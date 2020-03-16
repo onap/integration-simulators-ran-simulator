@@ -1,0 +1,153 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP Ransim Controller - Docker files
+  ================================================================================
+  Copyright (C) 2018 Wipro Limited Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.onap.ransim</groupId>
+		<artifactId>ransim</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.onap.ransim.docker</groupId>
+	<artifactId>docker</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Ransim - Docker build</name>
+	<description>ONAP Ransim Docker Build</description>
+<profiles>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.28.0</version>
+            <configuration>
+              <verbose>true</verbose>
+              <apiVersion>1.23</apiVersion>
+              <pullRegistry>${docker.pull.registry}</pullRegistry>
+              <pushRegistry>${docker.push.registry}</pushRegistry>
+              <images>
+                <image>
+                  <name>onap/ransim:${docker.tag}</name>
+                  <build>
+                    <cleanup>true</cleanup>
+                    <dockerFileDir>${project.basedir}/ransim-docker</dockerFileDir>
+                    <args>
+                      <PKG_FILENAME>${project.build.finalName}.${project.packaging}</PKG_FILENAME>
+                    </args>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+            <executions>
+              <execution>
+                <id>clean-images</id>
+                <phase>pre-clean</phase>
+                <goals>
+                  <goal>remove</goal>
+                </goals>
+                <configuration>
+                  <removeMode>all</removeMode>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-images</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>push-images</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    </profiles>
+
+
+
+<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-ransim-zip</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+                                                        <outputDirectory>ransim-docker</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.onap.ransim</groupId>
+									<artifactId>install</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+									<destFileName>install.zip</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+          	<id>get-target-version</id>
+          	<phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>echo</executable>
+          <workingDirectory>${project.build.directory}</workingDirectory>
+          <arguments>
+            <argument>${project.version}</argument>
+          </arguments>
+          <outputFile>${project.build.directory}/version</outputFile>
+        </configuration>
+      </plugin>
+
+		</plugins>
+	</build>
+
+</project>
