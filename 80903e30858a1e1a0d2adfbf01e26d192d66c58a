@@ -1,0 +1,327 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9f97b0e_0c4ce2e6",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f589b7c_4bd34d3b",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "consistency\n# Running RAN-SIM (always a space after the #)",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af90ae02_952d69c0",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "- After (add a space) \nidem for the 2 next lines",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55756494_0f426a2c",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "ok, do you also send them to stdout? (to get them when performing a docker logs)",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af2a8a9e_3ae87e96",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "missing return carriage",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7e1c697_7da4a737",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "s/comman/common?",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3b16f3c_46f7a84d",
+        "filename": "ransim/docker/ransim-docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "looks very old...14.04 is no more supported and could be a security issue.\nI know that it is for a simulator but would it be hard to move to a 18.04?",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b16d995_8ce82baf",
+        "filename": "ransim/docker/ransim-docker/docker-install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8979b6b_648a2a1d",
+        "filename": "ransim/ransimctrlr/packages/base/src/assembly/zip.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab0b5b9_45ce8dda",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/etc/profile.d/env.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0487f1c_5d7c63b8",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/mysql/data/181010_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e54c2d1_d77d3ba3",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9dd6d7b_25d63dee",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/init.d/tomcatd",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fcb33b1_13a64e98",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/configs/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80b0ccaa_e3bb54b3",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/m2/settings.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c30710a_069da733",
+        "filename": "ransim/ransimctrlr/packages/install/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51689583_73253917",
+        "filename": "ransim/ransimctrlr/packages/install/src/assembly/zip.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "088f1b81_20e922d7",
+        "filename": "ransim/ransimctrlr/packages/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7983bd9_49fcde8a",
+        "filename": "ransim/ransimctrlr/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-03-16T13:43:39Z",
+      "side": 1,
+      "message": "trailign spaces",
+      "revId": "80903e30858a1e1a0d2adfbf01e26d192d66c58a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
