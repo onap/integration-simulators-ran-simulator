@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!--
+
+        Copyright (c) 2018 Wipro Limited
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.onap.ransim</groupId>
+  <artifactId>ransim</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>ran-simulator</name>
+<modules>
+    <module>ransimctrlr</module>
+    <module>docker</module>
+</modules>
+<properties>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <onap.nexus.url>https://nexus.onap.org</onap.nexus.url>
+
+    <java.version>1.8</java.version>
+    <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
+    <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+    <!--docker -->
+    <docker.tag>${project.version}</docker.tag>
+    <!--sonar -->
+    <sonar.language>java</sonar.language>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports
+    </sonar.surefire.reportsPath>
+    <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec
+    </sonar.jacoco.reportPath>
+    <sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec
+    </sonar.jacoco.itReportPath>
+    <sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
+    <sonar.projectVersion>${project.version}</sonar.projectVersion>
+    <sonar.coverage.exclusions>**/model/**/*</sonar.coverage.exclusions>
+    <nexusproxy>https://nexus.onap.org</nexusproxy>
+    <sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
+    <releases.path>content/repositories/releases/</releases.path>
+    <snapshots.path>content/repositories/snapshots/</snapshots.path>
+    <staging.path>content/repositories/staging/</staging.path>
+</properties>
+        <distributionManagement>
+                <repository>
+                        <id>ecomp-releases</id>
+                        <name>ONAP Release Repository</name>
+                        <url>${nexusproxy}/${releases.path}</url>
+                </repository>
+                <snapshotRepository>
+                        <id>ecomp-snapshots</id>
+                        <name>ONAP Snapshot Repository</name>
+                        <url>${nexusproxy}/${snapshots.path}</url>
+                </snapshotRepository>
+                <site>
+                        <id>ecomp-site</id>
+                        <url>dav:${nexusproxy}${sitePath}</url>
+                </site>
+        </distributionManagement>
+
+        <repositories>
+                <!-- LF repositories -->
+                <repository>
+                        <id>ecomp-releases</id>
+                        <name>Release Repository</name>
+                        <url>${nexusproxy}/content/repositories/releases/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-staging</id>
+                        <name>Staging Repository</name>
+                        <url>${nexusproxy}/content/repositories/staging/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-snapshots</id>
+                        <name>Snapshots Repository</name>
+                        <url>${nexusproxy}/content/repositories/snapshots/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-public</id>
+                        <name>Public Repository</name>
+                        <url>${nexusproxy}/content/repositories/public/</url>
+                </repository>
+                <!-- LF repositories END-->
+        </repositories>
+
+        <reporting>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>2.10.4</version>
+              <configuration>
+                <failOnError>false</failOnError>
+                <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                <docletArtifact>
+                  <groupId>org.umlgraph</groupId>
+                  <artifactId>umlgraph</artifactId>
+                  <version>5.6</version>
+                </docletArtifact>
+                <additionalparam>-views</additionalparam>
+                <useStandardDocletOptions>true</useStandardDocletOptions>
+              </configuration>
+            </plugin>
+          </plugins>
+        </reporting>
+        <build>
+           <plugins>
+               <plugin>
+                  <groupId>org.sonatype.plugins</groupId>
+                  <artifactId>nexus-staging-maven-plugin</artifactId>
+                  <extensions>true</extensions>
+                  <configuration>
+                     <nexusUrl>${nexusproxy}</nexusUrl>
+                     <stagingProfileId>176c31dfe190a</stagingProfileId>
+                     <serverId>ecomp-staging</serverId>
+                  </configuration>
+                </plugin>
+                <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-deploy-plugin</artifactId>
+                   <configuration>
+                     <skip />
+                   </configuration>
+                </plugin>
+                <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-surefire-plugin</artifactId>
+                </plugin>
+                <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-clean-plugin</artifactId>
+                   <version>2.4.1</version>
+                 </plugin>
+                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.0</version>
+                    <configuration>
+                       <encoding>${project.encoding}</encoding>
+                       <source>${project.source.version}</source>
+                       <target>${project.target.version}</target>
+                    </configuration>
+                  </plugin>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                       <encoding>${project.encoding}</encoding>
+                    </configuration>
+                   </plugin>
+                   <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-war-plugin</artifactId>
+                      <version>2.3</version>
+                      <configuration>
+                          <failOnMissingWebXml>false</failOnMissingWebXml>
+                      </configuration>
+                   </plugin>
+                     <!-- The Jetty plugin allows us to easily test the development build by
+                                running jetty:run on the command line. -->
+                        <plugin>
+                                <groupId>com.fortify.ps.maven.plugin</groupId>
+                                <artifactId>sca-maven-plugin</artifactId>
+                                <version>4.20</version>
+                        </plugin>
+                        <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-site-plugin</artifactId>
+                          <dependencies>
+                            <dependency>
+                              <groupId>org.apache.maven.wagon</groupId>
+                              <artifactId>wagon-webdav-jackrabbit</artifactId>
+                              <version>2.10</version>
+                            </dependency>
+                          </dependencies>
+                        </plugin>
+                </plugins>
+        <pluginManagement>
+            <plugins>
+                                <plugin>
+                                        <groupId>org.jacoco</groupId>
+                                        <artifactId>jacoco-maven-plugin</artifactId>
+                                        <version>${jacoco.version}</version>
+                                        <configuration>
+                                                <!-- Note: This exclusion list should match <sonar.exclusions> property
+                                                        above -->
+                                                <excludes>
+                                                        <exclude>**/gen/**</exclude>
+                                                        <exclude>**/generated-sources/**</exclude>
+                                                        <exclude>**/yang-gen/**</exclude>
+                                                        <exclude>**/pax/**</exclude>
+                                                </excludes>
+                                        </configuration>
+                                        <executions>
+                                                <!-- Prepares the property pointing to the JaCoCo runtime agent which
+                                                        is passed as VM argument when Maven the Surefire plugin is executed. -->
+                                                <execution>
+                                                        <id>pre-unit-test</id>
+                                                        <goals>
+                                                                <goal>prepare-agent</goal>
+                                                        </goals>
+                                                        <configuration>
+                                                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                                        </configuration>
+                                                </execution>
+                                                <!-- Ensures that the code coverage report for unit tests is created
+                                                        after unit tests have been run. -->
+                                                <execution>
+                                                        <id>post-unit-test</id>
+                                                        <phase>test</phase>
+                                                        <goals>
+                                                                <goal>report</goal>
+                                                        </goals>
+                                                        <configuration>
+                                                                <dataFile>${sonar.jacoco.reportPath}</dataFile>
+                                                        </configuration>
+                                                </execution>
+                                        </executions>
+                                </plugin>
+
+
+
+
+            </plugins>
+        </pluginManagement>
+        </build>
+
+</project>
+
