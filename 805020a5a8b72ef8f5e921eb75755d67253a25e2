@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Bartek Grzybowski <b.grzybowski@partner.samsung.com>
+Code-Review+2: Morgan Richomme <morgan.richomme@orange.com>
+Code-Review+2: Marco Platania <platania@research.att.com>
+Verified+1: Marco Platania <platania@research.att.com>
+Submitted-by: Marco Platania <platania@research.att.com>
+Submitted-at: Wed, 18 Mar 2020 12:55:52 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/integration/simulators/ran-simulator/+/103784
+Project: integration/simulators/ran-simulator
+Branch: refs/heads/master
