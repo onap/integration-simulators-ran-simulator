@@ -13,7 +13,6 @@
 **/*.swp
 **/.log
 **/.tmp
-**/bin/
 **/.metadata/
 **/*.war
 **/*.jar
