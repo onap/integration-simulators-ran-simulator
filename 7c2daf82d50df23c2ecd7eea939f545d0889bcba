@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d414e00_0258e0ce",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/certtool.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-04-07T13:11:16Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "312bd558_38b7e34d",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/certtool.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-04-07T13:11:16Z",
+      "side": 1,
+      "message": "lots of tabs to be removed",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d5aa581_756733d0",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/monitor.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-04-07T13:11:16Z",
+      "side": 1,
+      "message": "tabs and trailing spaces",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20568e27_11f16630",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-04-07T13:11:16Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e99f5178_7009868e",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1215
+      },
+      "writtenOn": "2020-04-07T13:11:16Z",
+      "side": 1,
+      "message": "file mode 644 for sh script is wrong, no?",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
