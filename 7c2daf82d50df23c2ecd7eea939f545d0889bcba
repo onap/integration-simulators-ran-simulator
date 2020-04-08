@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae10d3c8_c8f489d0",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/certtool.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 6209
+      },
+      "writtenOn": "2020-04-08T04:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d414e00_0258e0ce",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "312bd558_38b7e34d",
         "filename": "ransim/ransimctrlr/packages/base/src/files/bin/certtool.sh",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "772ef75f_74678cb7",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/certtool.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 6209
+      },
+      "writtenOn": "2020-04-08T04:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "312bd558_38b7e34d",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "90438551_6aaf3867",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/bin/monitor.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6209
+      },
+      "writtenOn": "2020-04-08T04:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d5aa581_756733d0",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20568e27_11f16630",
         "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "bf309715_966eb785",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 6209
+      },
+      "writtenOn": "2020-04-08T04:56:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20568e27_11f16630",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e99f5178_7009868e",
         "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
         "patchSetId": 2
@@ -84,6 +156,24 @@
       "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d87165a3_01362142",
+        "filename": "ransim/ransimctrlr/packages/base/src/files/install/servers/common/tomcat/bin/setenv.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 6209
+      },
+      "writtenOn": "2020-04-08T04:56:51Z",
+      "side": 1,
+      "message": "These scripts will be copied inside the docker container and will be given executable permission",
+      "parentUuid": "e99f5178_7009868e",
+      "revId": "7c2daf82d50df23c2ecd7eea939f545d0889bcba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
