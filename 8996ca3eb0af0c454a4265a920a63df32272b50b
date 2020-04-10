@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Morgan Richomme <morgan.richomme@orange.com>
+Submitted-by: Marco Platania <platania@research.att.com>
+Submitted-at: Fri, 10 Apr 2020 13:57:35 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/integration/simulators/ran-simulator/+/105237
+Project: integration/simulators/ran-simulator
+Branch: refs/heads/master
