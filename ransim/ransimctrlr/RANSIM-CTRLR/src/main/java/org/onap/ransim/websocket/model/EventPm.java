@@ -21,24 +21,24 @@
 package org.onap.ransim.websocket.model;
 
 public class EventPm {
-    
-    private CommonEventHeaderPm commonEventHeader;
-    private Measurement measurement;
-    
-    public CommonEventHeaderPm getCommonEventHeader() {
-        return commonEventHeader;
-    }
-    
-    public void setCommonEventHeader(CommonEventHeaderPm commonEventHeader) {
-        this.commonEventHeader = commonEventHeader;
-    }
-    
-    public Measurement getMeasurement() {
-        return measurement;
-    }
-    
-    public void setMeasurement(Measurement measurement) {
-        this.measurement = measurement;
-    }
-    
+
+	private CommonEventHeaderPm commonEventHeader;
+	private Measurement measurement;
+
+	public CommonEventHeaderPm getCommonEventHeader() {
+		return commonEventHeader;
+	}
+
+	public void setCommonEventHeader(CommonEventHeaderPm commonEventHeader) {
+		this.commonEventHeader = commonEventHeader;
+	}
+
+	public Measurement getMeasurement() {
+		return measurement;
+	}
+
+	public void setMeasurement(Measurement measurement) {
+		this.measurement = measurement;
+	}
+
 }
