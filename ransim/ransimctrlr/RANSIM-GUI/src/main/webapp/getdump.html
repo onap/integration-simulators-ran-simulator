@@ -23,49 +23,59 @@
 <html>
 
 <head>
-  <script src="angular.min.js"></script>
-  <style>
-    .show {
-      z-index: 1000;
-      position: absolute;
-      padding: 2px;
-      display: block;
-      margin: 0;
-      list-style-type: none;
-      list-style: none;
-    }
+<script src="angular.min.js"></script>
+<style>
+.show {
+	z-index: 1000;
+	position: absolute;
+	padding: 2px;
+	display: block;
+	margin: 0;
+	list-style-type: none;
+	list-style: none;
+}
 
-    .hide {
-      display: none;
-    }
+.hide {
+	display: none;
+}
 
-    .btn-group .button {
-      background-color: LightGrey;
-      color: black;
-      border: 1px solid Black;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100px;
-      display: block;
-    }
+.btn-group .button {
+	background-color: LightGrey;
+	color: black;
+	border: 1px solid Black;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	width: 100px;
+	display: block;
+}
 
-    .btn-group .button:not (:last-child) {
-      border-bottom:
+.btn-group
+ 
+.button
+:not
+ 
+(
+:last-child
+ 
+)
+{
+border-bottom
+:
+ 
+none
+;
 
-        none;
 
-
-    }
-
-    .btn-group .button:hover {
-      background-color: lightblue;
-      color: white;
-    }
-  </style>
-  <script>
+}
+.btn-group .button:hover {
+	background-color: lightblue;
+	color: white;
+}
+</style>
+<script>
     function init() {
       getCellTopology();
     }
@@ -75,13 +85,11 @@
         "nodeId": nodeId
       }
       var dataObj = JSON.stringify(formVal);
-      //console.log("Delete DataObj : " + dataObj);
       var xmlhttp = new XMLHttpRequest();
       var toBeContinued = true;
       var nbrsStr = '';
       xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          //console.log("Response DataObj : " + this.responseText);
           var nbrs = JSON.parse(this.responseText);
           for( i in nbrs.cellsWithHO ) {
             var nodeId = nbrs.cellsWithHO[i].nodeId;
@@ -89,7 +97,6 @@
               nbrsStr += ', ';
             nbrsStr +=  '{"nodeId":'+'"'+nodeId+'"'+',"blacklisted":"false"}' ;
           }
-          //console.log("Response nbrsStr : " + nbrsStr);
           toBeContinued = false;
         } else if (this.readyState == 4 && this.status >= 200) {
           toBeContinued = false;
@@ -144,81 +151,6 @@
       var aColors = "#32CD32";
       var aColorsLength = 1;
       var arr = new Array();
-      /* for (var x = 0; x < gridSize; x++) {
-        arr[x] = new Array();
-        for (var y = 0; y < gridSize; y++) {
-
-          context.fillStyle = "#D3D3D3";
-
-          context.beginPath();
-
-          context.lineWidth = 5;
-          var a = 1.5 * rad;
-          var b = 0.86 * rad;
-          if (x % 2 == 0) {
-            context.moveTo((x + 1) * a + rad, (2 * y + 1) * b);
-            var s = 6;
-            for (var p = 1; p < s; p++) {
-              context.lineTo(((x + 1) * a) + (rad * Math.cos(p *
-                2 * Math.PI / s)), (2 * y + 1) * b + (
-                rad * Math.sin(p * 2 * Math.PI / s)));
-            }
-          } else {
-
-            context.moveTo((x + 1) * a + rad, (2 * y + 2) * b);
-            var s = 6;
-            for (var p = 1; p < s; p++) {
-              context.lineTo(((x + 1) * a) + (rad * Math.cos(p *
-                  2 * Math.PI / s)), ((2 * y + 2) * b) +
-                (
-                  rad * Math.sin(p * 2 * Math.PI / s)));
-            }
-          }
-          context.strokeStyle = "black";
-          context.stroke();
-
-          context.closePath();
-          context.fill();
-          arr[x][y] = (x + 1) + ":" + (y + 1);
-        }
-      } */
-
-      /* myCanvas.addEventListener('contextmenu', (e) => {
-        const pos = {
-          x: e.clientX,
-          y: e.clientY
-        };
-        for (var x = 0; x < gridSize; x++) {
-          for (var y = 0; y < gridSize; y++) {
-            if (isIntersectDefault(pos, x, y, rad, gaps)) {
-              var val = arr[x][y];
-              document.getElementById("rmenu").className =
-                "show";
-              document.getElementById('rmenu').style.top =
-                pos.y + "px"; //or whatever 
-              document.getElementById('rmenu').style.left =
-                pos.x + "px"; // or whatever
-
-              var htmlText1 = '<div class="btn-group">';
-              htmlText1 +=
-                '<button class="button" id="createNode">Create</button>';
-              htmlText1 += '</div>';
-              document.getElementById("rmenu").innerHTML =
-                htmlText1;
-
-              document.getElementById("createNode").addEventListener(
-                "click",
-                function() {
-                  createNode(val);
-                });
-			  e.preventDefault();
-              return;
-			}
-          }
-        }
-        e.preventDefault();
-      }); */
-
       console.log('{ "cellList" :[');
       var index = 0;
       var pnfNum = 1000;
@@ -233,8 +165,6 @@
         var row = i/45;
         
         var col = i%45;
-        
-        
         //function point2LatLng(row, col, map);
         //console.log( translate_coordinates(row, row));
         
@@ -259,8 +189,6 @@
         if (typeof topoObj.cellTopology[i].color != 'undefined') {
           confuColor = topoObj.cellTopology[i].color;
         }
-        //alert(nodeId+" "+physicalCellId+" "+col+" "+row+" "+confusion+" "+confuColor+" ");
-
         if (collision) {
 	   if (confusion) {
           context.fillStyle = "#FF0000";
@@ -298,14 +226,12 @@
         }
         context.strokeStyle = "black";
         context.stroke();
-        //alert(nodeId+" Circle X " + (rad+gaps*col) + " Y: "+ (rad+gaps*row));
         context.closePath();
         context.fill();
 
         context.font = "12px Comic Sans MS";
         context.fillStyle = "white";
         context.textAlign = "center";
-        //fillMultiLineText(context,"cid:"+nodeId+"\npcid:"+physicalCellId, rad+gaps*col,rad+ gaps*row);
 
         if (col % 2 == 0) {
           context.fillText("" + nodeId + "," + physicalCellId, (col +1) * a, rad + (2 * row + 1) * b);
@@ -313,20 +239,12 @@
           var xy2ll = translate_xyToLatLng( (col +1) * a,  (2 * row +1) * b);
   		  var slat=xy2ll.slat;  
           var slon=xy2ll.slon;
-          //cellStr += ' "latitude" : "' + slat + '", ';
-  		  //cellStr += ' "longitude" : "' + slon + '" ';
-          
-		//cellStr += ' "screenX" : "' + ((col + 1) * a) + '", ';
-		//cellStr += ' "screenY" : "' + (rad + (2 * row) * b) + '" ';
+        
         } else {
           context.fillText("" + nodeId + "," + physicalCellId, (col +1) * a, (2 * row + 2) * b);
           var xy2ll = translate_xyToLatLng( (col +1) * a, (2 * row + 2) * b);
   		  var slat=xy2ll.slat;  
           var slon=xy2ll.slon;
-          //cellStr += ' "latitude" : "' + slat + '", ';
-  		  //cellStr += ' "longitude" : "' + slon + '" ';
-			//cellStr += ' "screenX" : "' + ((col + 1) * a) + '", ';
-			//cellStr += ' "screenY" : "' + ((2 * row + 2) * b) + '" ';
         }
 		
 		var neighborStr = getNeighborDumb(nodeId);
@@ -375,8 +293,6 @@
               gaps)) {
             var nodeVal = topoObj.cellTopology[i].nodeId;
             var cellVal = topoObj.cellTopology[i].physicalCellId;
-            //alert('click on circle: ' + topoObj.cellTopology[i].nodeId);
-            //alert(pos.x + " "+pos.y);
             document.getElementById("rmenu").className =
               "show";
             document.getElementById('rmenu').style.top =
@@ -439,13 +355,6 @@
              
               var xx,yy,r,ct,st,angle;
               angle = 0;
-
-             
-                 /* X,Y to Lat/Lon Coordinate Translation  */
-                 //pxpos_mtrs = porg.x;  
-                 //pypos_mtrs = porg.y;
-        	 	//xx = x;
-        		// yy = y;
         		 r = Math.sqrt(xx*xx + yy*yy);
 
         		 if(r)
@@ -475,9 +384,6 @@
 
     	r = Math.sqrt(xx*xx + yy*yy);
 
-            /* alert('LL_TO_XY: xx=' + xx + ' yy=' + yy + ' r=' + r);
-            return false;*/
-
     	if(r)
     	{
     	    ct = xx/r;
@@ -485,9 +391,6 @@
     	    xx = r * ( (ct * Math.cos(0)) + (st * Math.sin(0)) );
     	    yy = r * ( (st * Math.cos(0)) - (ct * Math.sin(0)) );
     	}
-    	//pxpos_mtrs = xx + porg.xoffset_mtrs;
-    	//pypos_mtrs = yy + porg.yoffset_mtrs;
-          
             var sxy={};
             sxy={x:xx, y:yy};
 
@@ -498,7 +401,6 @@
       var point = cellInfo.split(":");
       var gridX = point[0];
       var gridY = point[1];
-      //alert("Cell X : "+gridX+" Y: "+ gridY);
       window.childWin = window.open('createCell.html?gridX=' + gridX +
         '&gridY=' + gridY, '',
         'menubar=no, locationbar=no, toolbar=no, width=600px, height=250px'
@@ -518,7 +420,6 @@
     }
 
     function deleteNode(cid, pcid) {
-      //alert("Delete CID "+cid + " PCID " + pcid);
       window.childWin = window.open('deleteCell.html?cid=' + cid +
         '&pcid=' + pcid, '',
         'menubar=no, locationbar=no, toolbar=no, width=600px, height=250px'
@@ -591,8 +492,8 @@
 </head>
 
 <body onLoad="init();" style="margin: 0px">
-  <div class="hide" id="rmenu"></div>
-  <canvas id="myCanvas" />
+	<div class="hide" id="rmenu"></div>
+	<canvas id="myCanvas" />
 </body>
 
 </html>

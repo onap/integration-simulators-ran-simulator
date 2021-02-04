@@ -25,33 +25,31 @@ import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
 public class DeviceDataDecoder implements Decoder.Text<DeviceData> {
-    
-    // public class DeviceDataDecoder implements Decoder.Text<DeviceData>
-    @Override
-    public void destroy() {
-    }
-    
-    @Override
-    public void init(EndpointConfig arg0) {
-    }
-    
-    @Override
-    public DeviceData decode(String msgInfo) throws DecodeException {
-        DeviceData data = new DeviceData();
-        String[] strInfo = msgInfo.split(":", 2);
-        if (strInfo.length < 2) {
-            data.setMessage("");
-        } else {
-            data.setMessage(strInfo[1]);
-        }
-        data.setType(strInfo[0]);
-        return data;
-    }
-    
-    @Override
-    public boolean willDecode(String arg0) {
-        // TODO Auto-generated method stub
-        return true;
-    }
-    
+
+	@Override
+	public void destroy() {
+	}
+
+	@Override
+	public void init(EndpointConfig arg0) {
+	}
+
+	@Override
+	public DeviceData decode(String msgInfo) throws DecodeException {
+		DeviceData data = new DeviceData();
+		String[] strInfo = msgInfo.split(":", 2);
+		if (strInfo.length < 2) {
+			data.setMessage("");
+		} else {
+			data.setMessage(strInfo[1]);
+		}
+		data.setType(strInfo[0]);
+		return data;
+	}
+
+	@Override
+	public boolean willDecode(String arg0) {
+		return true;
+	}
+
 }

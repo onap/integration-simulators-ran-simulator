@@ -19,47 +19,43 @@
  */
 package org.onap.ransim.rest.api.models;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "NeighborDetails")
 public class NeighborDetails {
-    
-    @EmbeddedId
-    private NeihborId neigbor;
-    
-    private boolean blacklisted;
-    
-    public NeighborDetails() {
-        
-    }
 
-    public NeighborDetails(NeihborId neigbor, boolean blacklisted) {
-        super();
-        this.neigbor = neigbor;
-        this.blacklisted = blacklisted;
-    }
+	@EmbeddedId
+	private NeihborId neigbor;
 
+	private boolean blacklisted;
 
-    public NeihborId getNeigbor() {
-        return neigbor;
-    }
+	public NeighborDetails() {
 
-    public void setNeigbor(NeihborId neigbor) {
-        this.neigbor = neigbor;
-    }
+	}
 
-    public boolean isBlacklisted() {
-        return blacklisted;
-    }
+	public NeighborDetails(NeihborId neigbor, boolean blacklisted) {
+		super();
+		this.neigbor = neigbor;
+		this.blacklisted = blacklisted;
+	}
 
-    public void setBlacklisted(boolean blacklisted) {
-        this.blacklisted = blacklisted;
-    }
-    
-    
+	public NeihborId getNeigbor() {
+		return neigbor;
+	}
+
+	public void setNeigbor(NeihborId neigbor) {
+		this.neigbor = neigbor;
+	}
+
+	public boolean isBlacklisted() {
+		return blacklisted;
+	}
+
+	public void setBlacklisted(boolean blacklisted) {
+		this.blacklisted = blacklisted;
+	}
+
 }

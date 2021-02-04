@@ -21,66 +21,66 @@
 package org.onap.ransim.websocket.model;
 
 public class CommonEventHeaderFm {
-    
-    private String sourceName;
-    private String sourceUuid;
-    private String reportingEntityName;
-    private long startEpochMicrosec;
-    private long lastEpochMicrosec;
-    
-    public CommonEventHeaderFm() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public CommonEventHeaderFm(String sourceName, String sourceUuid, String reportingEntityName,
-            long startEpochMicrosec, long lastEpochMicrosec) {
-        super();
-        this.sourceName = sourceName;
-        this.sourceUuid = sourceUuid;
-        this.reportingEntityName = reportingEntityName;
-        this.startEpochMicrosec = startEpochMicrosec;
-        this.lastEpochMicrosec = lastEpochMicrosec;
-    }
-    
-    public String getSourceName() {
-        return sourceName;
-    }
-    
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-    
-    public String getSourceUuid() {
-        return sourceUuid;
-    }
-    
-    public void setSourceUuid(String sourceUuid) {
-        this.sourceUuid = sourceUuid;
-    }
-    
-    public long getStartEpochMicrosec() {
-        return startEpochMicrosec;
-    }
-    
-    public void setStartEpochMicrosec(long startEpochMicrosec) {
-        this.startEpochMicrosec = startEpochMicrosec;
-    }
-    
-    public long getLastEpochMicrosec() {
-        return lastEpochMicrosec;
-    }
-    
-    public void setLastEpochMicrosec(long lastEpochMicrosec) {
-        this.lastEpochMicrosec = lastEpochMicrosec;
-    }
-    
-    public String getReportingEntityName() {
-        return reportingEntityName;
-    }
-    
-    public void setReportingEntityName(String reportingEntityName) {
-        this.reportingEntityName = reportingEntityName;
-    }
-    
+
+	private String sourceName;
+	private String sourceUuid;
+	private String reportingEntityName;
+	private long startEpochMicrosec;
+	private long lastEpochMicrosec;
+
+	public CommonEventHeaderFm() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public CommonEventHeaderFm(String sourceName, String sourceUuid, String reportingEntityName,
+			long startEpochMicrosec, long lastEpochMicrosec) {
+		super();
+		this.sourceName = sourceName;
+		this.sourceUuid = sourceUuid;
+		this.reportingEntityName = reportingEntityName;
+		this.startEpochMicrosec = startEpochMicrosec;
+		this.lastEpochMicrosec = lastEpochMicrosec;
+	}
+
+	public String getSourceName() {
+		return sourceName;
+	}
+
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
+
+	public String getSourceUuid() {
+		return sourceUuid;
+	}
+
+	public void setSourceUuid(String sourceUuid) {
+		this.sourceUuid = sourceUuid;
+	}
+
+	public long getStartEpochMicrosec() {
+		return startEpochMicrosec;
+	}
+
+	public void setStartEpochMicrosec(long startEpochMicrosec) {
+		this.startEpochMicrosec = startEpochMicrosec;
+	}
+
+	public long getLastEpochMicrosec() {
+		return lastEpochMicrosec;
+	}
+
+	public void setLastEpochMicrosec(long lastEpochMicrosec) {
+		this.lastEpochMicrosec = lastEpochMicrosec;
+	}
+
+	public String getReportingEntityName() {
+		return reportingEntityName;
+	}
+
+	public void setReportingEntityName(String reportingEntityName) {
+		this.reportingEntityName = reportingEntityName;
+	}
+
 }

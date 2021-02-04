@@ -26,79 +26,74 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "NetconfServers")
 public class NetconfServers {
-    
-    @Id
-    @Column(name = "serverId", unique = true, nullable = false, length = 20)
-    private String serverId;
-    
-    private String ip;
-    private String netconfPort;
-    
-    @OneToMany(targetEntity = CellDetails.class, orphanRemoval = true, cascade = { CascadeType.ALL })
-    // @OneToMany(targetEntity = CellDetails.class)
-    private Set<CellDetails> cells;
-    
-    public NetconfServers() {
-        
-    }
-    
-    /**
-     * A constructor for Netconf server table class.
-     *
-     * @param serverId
-     *            server Id of the netconf server
-     * @param ip
-     *            ip address of the netconf server
-     * @param netconfPort
-     *            port number of the netconf server
-     * @param cells
-     *            List of cells belonging to the netconf server
-     */
-    public NetconfServers(String serverId, String ip, String netconfPort,
-            Set<CellDetails> cells) {
-        super();
-        this.serverId = serverId;
-        this.ip = ip;
-        this.netconfPort = netconfPort;
-        this.cells = cells;
-    }
-    
-    public String getServerId() {
-        return serverId;
-    }
-    
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
-    
-    public String getIp() {
-        return ip;
-    }
-    
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-    
-    public String getNetconfPort() {
-        return netconfPort;
-    }
-    
-    public void setNetconfPort(String netconfPort) {
-        this.netconfPort = netconfPort;
-    }
-    
-    public Set<CellDetails> getCells() {
-        return cells;
-    }
-    
-    public void setCells(Set<CellDetails> cells) {
-        this.cells = cells;
-    }
-    
+
+	@Id
+	@Column(name = "serverId", unique = true, nullable = false, length = 20)
+	private String serverId;
+
+	private String ip;
+	private String netconfPort;
+
+	@OneToMany(targetEntity = CellDetails.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<CellDetails> cells;
+
+	public NetconfServers() {
+
+	}
+
+	/**
+	 * A constructor for Netconf server table class.
+	 *
+	 * @param serverId    server Id of the netconf server
+	 * @param ip          ip address of the netconf server
+	 * @param netconfPort port number of the netconf server
+	 * @param cells       List of cells belonging to the netconf server
+	 */
+	public NetconfServers(String serverId, String ip, String netconfPort, Set<CellDetails> cells) {
+		super();
+		this.serverId = serverId;
+		this.ip = ip;
+		this.netconfPort = netconfPort;
+		this.cells = cells;
+	}
+
+	public String getServerId() {
+		return serverId;
+	}
+
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getNetconfPort() {
+		return netconfPort;
+	}
+
+	public void setNetconfPort(String netconfPort) {
+		this.netconfPort = netconfPort;
+	}
+
+	public Set<CellDetails> getCells() {
+		return cells;
+	}
+
+	public void setCells(Set<CellDetails> cells) {
+		this.cells = cells;
+	}
+
 }
