@@ -21,54 +21,51 @@
 package org.onap.ransim.rest.api.models;
 
 public class FmAlarmInfo {
-    
-    private String problem;
-    private String collisionCount;
-    private String confusionCount;
-    
-    public FmAlarmInfo() {
-        super();
-    }
-    
-    /**
-     * Constructor with all fields.
-     * 
-     * @param problem
-     *            Collision or Confusion
-     * @param collisionCount
-     *            No of cells that causes collision.
-     * @param confusionCount
-     *            No od cells that causes confusion.
-     */
-    public FmAlarmInfo(String problem, String collisionCount, String confusionCount) {
-        super();
-        this.problem = problem;
-        this.collisionCount = collisionCount;
-        this.confusionCount = confusionCount;
-    }
-    
-    public String getProblem() {
-        return problem;
-    }
-    
-    public void setProblem(String problem) {
-        this.problem = problem;
-    }
-    
-    public String getCollisionCount() {
-        return collisionCount;
-    }
-    
-    public void setCollisionCount(String collisionCount) {
-        this.collisionCount = collisionCount;
-    }
-    
-    public String getConfusionCount() {
-        return confusionCount;
-    }
-    
-    public void setConfusionCount(String confusionCount) {
-        this.confusionCount = confusionCount;
-    }
-    
+
+	private String problem;
+	private String collisionCount;
+	private String confusionCount;
+
+	public FmAlarmInfo() {
+		super();
+	}
+
+	/**
+	 * Constructor with all fields.
+	 * 
+	 * @param problem        Collision or Confusion
+	 * @param collisionCount No of cells that causes collision.
+	 * @param confusionCount No od cells that causes confusion.
+	 */
+	public FmAlarmInfo(String problem, String collisionCount, String confusionCount) {
+		super();
+		this.problem = problem;
+		this.collisionCount = collisionCount;
+		this.confusionCount = confusionCount;
+	}
+
+	public String getProblem() {
+		return problem;
+	}
+
+	public void setProblem(String problem) {
+		this.problem = problem;
+	}
+
+	public String getCollisionCount() {
+		return collisionCount;
+	}
+
+	public void setCollisionCount(String collisionCount) {
+		this.collisionCount = collisionCount;
+	}
+
+	public String getConfusionCount() {
+		return confusionCount;
+	}
+
+	public void setConfusionCount(String confusionCount) {
+		this.confusionCount = confusionCount;
+	}
+
 }

@@ -23,25 +23,25 @@ package org.onap.ransim.rest.api.models;
 import java.util.List;
 
 public class PmDataDump {
-    
-    private List<PmParameters> kpiDump;
-    
-    public PmDataDump() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public PmDataDump(List<PmParameters> kpiDump) {
-        super();
-        this.kpiDump = kpiDump;
-    }
-    
-    public List<PmParameters> getKpiDump() {
-        return kpiDump;
-    }
-    
-    public void setKpiDump(List<PmParameters> kpiDump) {
-        this.kpiDump = kpiDump;
-    }
-    
+
+	private List<PmParameters> kpiDump;
+
+	public PmDataDump() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public PmDataDump(List<PmParameters> kpiDump) {
+		super();
+		this.kpiDump = kpiDump;
+	}
+
+	public List<PmParameters> getKpiDump() {
+		return kpiDump;
+	}
+
+	public void setKpiDump(List<PmParameters> kpiDump) {
+		this.kpiDump = kpiDump;
+	}
+
 }

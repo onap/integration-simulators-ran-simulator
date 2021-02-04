@@ -20,1131 +20,745 @@
 
 package org.onap.ransim.rest.api.controller;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.websocket.Session;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.onap.ransim.websocket.model.*;
-import org.onap.ransim.rest.api.models.CellData;
 import org.onap.ransim.rest.api.models.CellDetails;
 import org.onap.ransim.rest.api.models.CellNeighbor;
-import org.onap.ransim.rest.api.models.FmAlarmInfo;
+import org.onap.ransim.rest.api.models.DeleteACellReq;
+import org.onap.ransim.rest.api.models.GetACellDetailReq;
 import org.onap.ransim.rest.api.models.GetNeighborList;
-import org.onap.ransim.rest.api.models.NbrDump;
+import org.onap.ransim.rest.api.models.GetNeighborListReq;
+import org.onap.ransim.rest.api.models.GetNetconfServerDetailsReq;
+import org.onap.ransim.rest.api.models.GetPmDataReq;
+import org.onap.ransim.rest.api.models.ModifyACellReq;
 import org.onap.ransim.rest.api.models.NeighborDetails;
-import org.onap.ransim.rest.api.models.NeighborPmDetails;
 import org.onap.ransim.rest.api.models.NeihborId;
 import org.onap.ransim.rest.api.models.NetconfServers;
 import org.onap.ransim.rest.api.models.OperationLog;
-import org.onap.ransim.rest.api.models.PmDataDump;
-import org.onap.ransim.rest.api.models.PmParameters;
-import org.onap.ransim.rest.api.models.TopologyDump;
-import org.onap.ransim.rest.client.RestClient;
-import org.onap.ransim.websocket.model.FmMessage;
-import org.onap.ransim.websocket.model.ModifyNeighbor;
-import org.onap.ransim.websocket.model.ModifyPci;
-import org.onap.ransim.websocket.model.Neighbor;
-import org.onap.ransim.websocket.model.PmMessage;
-import org.onap.ransim.websocket.model.SetConfigTopology;
-import org.onap.ransim.websocket.model.Topology;
-import org.onap.ransim.websocket.model.UpdateCell;
-import org.onap.ransim.websocket.server.RansimWebSocketServer;
+import org.onap.ransim.rest.api.models.SDNRServerConstants;
+import org.onap.ransim.rest.api.models.Topology;
+import org.onap.ransim.rest.api.models.TACells;
+import org.onap.ransim.rest.api.services.RansimControllerServices;
+import org.onap.ransim.rest.api.services.RANSliceConfigService;
+import org.onap.ransim.rest.api.services.RansimRepositoryService;
+import org.onap.ransim.rest.api.controller.RANSliceConfigController;
+import org.onap.ransim.rest.api.handler.RansimPciHandler;
+import org.onap.ransim.rest.api.handler.RansimSlicingHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.onap.ransim.rest.api.services.SlicingPMDataGenerator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@RestController
+@Api(value = "Ran Simulator Controller Services")
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class RansimController {
 
-	static Logger log = Logger.getLogger(RansimController.class
-			.getName());
+	static Logger log = Logger.getLogger(RansimController.class.getName());
 
-	private static RansimController rsController = null;
-	Properties netconfConstants = new Properties();
-	int gridSize = 10;
-	boolean collision = false;
-	String serverIdPrefix = "";
-	static int numberOfCellsPerNcServer = 15;
-	int numberOfMachines = 1;
-	int numberOfProcessPerMc = 5;
-	boolean strictValidateRansimAgentsAvailability = false;
-	static public Map<String, Session> webSocketSessions = new ConcurrentHashMap<String, Session>();
-	static Map<String, String> serverIdIpPortMapping = new ConcurrentHashMap<String, String>();
+	private static boolean isPmDataGenerating = false;
+    private static boolean isIntelligentSlicingPmDataGenerating = false;    
 
-	static Map<String, String> globalNcServerUuidMap = new ConcurrentHashMap<String, String>();
-	static List<String> unassignedServerIds = Collections
-			.synchronizedList(new ArrayList<String>());
-	static Map<String, List<String>> serverIdIpNodeMapping = new ConcurrentHashMap<String, List<String>>();
-	int nextServerIdNumber = 1001;
-	String sdnrServerIp = "";
-	int sdnrServerPort = 0;
-	static String sdnrServerUserid = "";
-	static String sdnrServerPassword = "";
-	static String dumpFileName = "";
-	static long maxPciValueAllowed = 503;
+	ScheduledExecutorService execService = Executors.newScheduledThreadPool(5);
+    ScheduledExecutorService execServiceForIntelligentSlicing = Executors.newScheduledThreadPool(5);  
+	ScheduledExecutorService closedLoopExecService;
 
-	static RansimPciHandler rsPciHdlr = RansimPciHandler.getRansimPciHandler();
-
-	private RansimController() {
-
-	}
+	@Autowired
+	RansimRepositoryService ransimRepo;
+	@Autowired
+	RansimControllerServices rscServices;
+	@Autowired
+	RansimPciHandler rsPciHdlr;
+	@Autowired
+	RANSliceConfigController ranSliceConfigController;
+	@Autowired
+	RANSliceConfigService ranSliceConfigService;
+	@Autowired
+	RansimSlicingHandler ranSliceHandler;
+	@Autowired
+        SlicingPMDataGenerator pmDataGenerator;
 
 	/**
-	 * To accesss variable of this class from another class.
+	 * Start the RAN network simulation.
 	 *
-	 * @return returns rscontroller constructor
+	 * @param req gets the necessary details as a request of class type
+	 *            StartSimulationReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
 	 */
-	public static synchronized RansimController getRansimController() {
-		if (rsController == null) {
-			rsController = new RansimController();
-			new KeepWebsockAliveThread(rsController).start();
-		}
-		return rsController;
-	}
+	@ApiOperation("Starts the RAN network simulation")
+	@RequestMapping(value = "/StartSimulation", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot start the simulation") })
+	public ResponseEntity<String> startSimulation(@RequestBody Map<String,String> dumpfile) throws Exception {
 
-	private String checkIpPortAlreadyExists(String ipPort,
-			Map<String, String> serverIdIpPortMapping) {
-		String serverId = null;
-		for (String key : serverIdIpPortMapping.keySet()) {
-			String value = serverIdIpPortMapping.get(key);
-			if (value.equals(ipPort)) {
-				serverId = key;
-				break;
-			}
+		List<CellDetails> cellList = ransimRepo.getCellDetailsList();
+		if (!cellList.isEmpty()) {
+			return new ResponseEntity<>("Already simulation is running.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return serverId;
+		try {
+			log.info("SDNR Properties : " + SDNRServerConstants.getSdnrServerIp());
+			rscServices.loadProperties();
+			RansimControllerServices.dumpFileName = dumpfile.containsKey("dumpfile") ? dumpfile.get("dumpfile"):null;
+			long startTimeStartSimulation = System.currentTimeMillis();
+			rscServices.generateClusterFromFile();
+			rscServices.sendInitialConfigAll();
+			long endTimeStartSimulation = System.currentTimeMillis();
+			log.info("Time taken for start simulation : " + (endTimeStartSimulation - startTimeStartSimulation));
+
+			return new ResponseEntity<String>(HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.info("/StartSimulation ", eu);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@ApiOperation("Starts the RAN network slice simulation")
+	@RequestMapping(value = "/StartRanSliceSimulation", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot start the simulation") })
+	public ResponseEntity<String> startRanSliceSimulation() throws Exception {
+		try {
+			log.info("SDNR Properties : " + SDNRServerConstants.getSdnrServerIp());
+			rscServices.loadGNBFunctionProperties();
+			long startTimeStartSimulation = System.currentTimeMillis();
+			rscServices.sendRanInitialConfigAll();
+			long endTimeStartSimulation = System.currentTimeMillis();
+			log.info("Time taken for start ran slice simulation : " + (endTimeStartSimulation - startTimeStartSimulation));
+			return new ResponseEntity<>("Simulation started.", HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.info("/StartRanSliceSimulation ", eu);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
-	 * Add web socket sessions.
-	 *
-	 * @param ipPort
-	 *            ip address for the session
-	 * @param wsSession
-	 *            session details
-	 */
-	public synchronized String addWebSocketSessions(String ipPort,
-			Session wsSession) { 
-		loadProperties();
-		if (webSocketSessions.containsKey(ipPort)) {
-			log.info("addWebSocketSessions: Client session "
-					+ wsSession.getId() + " for " + ipPort
-					+ " already exist. Removing old session.");
-			webSocketSessions.remove(ipPort);
-		}
-
-		log.info("addWebSocketSessions: Adding Client session "
-				+ wsSession.getId() + " for " + ipPort);
-		webSocketSessions.put(ipPort, wsSession);
-		String serverId = null;
-		if (!serverIdIpPortMapping.containsValue(ipPort)) {
-			if (unassignedServerIds.size() > 0) {
-				log.info("addWebSocketSessions: No serverIds pending to assign for "
-						+ ipPort);
-				serverId = checkIpPortAlreadyExists(ipPort,
-						serverIdIpPortMapping);
-				if (serverId == null) {
-					serverId = unassignedServerIds.remove(0);
-				} else {
-					if (unassignedServerIds.contains(serverId)) {
-						unassignedServerIds.remove(serverId);
-					}
-				}
-				log.info("RansCtrller = Available unassigned ServerIds :"
-						+ unassignedServerIds);
-				log.info("RansCtrller = addWebSocketSessions: Adding serverId "
-						+ serverId + " for " + ipPort);
-				serverIdIpPortMapping.put(serverId, ipPort);
-				log.debug("RansCtrller = serverIdIpPortMapping >>>> :"
-						+ serverIdIpPortMapping);
-				mapServerIdToNodes(serverId);
-				RansimControllerDatabase rsDb = new RansimControllerDatabase();
-				try {
-
-					NetconfServers server = rsDb.getNetconfServer(serverId);
-					if (server != null) {
-						server.setIp(ipPort.split(":")[0]);
-						server.setNetconfPort(ipPort.split(":")[1]);
-						rsDb.mergeNetconfServers(server);
-					}
-
-				} catch (Exception e1) {
-					log.info("Exception mapServerIdToNodes :", e1);
-				}
-			} else {
-				log.info("addWebSocketSessions: No serverIds pending to assign for "
-						+ ipPort);
-			}
-		} else {
-			for (String key : serverIdIpPortMapping.keySet()) {
-				if (serverIdIpPortMapping.get(key).equals(ipPort)) {
-					log.info("addWebSocketSessions: ServerId " + key + " for "
-							+ ipPort + " is exist already");
-					serverId = key;
-					break;
-				}
-			}
-		}
-		return serverId;
-	}
-
-	/**
-	 * Map server ID to the cells
+	 * The performance Management Data of each cell will be sent to its netconf
+	 * agent at a regular interval.
 	 * 
-	 * @param serverId
-	 *            Server ID
-	 */
-	private void mapServerIdToNodes(String serverId) {
-		dumpSessionDetails();
-		if (serverIdIpNodeMapping.containsKey(serverId)) {
-			// already mapped.RansimController Do nothing.
-		} else {
-			List<String> nodeIds = new ArrayList<String>();
-			RansimControllerDatabase rsDb = new RansimControllerDatabase();
-			try {
-				List<CellDetails> nodes = rsDb.getCellsWithNoServerIds();
-				for (CellDetails cell : nodes) {
-					cell.setServerId(serverId);
-					nodeIds.add(cell.getNodeId());
-					rsDb.mergeCellDetails(cell);
-				}
-				serverIdIpNodeMapping.put(serverId, nodeIds);
-			} catch (Exception e1) {
-				log.info("Exception mapServerIdToNodes :", e1);
-
-			}
-		}
-	}
-
-	/**
-	 * It removes the web socket sessions.
-	 *
-	 * @param ipPort
-	 *            ip address of the netconf server
-	 */
-	public synchronized void removeWebSocketSessions(String ipPort) {
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-		log.info("remove websocket session request received for: " + ipPort);
-		try {
-			if (webSocketSessions.containsKey(ipPort)) {
-				String removedServerId = null;
-				for (String serverId : serverIdIpPortMapping.keySet()) {
-					String ipPortVal = serverIdIpPortMapping.get(serverId);
-					if (ipPortVal.equals(ipPort)) {
-						if (!unassignedServerIds.contains(serverId)) {
-							unassignedServerIds.add(serverId);
-							log.info(serverId + "added in unassignedServerIds");
-						}
-						NetconfServers ns = rsDb.getNetconfServer(serverId);
-						ns.setIp(null);
-						ns.setNetconfPort(null);
-						log.info(serverId + " ip and Port set as null ");
-						rsDb.mergeNetconfServers(ns);
-						removedServerId = serverId;
-						break;
-					}
-				}
-				serverIdIpPortMapping.remove(removedServerId);
-
-				Session wsSession = webSocketSessions.remove(ipPort);
-				log.info("removeWebSocketSessions: Client session "
-						+ wsSession.getId() + " for " + ipPort
-						+ " is removed. Server Id : " + removedServerId);
-			} else {
-				log.info("addWebSocketSessions: Client session for " + ipPort
-						+ " not exist");
-			}
-		} catch (Exception e) {
-			log.info("Exception in removeWebSocketSessions. e: " + e);
-		}
-
-	}
-
-	/**
-	 * Checks the number of ransim agents running.
-	 *
-	 * @param cellsToBeSimulated
-	 *            number of cells to be simulated
-	 * @return returns true if there are enough ransim agents running
-	 */
-	public boolean hasEnoughRansimAgentsRunning(int cellsToBeSimulated) {
-
-		log.info("hasEnoughRansimAgentsRunning: numberOfCellsPerNCServer "
-				+ numberOfCellsPerNcServer + " , webSocketSessions.size:"
-				+ webSocketSessions.size() + " , cellsToBeSimulated:"
-				+ cellsToBeSimulated);
-		log.info(strictValidateRansimAgentsAvailability);
-
-		if (strictValidateRansimAgentsAvailability) {
-			if (numberOfCellsPerNcServer * webSocketSessions.size() < cellsToBeSimulated) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * It updates the constant values in the properties file.
-	 */
-	public void loadProperties() {
-		InputStream input = null;
-		try {
-			input = new FileInputStream(
-					"/tmp/ransim-install/config/ransim.properties");
-			netconfConstants.load(input);
-			serverIdPrefix = netconfConstants.getProperty("serverIdPrefix");
-			numberOfCellsPerNcServer = Integer.parseInt(netconfConstants
-					.getProperty("numberOfCellsPerNCServer"));
-			numberOfMachines = Integer.parseInt(netconfConstants
-					.getProperty("numberOfMachines"));
-			numberOfProcessPerMc = Integer.parseInt(netconfConstants
-					.getProperty("numberOfProcessPerMc"));
-			strictValidateRansimAgentsAvailability = Boolean
-					.parseBoolean(netconfConstants
-							.getProperty("strictValidateRansimAgentsAvailability"));
-			sdnrServerIp = netconfConstants.getProperty("sdnrServerIp");
-			sdnrServerPort = Integer.parseInt(netconfConstants
-					.getProperty("sdnrServerPort"));
-			sdnrServerUserid = netconfConstants.getProperty("sdnrServerUserid");
-			sdnrServerPassword = netconfConstants
-					.getProperty("sdnrServerPassword");
-			dumpFileName = netconfConstants.getProperty("dumpFileName");
-			maxPciValueAllowed = Long.parseLong(netconfConstants
-					.getProperty("maxPciValueAllowed"));
-
-		} catch (Exception e) {
-			log.info("Properties file error", e);
-		} finally {
-			try {
-				if (input != null) {
-					input.close();
-				}
-			} catch (Exception ex) {
-				log.info("Properties file error", ex);
-			}
-		}
-	}
-
-	/**
-	 * The function adds the cell(with nodeId passed as an argument) to its
-	 * netconf server list if the netconf server already exists. Else it will
-	 * create a new netconf server in the NetconfServers Table and the cell into
-	 * its list.
-	 *
-	 * @param nodeId
-	 *            node Id of the cell
-	 */
-	static void setNetconfServers(String nodeId) {
-
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-		CellDetails currentCell = rsDb.getCellDetail(nodeId);
-
-		Set<CellDetails> newList = new HashSet<CellDetails>();
-		try {
-			if (currentCell != null) {
-				NetconfServers server = rsDb.getNetconfServer(currentCell
-						.getServerId());
-
-				if (server == null) {
-
-					server = new NetconfServers();
-					server.setServerId(currentCell.getServerId());
-				} else {
-					newList.addAll(server.getCells());
-				}
-
-				newList.add(currentCell);
-				server.setCells(newList);
-				log.info("setNetconfServers: nodeId: " + nodeId + ", X:"
-						+ currentCell.getGridX() + ", Y:"
-						+ currentCell.getGridY() + ", ip: " + server.getIp()
-						+ ", portNum: " + server.getNetconfPort()
-						+ ", serverId:" + currentCell.getServerId());
-
-				rsDb.mergeNetconfServers(server);
-
-			}
-
-		} catch (Exception eu) {
-			log.info("/setNetconfServers Function Error", eu);
-
-		}
-	}
-
-	private static double degToRadians(double angle) {
-		double radians = 57.2957795;
-		return (angle / radians);
-	}
-
-	private static double metersDeglon(double angle) {
-
-		double d2r = degToRadians(angle);
-		return ((111415.13 * Math.cos(d2r)) - (94.55 * Math.cos(3.0 * d2r)) + (0.12 * Math
-				.cos(5.0 * d2r)));
-
-	}
-
-	private static double metersDeglat(double angle) {
-
-		double d2r = degToRadians(angle);
-		return (111132.09 - (566.05 * Math.cos(2.0 * d2r))
-				+ (1.20 * Math.cos(4.0 * d2r)) - (0.002 * Math.cos(6.0 * d2r)));
-
-	}
-
-	/**
-	 * generateClusterFromFile()
+	 * @param req Contains the details of node ids which will have bad and poor pm
+	 *            values
+	 * @return return HTTP status.
 	 * 
-	 * @throws IOException
 	 */
-	static void generateClusterFromFile() throws IOException {
+	@ApiOperation("Generate PM data")
+	@RequestMapping(value = "/GeneratePmData", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot start the simulation") })
+	public ResponseEntity<String> generatePmData(@RequestBody GetPmDataReq req) throws Exception {
 
-		EntityManagerFactory emfactory = Persistence
-				.createEntityManagerFactory("ransimctrlrdb");
-		EntityManager entitymanager = emfactory.createEntityManager();
-		log.info("Inside generateClusterFromFile");
-		File dumpFile = null;
-		String cellDetailsString = "";
-
-		dumpFile = new File(dumpFileName);
-
-		BufferedReader br = null;
+		log.info("Generate PM Data - nodeId_bad: " + req.getNodeIdBad() + ", nodeId_poor: " + req.getNodeIdPoor());
 		try {
-			log.info("Reading dump file");
-			br = new BufferedReader(new FileReader(dumpFile));
+			rsPciHdlr.readPmParameters();
+			execService = Executors.newScheduledThreadPool(5);
+			execService.scheduleAtFixedRate(() -> {
 
-			StringBuilder sb = new StringBuilder();
-			String line = br.readLine();
-			while (line != null) {
-				sb.append(line);
-				sb.append("\n");
-				line = br.readLine();
-			}
-			cellDetailsString = sb.toString();
+				rsPciHdlr.generatePmData(req.getNodeIdBad(), req.getNodeIdPoor());
+				log.info("execService.isTerminated(): " + execService.isTerminated());
 
-			TopologyDump dumpTopo = new Gson().fromJson(cellDetailsString,
-					TopologyDump.class);
-			CellDetails cellsDb = new CellDetails();
+			}, 0, 300, TimeUnit.SECONDS);
 
-			log.info("dumpTopo.getCellList().size():"
-					+ dumpTopo.getCellList().size());
-			for (int i = 0; i < dumpTopo.getCellList().size(); i++) {
-				Gson g = new Gson();
-				String pnt = g.toJson(dumpTopo.getCellList().get(i));
-				log.info("Creating Cell:" + pnt);
-				log.info("Creating Cell:"
-						+ dumpTopo.getCellList().get(i).getCell().getNodeId());
+			isPmDataGenerating = true;
 
-				cellsDb = new CellDetails();
-				entitymanager.getTransaction().begin();
-				cellsDb.setNodeId(dumpTopo.getCellList().get(i).getCell()
-						.getNodeId());
-				cellsDb.setPhysicalCellId(dumpTopo.getCellList().get(i)
-						.getCell().getPhysicalCellId());
-				cellsDb.setLongitude(dumpTopo.getCellList().get(i).getCell()
-						.getLongitude());
-				cellsDb.setLatitude(dumpTopo.getCellList().get(i).getCell()
-						.getLatitude());
-				cellsDb.setServerId(dumpTopo.getCellList().get(i).getCell()
-						.getPnfName());
-				if (!unassignedServerIds.contains(cellsDb.getServerId())) {
-					unassignedServerIds.add(cellsDb.getServerId());
-				}
-				cellsDb.setNetworkId(dumpTopo.getCellList().get(i).getCell()
-						.getNetworkId());
+			return new ResponseEntity<>("Request generated.", HttpStatus.OK);
 
-				double lon = Float.valueOf(dumpTopo.getCellList().get(i)
-						.getCell().getLongitude());
-				double lat = Float.valueOf(dumpTopo.getCellList().get(i)
-						.getCell().getLatitude());
-
-				double xx = (lon - 0) * metersDeglon(0);
-				double yy = (lat - 0) * metersDeglat(0);
-
-				double rad = Math.sqrt(xx * xx + yy * yy);
-
-				if (rad > 0) {
-					double ct = xx / rad;
-					double st = yy / rad;
-					xx = rad * ((ct * Math.cos(0)) + (st * Math.sin(0)));
-					yy = rad * ((st * Math.cos(0)) - (ct * Math.sin(0)));
-				}
-
-				cellsDb.setScreenX((float) (xx));
-				cellsDb.setScreenY((float) (yy));
-
-				List<String> attachedNoeds = serverIdIpNodeMapping.get(cellsDb
-						.getServerId());
-				log.info("Attaching Cell:"
-						+ dumpTopo.getCellList().get(i).getCell().getNodeId()
-						+ " to " + cellsDb.getServerId());
-				if (attachedNoeds == null) {
-					attachedNoeds = new ArrayList<String>();
-				}
-				attachedNoeds.add(cellsDb.getNodeId());
-				serverIdIpNodeMapping.put(cellsDb.getServerId(), attachedNoeds);
-				if (attachedNoeds.size() > numberOfCellsPerNcServer) {
-					log.warn("Attaching Cell:"
-							+ dumpTopo.getCellList().get(i).getCell()
-									.getNodeId() + " to "
-							+ cellsDb.getServerId()
-							+ ", But it is exceeding numberOfCellsPerNcServer "
-							+ numberOfCellsPerNcServer);
-				}
-
-				entitymanager.merge(cellsDb);
-				entitymanager.flush();
-				entitymanager.getTransaction().commit();
-
-				setNetconfServers(cellsDb.getNodeId());
-			}
-
-			dumpSessionDetails();
-
-			try {
-
-				for (int i = 0; i < dumpTopo.getCellList().size(); i++) {
-
-					String cellNodeId = dumpTopo.getCellList().get(i).getCell()
-							.getNodeId();
-					entitymanager.getTransaction().begin();
-
-					// neighbor list with the corresponding node id
-					CellNeighbor neighborList = entitymanager.find(
-							CellNeighbor.class, cellNodeId);
-					// cell with the corresponding nodeId
-					CellDetails currentCell = entitymanager.find(
-							CellDetails.class, cellNodeId);
-
-					Set<NeighborDetails> newCell = new HashSet<NeighborDetails>();
-
-					if (currentCell != null) {
-						if (neighborList == null) {
-							neighborList = new CellNeighbor();
-							neighborList.setNodeId(cellNodeId);
-						}
-						List<NbrDump> neighboursFromFile = dumpTopo
-								.getCellList().get(i).getNeighbor();
-						log.info("Creating Neighbor for Cell :" + cellNodeId);
-						for (NbrDump a : neighboursFromFile) {
-							String id = a.getNodeId().trim();
-							boolean noHo = Boolean.parseBoolean(a
-									.getBlacklisted().trim());
-							CellDetails neighborCell = entitymanager.find(
-									CellDetails.class, id);
-							NeighborDetails neighborDetails = new NeighborDetails(
-									new NeihborId(currentCell.getNodeId(),
-											neighborCell.getNodeId()), noHo);
-
-							newCell.add(neighborDetails);
-						}
-
-						neighborList.setNeighborList(newCell);
-						entitymanager.merge(neighborList);
-						entitymanager.flush();
-
-						entitymanager.getTransaction().commit();
-
-						rsPciHdlr.setCollisionConfusionFromFile(cellNodeId);
-
-					}
-
-				}
-
-			} catch (Exception e1) {
-				log.info("Exception generateClusterFromFile :", e1);
-				if (entitymanager.getTransaction().isActive()) {
-					entitymanager.getTransaction().rollback();
-				}
-			}
-
-			try {
-
-				long startTimeSectorNumber = System.currentTimeMillis();
-				for (int i = 0; i < dumpTopo.getCellList().size(); i++) {
-
-					CellData icellData = dumpTopo.getCellList().get(i);
-					CellDetails icell = entitymanager.find(CellDetails.class,
-							icellData.getCell().getNodeId());
-					int icount = icell.getSectorNumber();
-					if (icount == 0) {
-						entitymanager.getTransaction().begin();
-						log.info("Setting sectorNumber for Cell(i) :"
-								+ icell.getNodeId());
-						int jcount = 0;
-						for (int j = (i + 1); j < dumpTopo.getCellList().size(); j++) {
-
-							CellData jcellData = dumpTopo.getCellList().get(j);
-							if (icellData.getCell().getLatitude()
-									.equals(jcellData.getCell().getLatitude())) {
-								if (icellData
-										.getCell()
-										.getLongitude()
-										.equals(jcellData.getCell()
-												.getLongitude())) {
-
-									if (icount == 0) {
-										icount++;
-										jcount = icount + 1;
-									}
-
-									CellDetails jcell = entitymanager.find(
-											CellDetails.class, dumpTopo
-													.getCellList().get(j)
-													.getCell().getNodeId());
-
-									jcell.setSectorNumber(jcount);
-									log.info("Setting sectorNumber for Cell(j) :"
-											+ jcell.getNodeId()
-											+ " icell: "
-											+ icell.getNodeId()
-											+ " Sector number: " + jcount);
-									entitymanager.merge(jcell);
-									jcount++;
-									if (jcount > 3) {
-										break;
-									}
-								}
-							}
-						}
-						icell.setSectorNumber(icount);
-						entitymanager.merge(icell);
-						entitymanager.flush();
-						entitymanager.getTransaction().commit();
-					}
-
-				}
-
-				long endTimeSectorNumber = System.currentTimeMillis();
-				log.info("Time taken for setting sector number: "
-						+ (endTimeSectorNumber - startTimeSectorNumber));
-
-			} catch (Exception e3) {
-				log.info("Exception generateClusterFromFile :", e3);
-				if (entitymanager.getTransaction().isActive()) {
-					entitymanager.getTransaction().rollback();
-				}
-			}
-
-		} catch (Exception e) {
-			log.info("Exception generateClusterFromFile :", e);
-			if (entitymanager.getTransaction().isActive()) {
-				entitymanager.getTransaction().rollback();
-			}
-		} finally {
-			br.close();
-			entitymanager.close();
-			emfactory.close();
-		}
-	}
-
-	/**
-	 * The function deletes the cell from the database with the nodeId passed in
-	 * the arguments. It removes the cell from its neighbor's neighbor list and
-	 * the netconf server list.
-	 *
-	 * @param nodeId
-	 *            node Id of the cell to be deleted.
-	 * @return returns success or failure message
-	 */
-	public static String deleteCellFunction(String nodeId) {
-		String result = "failure node dosent exist";
-		log.info("deleteCellFunction called with nodeId :" + nodeId);
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-
-		try {
-			CellDetails deleteCelldetail = rsDb.getCellDetail(nodeId);
-
-			CellNeighbor deleteCellNeighbor = rsDb.getCellNeighbor(nodeId);
-
-			if (deleteCelldetail != null) {
-				if (deleteCellNeighbor != null) {
-					List<CellNeighbor> cellNeighborList = rsDb
-							.getCellNeighborList();
-					for (CellNeighbor cellNeighbors : cellNeighborList) {
-						Set<NeighborDetails> currentCellNeighbors = new HashSet<NeighborDetails>(
-								cellNeighbors.getNeighborList());
-
-						NeihborId deleteNeighborDetail = new NeihborId(
-								cellNeighbors.getNodeId(),
-								deleteCelldetail.getNodeId());
-
-						if (currentCellNeighbors.contains(deleteNeighborDetail)) {
-							log.info("Deleted Cell is Neighbor of NodeId : "
-									+ cellNeighbors.getNodeId());
-							currentCellNeighbors.remove(deleteNeighborDetail);
-							cellNeighbors.setNeighborList(currentCellNeighbors);
-							rsDb.mergeCellNeighbor(cellNeighbors);
-						}
-					}
-
-					deleteCellNeighbor.getNeighborList().clear();
-					rsDb.deleteCellNeighbor(deleteCellNeighbor);
-				}
-
-				rsDb.deleteCellDetails(deleteCelldetail);
-				result = "cell has been deleted from the database";
-			} else {
-				log.info("cell id does not exist");
-				result = "failure nodeId dosent exist";
-				return result;
-			}
 		} catch (Exception eu) {
-			log.info("Exception deleteCellFunction :", eu);
+			log.error("Exception: ", eu);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-			result = "exception in function";
 		}
-		return result;
+
 	}
 
 	/**
-	 * Send configuration details to all the netconf server.
+	 * Terminates the ScheduledExecutorService which sends the PM data at regular
+	 * interval.
+	 * 
+	 * @return returns HTTP status
+	 * 
 	 */
-	public void sendInitialConfigAll() {
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-		try {
-			dumpSessionDetails();
-			List<NetconfServers> ncServers = rsDb.getNetconfServersList();
-			for (NetconfServers netconfServers : ncServers) {
-				String ipPortKey = serverIdIpPortMapping.get(netconfServers
-						.getServerId());
-				if (ipPortKey == null || ipPortKey.trim().equals("")) {
-					log.info("No client for " + netconfServers.getServerId());
-					for (String ipPortKeyStr : webSocketSessions.keySet()) {
-						if (!serverIdIpPortMapping.containsValue(ipPortKeyStr)) {
-							serverIdIpPortMapping.put(
-									netconfServers.getServerId(), ipPortKeyStr);
-							ipPortKey = ipPortKeyStr;
-							break;
-						}
-					}
-				}
-				if (ipPortKey != null && !ipPortKey.trim().equals("")) {
-					Session clSess = webSocketSessions.get(ipPortKey);
-					if (clSess != null) {
-						sendInitialConfig(netconfServers.getServerId());
-						try {
-							String[] agentDetails = ipPortKey.split(":");
-							new RestClient().sendMountRequestToSdnr(
-									netconfServers.getServerId(), sdnrServerIp,
-									sdnrServerPort, agentDetails[0],
-									agentDetails[1], sdnrServerUserid,
-									sdnrServerPassword);
-						} catch (Exception ex1) {
-							log.info("Ignoring exception", ex1);
-						}
+	@ApiOperation("stop PM data")
+	@RequestMapping(value = "/stopPmData", method = RequestMethod.GET)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot start the simulation") })
+	public ResponseEntity<String> stopPmData() throws Exception {
 
-					} else {
-						log.info("No session for " + ipPortKey);
-					}
-				}
+		try {
+			log.info("1. execService.isTerminated(): " + execService.isTerminated());
+			if (!execService.isTerminated()) {
+				execService.shutdown();
+				log.info("2. execService.isTerminated(): " + execService.isTerminated());
+
 			}
+			isPmDataGenerating = false;
+			return new ResponseEntity<>("PM data generated.", HttpStatus.OK);
+
 		} catch (Exception eu) {
-			log.info("Exception:", eu);
+			log.error("Exception: ", eu);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
 	}
 
 	/**
-	 * Sends initial configuration details of the cells for a new netconf server
-	 * that has been started.
-	 *
-	 * @param ipPortKey
-	 *            ip address details of the netconf server
+	 * Get the status of ScheduledExecutorService, whether active or terminated.
+	 * 
+	 * @return return the status
+	 * 
 	 */
-	public void sendInitialConfigForNewAgent(String ipPortKey, String serverId) {
+	@ApiOperation("get PM data status")
+	@RequestMapping(value = "/GetPmDataStatus", method = RequestMethod.GET)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot get information") })
+	public boolean getPmDataStatus() throws Exception {
+
 		try {
-			dumpSessionDetails();
-			if (ipPortKey != null && !ipPortKey.trim().equals("")) {
-				if (serverId != null && !serverId.trim().equals("")) {
-					Session clSess = webSocketSessions.get(ipPortKey);
-					if (clSess != null) {
-						String[] agentDetails = ipPortKey.split(":");
-						sendInitialConfig(serverId);
-						new RestClient().sendMountRequestToSdnr(serverId,
-								sdnrServerIp, sdnrServerPort, agentDetails[0],
-								agentDetails[1], sdnrServerUserid,
-								sdnrServerPassword);
-					} else {
-						log.info("No session for " + ipPortKey);
-					}
-				} else {
-					log.info("No serverid for " + ipPortKey);
-				}
-			} else {
-				log.info("Invalid ipPortKey " + ipPortKey);
-			}
+			return isPmDataGenerating;
 		} catch (Exception eu) {
-			log.info("Exception:", eu);
+			log.error("Exception: ", eu);
+			return false;
 		}
+
 	}
 
 	/**
-	 * To send the initial configration to the netconf server.
+	 * The function retrieves RAN simulation network topology.
 	 *
-	 * @param serverId
-	 *            ip address details of the netconf server
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 *
 	 */
-	public void sendInitialConfig(String serverId) {
-
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
+	@ApiOperation("Retrieves RAN simulation network topology")
+	@RequestMapping(value = "/GetTopology", method = RequestMethod.GET)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot retrieve the RAN simulation network topology details") })
+	public ResponseEntity<String> getTopology() throws Exception {
+		log.debug("Inside getTopology...");
 		try {
-			NetconfServers server = rsDb.getNetconfServer(serverId);
-			log.info("sendInitialConfig: serverId:" + serverId + ", server:"
-					+ server);
-			if (server == null) {
-				return;
-			}
+			rsPciHdlr.checkCollisionAfterModify();
+			List<CellDetails> cds = ransimRepo.getCellDetailsList();
 
-			String ipPortKey = serverIdIpPortMapping.get(serverId);
+			Topology top = new Topology();
 
-			log.info("sendInitialConfig: ipPortKey:" + ipPortKey);
+			if (cds != null && cds.size() > 0) {
+				top.setMinScreenX(cds.get(0).getScreenX());
+				top.setMaxScreenX(cds.get(0).getScreenX());
+				top.setMinScreenY(cds.get(0).getScreenY());
+				top.setMaxScreenY(cds.get(0).getScreenY());
 
-			List<CellDetails> cellList = new ArrayList<CellDetails>(
-					server.getCells());
+				for (int i = 0; i < cds.size(); i++) {
+					if (cds.get(i).getScreenX() < top.getMinScreenX()) {
+						top.setMinScreenX(cds.get(i).getScreenX());
+					}
+					if (cds.get(i).getScreenY() < top.getMinScreenY()) {
+						top.setMinScreenY(cds.get(i).getScreenY());
+					}
 
-			List<Topology> config = new ArrayList<Topology>();
-
-			for (int i = 0; i < server.getCells().size(); i++) {
-				Topology cell = new Topology();
-				CellDetails currentCell = rsDb.getCellDetail(cellList.get(i)
-						.getNodeId());
-				CellNeighbor neighbor = rsDb.getCellNeighbor(cellList.get(i)
-						.getNodeId());
-
-				cell.setCellId("" + currentCell.getNodeId());
-				cell.setPciId(currentCell.getPhysicalCellId());
-				cell.setPnfName(serverId);
-
-				List<Neighbor> nbrList = new ArrayList<Neighbor>();
-				Set<NeighborDetails> nbrsDet = neighbor.getNeighborList();
-				for (NeighborDetails cellDetails : nbrsDet) {
-					Neighbor nbr = new Neighbor();
-					CellDetails nbrCell = rsDb.getCellDetail(cellDetails
-							.getNeigbor().getNeighborCell());
-					nbr.setNodeId(nbrCell.getNodeId());
-					nbr.setPhysicalCellId(nbrCell.getPhysicalCellId());
-					nbr.setPnfName(nbrCell.getServerId());
-					nbr.setServerId(nbrCell.getServerId());
-					nbr.setPlmnId(nbrCell.getNetworkId());
-					nbr.setBlacklisted(cellDetails.isBlacklisted());
-					nbrList.add(nbr);
+					if (cds.get(i).getScreenX() > top.getMaxScreenX()) {
+						top.setMaxScreenX(cds.get(i).getScreenX());
+					}
+					if (cds.get(i).getScreenY() > top.getMaxScreenY()) {
+						top.setMaxScreenY(cds.get(i).getScreenY());
+					}
 				}
-				cell.setNeighborList(nbrList);
-				config.add(i, cell);
+				top.setCellTopology(cds);
 			}
-
-			SetConfigTopology topo = new SetConfigTopology();
-
-			topo.setServerId(server.getServerId());
-			String uuid = globalNcServerUuidMap.get(server.getServerId());
-			if (uuid == null) {
-				uuid = getUuid();
-				globalNcServerUuidMap.put(server.getServerId(), uuid);
-			}
-			topo.setUuid(uuid);
-
-			topo.setTopology(config);
+			top.setGridSize(rscServices.gridSize);
 
 			Gson gson = new Gson();
-			String jsonStr = gson.toJson(topo);
-			log.info("ConfigTopologyMessage: " + jsonStr);
-			Session clSess = webSocketSessions.get(ipPortKey);
-			RansimWebSocketServer.sendSetConfigTopologyMessage(jsonStr, clSess);
+			String jsonStr = gson.toJson(top);
+
+			return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 
 		} catch (Exception eu) {
-			log.info("Exception:", eu);
+			log.error("GetTopology", eu);
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * The function retrieves the neighbor list details for the cell with the
+	 * mentioned nodeId.
+	 *
+	 * @param req gets the necessary details as a request of class type
+	 *            GetNeighborListReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 */
+	@ApiOperation("Retrieves the neighbor list details for the cell with the mentioned nodeId")
+	@RequestMapping(value = "/GetNeighborList", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot Insert the given parameters") })
+	public ResponseEntity<String> getNeighborList(@RequestBody GetNeighborListReq req) throws Exception {
+		log.debug("Inside getNeighborList...");
+
+		try {
+			String jsonStr = "";
+
+			GetNeighborList message = rsPciHdlr.generateNeighborList(req.getNodeId());
+
+			if (message != null) {
+
+				log.info("message.getNodeId(): " + message.getNodeId());
+
+				Gson gson = new Gson();
+				jsonStr = gson.toJson(message);
+			}
+			return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.info("/getNeighborList", eu);
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * The function retrieves the neighbor list for the cell with the mentioned
+	 * nodeId.
+	 *
+	 * @param req gets the necessary details as a request of class type
+	 *            GetNeighborListReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 */
+	@ApiOperation("Retrieves the neighbor list details for the cell with the mentioned nodeId")
+	@RequestMapping(value = "/GetNeighborBlacklistDetails", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot Insert the given parameters") })
+	public ResponseEntity<String> getNeighborBlacklistDetails(@RequestBody GetNeighborListReq req) throws Exception {
+		log.debug("Inside getNeighborList...");
+
+		try {
+			String jsonStr = "";
+
+			CellNeighbor neighborList = ransimRepo.getCellNeighbor(req.getNodeId());
+
+			Map<String, String> result = new ConcurrentHashMap<String, String>();
+
+			for (NeighborDetails nd : neighborList.getNeighborList()) {
+
+				result.put(nd.getNeigbor().getNeighborCell(), "" + nd.isBlacklisted());
+			}
+
+			if (result != null) {
+				Gson gson = new Gson();
+				jsonStr = gson.toJson(result);
+			}
+			return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("/getNeighborList", eu);
+
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Changes the pci number or nbr list for the given cell.
+	 *
+	 * @param req gets the necessary details as a request of class type
+	 *            ModifyACellReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 */
+	@ApiOperation("Changes the pci number or nbr list for the given cell")
+	@RequestMapping(value = "/ModifyACell", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot update the PCI for the given cell") })
+	public ResponseEntity<String> modifyACell(@RequestBody ModifyACellReq req) throws Exception {
+		log.debug("Inside ModifyCell...");
+
+		try {
+			long startTimemodifyCell = System.currentTimeMillis();
+
+			String nbrsStr = req.getNewNbrs();
+			if (req.getNewNbrs() == null) {
+				nbrsStr = "";
+			}
+			String source = "GUI";
+			List<NeighborDetails> nbrsList = new ArrayList<NeighborDetails>();
+			String[] newNbrsArr = nbrsStr.split(",");
+
+			for (int i = 0; i < newNbrsArr.length; i++) {
+				NeighborDetails cell = new NeighborDetails(new NeihborId(req.getNodeId(), newNbrsArr[i].trim()), false);
+				nbrsList.add(cell);
+			}
+
+			int result = rsPciHdlr.modifyCellFunction(req.getNodeId(), req.getNewPhysicalCellId(), nbrsList, source);
+			rscServices.handleModifyPciFromGui(req.getNodeId(), req.getNewPhysicalCellId());
+			long endTimemodifyCell = System.currentTimeMillis();
+			log.info("Time taken to modify cell : " + (endTimemodifyCell - startTimemodifyCell));
+
+			if (result == 200) {
+				return new ResponseEntity<String>(HttpStatus.OK);
+			} else if (result == 400) {
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} catch (Exception eu) {
+			log.error("Exception in modifyACell", eu);
+			return new ResponseEntity<>("Cannot update the PCI for the given cell", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-	private static String getUuid() {
-		return UUID.randomUUID().toString();
+	/**
+	 * The function changes the PCI number of the cell for the the mentioned nodeId.
+	 *
+	 * @param req gets the necessary details as a request of class type
+	 *            GetACellDetailReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 */
+	@ApiOperation("Changes the pci number of the cell for the the mentioned nodeId")
+	@PostMapping(value = "/GetACellDetail")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot retrive the cell details for the given cell") })
+	public ResponseEntity<String> getACellDetail(@RequestBody GetACellDetailReq req) throws Exception {
+
+		log.debug("Inside GetACellDetailReq...");
+		try {
+			String jsonStr = null;
+
+			CellDetails cd = ransimRepo.getCellDetail(req.getNodeId());
+			if (cd != null) {
+				Gson gson = new Gson();
+				jsonStr = gson.toJson(cd);
+			}
+			return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("Exception in getACellDetail : {} ", eu);
+			return new ResponseEntity<>("Cannot update the PCI for the given cell", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
-	 * The function alters the database information based on the modifications
-	 * made in the SDNR.
+	 * The function deletes a cell with the mentioned nodeId.
 	 *
-	 * @param message
-	 *            message received from the SDNR
-	 * @param session
-	 *            sends the session details
-	 * @param ipPort
-	 *            ip address of the netconf server
+	 * @param req gets the necessary details as a request of class type
+	 *            DeleteACellReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
 	 */
-	public void handleModifyPciFromSdnr(String message, Session session,
-			String ipPort) {
-		log.info("handleModifyPciFromSDNR: message:" + message + " session:"
-				+ session + " ipPort:" + ipPort);
-		RansimControllerDatabase rcDb = new RansimControllerDatabase();
-		ModifyPci modifyPci = new Gson().fromJson(message, ModifyPci.class);
-		log.info("handleModifyPciFromSDNR: modifyPci:" + modifyPci.getCellId()
-				+ "; pci: " + modifyPci.getPciId());
-		String source = "Netconf";
+	@ApiOperation("Deletes a cell with the mentioned nodeId")
+	@RequestMapping(value = "/DeleteACell", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot delete the given cell") })
+	public ResponseEntity<String> deleteACell(@RequestBody DeleteACellReq req) throws Exception {
+		log.debug("Inside delete cell...");
 
-		CellDetails cd = rcDb.getCellDetail(modifyPci.getCellId());
-		long pci = cd.getPhysicalCellId();
-		cd.setPhysicalCellId(modifyPci.getPciId());
-		rcDb.mergeCellDetails(cd);
-		rsPciHdlr.updatePciOperationsTable(modifyPci.getCellId(), source, pci,
-				modifyPci.getPciId());
+		try {
+			long startTimeDeleteCell = System.currentTimeMillis();
+			String result = rscServices.deleteCellFunction(req.getNodeId());
+			long endTimeDeleteCell = System.currentTimeMillis();
+			log.info("Time taken to delete cell : " + (endTimeDeleteCell - startTimeDeleteCell));
+			return new ResponseEntity<String>(HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("Exception in deleteACell", eu);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**
-	 * The function alters the database information based on the modifications
-	 * made in the SDNR.
+	 * The function stops RAN network simulation and deletes all the cell data from
+	 * the database.
 	 *
-	 * @param message
-	 *            message received from the SDNR
-	 * @param session
-	 *            sends the session details
-	 * @param ipPort
-	 *            ip address of the netconf server
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
 	 */
-	public void handleModifyNeighborFromSdnr(String message, Session session,
-			String ipPort) {
-		log.info("handleModifyAnrFromSDNR: message:" + message + " session:"
-				+ session + " ipPort:" + ipPort);
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-		ModifyNeighbor modifyNeighbor = new Gson().fromJson(message,
-				ModifyNeighbor.class);
-		log.info("handleModifyAnrFromSDNR: modifyPci:"
-				+ modifyNeighbor.getCellId());
-		CellDetails currentCell = rsDb
-				.getCellDetail(modifyNeighbor.getCellId());
-		List<NeighborDetails> neighborList = new ArrayList<NeighborDetails>();
-		List<String> cellList = new ArrayList<String>();
-		cellList.add(modifyNeighbor.getCellId());
-		String nbrsAdd = "";
-		String nbrsDel = "";
-		String source = "Netconf";
+	@ApiOperation("Stops RAN network simulation and deletes all the cell data from the database")
+	@RequestMapping(value = "/StopSimulation", method = RequestMethod.DELETE)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot stop simulation") })
+	public ResponseEntity<String> stopSimulation() throws Exception {
+		log.debug("Inside stopSimulation...");
 
-		for (int i = 0; i < modifyNeighbor.getNeighborList().size(); i++) {
-			if (modifyNeighbor.getNeighborList().get(i).isBlacklisted()) {
-				NeighborDetails nd = new NeighborDetails(new NeihborId(
-						modifyNeighbor.getCellId(), modifyNeighbor
-								.getNeighborList().get(i).getNodeId()), true);
-				rsDb.mergeNeighborDetails(nd);
-				cellList.add(modifyNeighbor.getNeighborList().get(i)
-						.getNodeId());
-				if (nbrsAdd.equals("")) {
-					nbrsDel = modifyNeighbor.getNeighborList().get(i)
-							.getNodeId();
+		if (ransimRepo.getCellDetailsList().isEmpty()) {
+			return new ResponseEntity<>("No simulation is running.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try {
+			long startTimStopSimulation = System.currentTimeMillis();
+			ransimRepo.deleteNetconfServers();
+			ransimRepo.deleteCellNeighbors();
+			log.info("Stop simulation : " + (startTimStopSimulation));
+			ransimRepo.deleteAllCellDetails();
+			String result = rscServices.stopAllSimulation();
+			log.info("All cell simulation are stopped...." + result);
+			long endTimStopSimulation = System.currentTimeMillis();
+			log.info("Time taken for stopping simulation : " + (endTimStopSimulation - startTimStopSimulation));
+			return new ResponseEntity<>("Success", HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("Exception in stopSimulation", eu);
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@ApiOperation("Stops RAN Slicing network simulation and deletes all the data from the database")
+	@RequestMapping(value = "/StopRanSliceSimulation", method = RequestMethod.DELETE)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+	@ApiResponse(code = 500, message = "Cannot stop simulation") })
+	public ResponseEntity<String> stopRanSliceSimulation() throws Exception {
+		log.debug("Inside stopSimulation...");
+		if (ransimRepo.getCellDetailsList().isEmpty()) {
+			return new ResponseEntity<>("No simulation is running.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		try {
+			long startTimStopSimulation = System.currentTimeMillis();
+			ransimRepo.deleteNetconfServers();
+			log.info("Stop simulation : " + (startTimStopSimulation));
+			String result = rscServices.stopAllSimulation();
+			log.info("All cell simulation are stopped...." + result);
+			long endTimStopSimulation = System.currentTimeMillis();
+			log.info("Time taken for stopping simulation : " + (endTimStopSimulation - startTimStopSimulation));
+			return new ResponseEntity<>("Simulation stopped", HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("Exception in stopRanSliceSimulation", eu);
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	/**
+	 * The function returns the details of a Netconf server for the mentioned server
+	 * id.
+	 *
+	 * @param req gets the necessary details as a request of class type
+	 *            GetNetconfServerDetailsReq
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 */
+	@ApiOperation("Returns the details of a Netconf server for the mentioned server id")
+	@RequestMapping(value = "/GetNetconfServerDetails", method = RequestMethod.POST)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Failure in GetNetconfServerDetails API") })
+	public ResponseEntity<String> getNetconfServerDetails(@RequestBody GetNetconfServerDetailsReq req)
+			throws Exception {
+
+		try {
+			log.debug("Inside GetNetconfServerDetails API...");
+			String result = "";
+			String input = req.getServerId();
+			if (input.startsWith("Chn")) {
+				CellDetails cds = ransimRepo.getCellDetail(input);
+				if (cds != null) {
+					Gson gson = new Gson();
+					String jsonStr = gson.toJson(cds);
+					result = "{\"serverId\":\"any\",\"cells\":[" + jsonStr + "]}";
 				} else {
-					nbrsDel += ","
-							+ modifyNeighbor.getNeighborList().get(i)
-									.getNodeId();
+					result = ("Cell Id does not exist");
 				}
 			} else {
-				NeighborDetails nd = new NeighborDetails(new NeihborId(
-						modifyNeighbor.getCellId(), modifyNeighbor
-								.getNeighborList().get(i).getNodeId()), false);
-				rsDb.mergeNeighborDetails(nd);
-				cellList.add(modifyNeighbor.getNeighborList().get(i)
-						.getNodeId());
-				if (nbrsDel.equals("")) {
-					nbrsAdd = modifyNeighbor.getNeighborList().get(i)
-							.getNodeId();
+				NetconfServers ns = ransimRepo.getNetconfServer(input);
+				if (ns != null) {
+					Gson gson = new Gson();
+					String jsonStr = gson.toJson(ns);
+					result = jsonStr;
 				} else {
-					nbrsAdd += ","
-							+ modifyNeighbor.getNeighborList().get(i)
-									.getNodeId();
+					result = ("Server Id does not exist");
 				}
 			}
+			return new ResponseEntity<>(result, HttpStatus.OK);
 
+		} catch (Exception eu) {
+			log.error("/GetNetconfServers", eu);
+			return new ResponseEntity<>("Failure in GetNetconfServerDetails API", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
 
-		for (String cl : cellList) {
-			RansimPciHandler.setCollisionConfusionFromFile(cl);
+	@ApiOperation("Returns the connection status of all netconf servers")
+	@RequestMapping(value = "/GetNetconfStatus", method = RequestMethod.GET)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Failure in GetNetconfServerDetails API") })
+	public ResponseEntity<String> GetNetconfStatus() throws Exception {
+
+		try {
+			log.debug("Inside GetNetconfServerDetails API...");
+			String result = "";
+
+			List<NetconfServers> ns = ransimRepo.getNetconfServersList();
+			if (ns != null) {
+				GsonBuilder gsonBuilder = new GsonBuilder();
+				gsonBuilder.serializeNulls();
+				Gson gson = gsonBuilder.create();
+				String jsonStr = gson.toJson(ns);
+				result = jsonStr;
+			} else {
+				result = ("Server Id does not exist");
+			}
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+
+		} catch (Exception eu) {
+			log.error("/GetNetconfServers", eu);
+			return new ResponseEntity<>("Failure in GetNetconfServerDetails API", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		log.info("neighbor list: " + neighborList);
-
-		rsPciHdlr.updateNbrsOperationsTable(modifyNeighbor.getCellId(), source,
-				nbrsAdd, nbrsDel);
 	}
 
 	/**
-	 * The function sends the modification made in the GUI to the netconf
-	 * server.
+	 * The function retrieves RAN simulation network topology.
 	 *
-	 * @param cellId
-	 *            node Id of the cell which was modified
-	 * @param pciId
-	 *            PCI number of the cell which was modified
+	 * @return returns Http status
+	 * @throws Exception throws exceptions in the functions
+	 *
 	 */
-	public void handleModifyPciFromGui(String cellId, long pciId) {
-		log.info("handleModifyPciFromGUI: cellId:" + cellId + " pciId:" + pciId);
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-
+	@ApiOperation("Retrieves operations log - Modify/Delete operations performed")
+	@GetMapping(value = "/GetOperationLog")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+			@ApiResponse(code = 500, message = "Cannot retrieve the Operation Logs") })
+	public ResponseEntity<String> getOperationLog() throws Exception {
+		log.debug("Inside getOperationLog...");
 		try {
-			CellDetails currentCell = rsDb.getCellDetail(cellId);
-			CellNeighbor neighborList = rsDb.getCellNeighbor(cellId);
-			List<Neighbor> nbrList = new ArrayList<Neighbor>();
-			Iterator<NeighborDetails> iter = neighborList.getNeighborList()
-					.iterator();
-			while (iter.hasNext()) {
-				NeighborDetails nbCell = iter.next();
-				Neighbor nbr = new Neighbor();
-				CellDetails nbrCell = rsDb.getCellDetail(nbCell.getNeigbor()
-						.getNeighborCell());
-
-				nbr.setNodeId(nbrCell.getNodeId());
-				nbr.setPhysicalCellId(nbrCell.getPhysicalCellId());
-				nbr.setPnfName(nbrCell.getNodeName());
-				nbr.setServerId(nbrCell.getServerId());
-				nbr.setPlmnId(nbrCell.getNetworkId());
-				nbrList.add(nbr);
-			}
-
-			String pnfName = currentCell.getServerId();
-			String ipPort = serverIdIpPortMapping.get(pnfName);
-			log.info("handleModifyPciFromGui:ipPort >>>>>>> " + ipPort);
-
-			if (ipPort != null && !ipPort.trim().equals("")) {
-
-				String[] ipPortArr = ipPort.split(":");
-				Topology oneCell = new Topology(pnfName, pciId, cellId, nbrList);
-				UpdateCell updatedPci = new UpdateCell(
-						currentCell.getServerId(), ipPortArr[0], ipPortArr[1],
-						oneCell);
+			List<OperationLog> ols = ransimRepo.getOperationLogList();
+			if (ols != null && ols.size() > 0) {
 				Gson gson = new Gson();
-				String jsonStr = gson.toJson(updatedPci);
-				if (ipPort != null && !ipPort.trim().equals("")) {
-					Session clSess = webSocketSessions.get(ipPort);
-					if (clSess != null) {
-						RansimWebSocketServer.sendUpdateCellMessage(jsonStr,
-								clSess);
-						log.info("handleModifyPciFromGui, message: " + jsonStr);
-					} else {
-						log.info("No client session for " + ipPort);
-					}
-				} else {
-					log.info("No client for " + currentCell.getServerId());
-				}
+				String jsonStr = gson.toJson(ols);
+				return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("", HttpStatus.OK);
 			}
-
 		} catch (Exception eu) {
-
-			log.info("Exception:", eu);
+			log.error("/GetOperationLog", eu);
+			return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	/**
-	 * The function unmounts the connection with SDNR.
-	 *
-	 * @return returns null value
-	 */
-	public String stopAllCells() {
-		RansimControllerDatabase rcDb = new RansimControllerDatabase();
-		try {
-			List<NetconfServers> ncServers = rcDb.getNetconfServersList();
-			for (NetconfServers netconfServers : ncServers) {
-				try {
-					log.info("Unmount " + netconfServers.getServerId());
-					new RestClient().sendUnmountRequestToSdnr(
-							netconfServers.getServerId(), sdnrServerIp,
-							sdnrServerPort, sdnrServerUserid,
-							sdnrServerPassword);
-				} catch (Exception e) {
-					log.info("Ignore Exception:", e);
-				}
-				serverIdIpNodeMapping.clear();
-			}
-			return "Netconf servers unmounted.";
-		} catch (Exception eu) {
 
-			log.info("Exception:", eu);
-			return "Error";
-		}
+  @ApiOperation("Generate IntelligentSlicing PM data")
+    @RequestMapping(value = "/GenerateIntelligentSlicingPmData", method = RequestMethod.POST)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+            @ApiResponse(code = 500, message = "Cannot t the simulation") })
+    public ResponseEntity<String> generateIntelligentSlicingPmData(){
+       log.info("******************Request to generate***************************");
+                       
+        try {
+            long startTime = (System.currentTimeMillis());
+            Iterable<TACells> tacellList = ranSliceConfigService.fetchAllTA();
+            HashMap<String,List<String>> taCells = new HashMap<>();
+           for(TACells ta : tacellList)
+           {
+            String[] cells = ta.getCellsList().split(",");
+            List<String> cellList = new ArrayList<String>(Arrays.asList(cells));
+            taCells.put(ta.getTrackingArea(),cellList);
+            }
+            execServiceForIntelligentSlicing = Executors.newScheduledThreadPool(5);
+            execServiceForIntelligentSlicing.scheduleAtFixedRate(
+                    () -> {
+                        
+                        ranSliceHandler.generateIntelligentSlicingPmData(startTime,taCells);
+                        log.info("execServiceforIntelligentSlicing.isTerminated(): " + execServiceForIntelligentSlicing.isTerminated());
+                       
+                    }, 0, 10, TimeUnit.SECONDS);
+           
+            isIntelligentSlicingPmDataGenerating = true;
+           
 
-	}
+           
+        } catch (Exception eu) {
+            log.info("Exception: ", eu);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+           
+        }
+        return new ResponseEntity<>("IntelligentSlicing PM data generated.", HttpStatus.OK);
+    }
+   
+    @ApiOperation("Stop IntelligentSlicing PM data")
+    @RequestMapping(value = "/stopIntelligentSlicingPmData", method = RequestMethod.POST)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+            @ApiResponse(code = 500, message = "Cannot start the simulation") })
+    public ResponseEntity<String> stopIntelligentSlicingPmData() throws Exception {
+       
+        try {
+            log.info("1. execServiceForIntelligentSlicing.isTerminated(): " + execServiceForIntelligentSlicing.isTerminated());
+            if (!execServiceForIntelligentSlicing.isTerminated()) {
+            execServiceForIntelligentSlicing.shutdown();
+                log.info("2. execServiceForIntelligentSlicing.isTerminated(): " + execServiceForIntelligentSlicing.isTerminated());
+               
+            }
+            isIntelligentSlicingPmDataGenerating = false;
+            return new ResponseEntity<>("Stopped PM data generation.", HttpStatus.OK);
+           
+        } catch (Exception eu) {
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+       
+    }
 
-	/**
-	 * Used to dump session details.
-	 */
-	synchronized public static void dumpSessionDetails() {
 
-		try {
+        /*
+        *Generate closed loopPM data for DUs
+        *
+        */
+        @ApiOperation("Generate Closed loop PM data")
+        @RequestMapping(value = "/generateClosedLoopPmData", method = RequestMethod.POST)
+        @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+        @ApiResponse(code = 500, message = "Problem generating closed loop PM data") })
+        public ResponseEntity<String> generateClosedLoopPmData() {
+                        long startTime = (System.currentTimeMillis());
+                        log.info("Closed loop PM Data generation started at " + startTime);
+                        closedLoopExecService = Executors.newScheduledThreadPool(5);
+                        closedLoopExecService.scheduleAtFixedRate(() -> {
+                                pmDataGenerator.generateClosedLoopPmData(startTime);
+                                log.info("closedLoopexecService.isTerminated(): " + execServiceForIntelligentSlicing.isTerminated());
 
-			log.info("serverIdIpPortMapping.size:"
-					+ serverIdIpPortMapping.size() + "webSocketSessions.size"
-					+ webSocketSessions.size());
-			for (String key : serverIdIpPortMapping.keySet()) {
-				String val = serverIdIpPortMapping.get(key);
-				Session sess = webSocketSessions.get(val);
-				log.info("ServerId:" + key + " IpPort:" + val + " Session:"
-						+ sess);
-			}
-			for (String serverId : unassignedServerIds) {
-				log.info("Unassigned ServerId:" + serverId);
-			}
-			for (String serverId : serverIdIpPortMapping.keySet()) {
-				List<String> attachedNoeds = serverIdIpNodeMapping
-						.get(serverId);
-				if (attachedNoeds != null) {
-					log.info("ServerId:" + serverId + " attachedNoeds.size:"
-							+ attachedNoeds.size() + " nodes:"
-							+ attachedNoeds.toArray());
-				} else {
-					log.info("ServerId:" + serverId + " attachedNoeds:" + null);
-				}
-			}
-		} catch (Exception e) {
-			log.info("Exception:", e);
-		}
-	}
+                        }, 0, 10, TimeUnit.SECONDS);
 
-}
+                return new ResponseEntity<>("Generating Closed loop PM data.", HttpStatus.OK);
+        }
 
-class KeepWebsockAliveThread extends Thread {
-	static Logger log = Logger
-			.getLogger(KeepWebsockAliveThread.class.getName());
-	RansimController rsCtrlr = null;
+            @ApiOperation("Stop Closed loop PM data")
+            @RequestMapping(value = "/stopClosedLoopPmData", method = RequestMethod.GET)
+            @ApiResponses(value = { @ApiResponse(code = 200, message = "Successful"),
+                    @ApiResponse(code = 500, message = "Cannot start the simulation") })
+            public ResponseEntity<String> stopClosedLoopPmData() throws Exception {
 
-	KeepWebsockAliveThread(RansimController ctrlr) {
-		rsCtrlr = ctrlr;
-	}
+                try {
+                    log.info("1. closedLoopexecService.isTerminated(): " + closedLoopExecService.isTerminated());
+                    if (!closedLoopExecService.isTerminated()) {
+                        closedLoopExecService.shutdown();
+                        log.info("2. closedLoopexecService.isTerminated(): " + closedLoopExecService.isTerminated());
 
-	@Override
-	public void run() {
-		log.info("Inside KeepWebsockAliveThread run method");
-		while (true) {
-			for (String ipPort : rsCtrlr.webSocketSessions.keySet()) {
-				try {
-					Session sess = rsCtrlr.webSocketSessions.get(ipPort);
-					RansimWebSocketServer.sendPingMessage(sess);
-					log.debug("Sent ping message to Client ipPort:" + ipPort);
-				} catch (Exception ex1) {
-				}
-			}
-			try {
-				Thread.sleep(10000);
-			} catch (Exception ex) {
-			}
-		}
-	}
+                    }
+                    return new ResponseEntity<>("Closed loop PM data generated.", HttpStatus.OK);
+
+                } catch (Exception eu) {
+                    return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+            }
 }

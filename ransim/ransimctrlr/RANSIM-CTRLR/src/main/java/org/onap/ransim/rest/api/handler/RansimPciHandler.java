@@ -1,5 +1,5 @@
 /*-
- * ============LICENSE_START=======================================================
+ }* ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
  * Copyright (C) 2020 Wipro Limited.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.ransim.rest.api.controller;
+package org.onap.ransim.rest.api.handler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,10 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.websocket.Session;
 
 import org.apache.log4j.Logger;
@@ -48,6 +44,9 @@ import org.onap.ransim.rest.api.models.NetconfServers;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.models.PmDataDump;
 import org.onap.ransim.rest.api.models.PmParameters;
+import org.onap.ransim.rest.api.services.RANSliceConfigService;
+import org.onap.ransim.rest.api.services.RansimControllerServices;
+import org.onap.ransim.rest.api.services.RansimRepositoryService;
 import org.onap.ransim.websocket.model.AdditionalMeasurements;
 import org.onap.ransim.websocket.model.CommonEventHeaderFm;
 import org.onap.ransim.websocket.model.CommonEventHeaderPm;
@@ -58,34 +57,26 @@ import org.onap.ransim.websocket.model.FmMessage;
 import org.onap.ransim.websocket.model.Measurement;
 import org.onap.ransim.websocket.model.PmMessage;
 import org.onap.ransim.websocket.server.RansimWebSocketServer;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.Gson;
 
+@Service
 public class RansimPciHandler {
-
-	private static RansimPciHandler rsPciHandler = null;
 	
-	private RansimPciHandler() {
-
-	}
-
-	/**
-	 * To accesss variable of this class from another class.
-	 *
-	 * @return returns rscontroller constructor
-	 */
-	public static synchronized RansimPciHandler getRansimPciHandler() {
-		if (rsPciHandler == null) {
-			rsPciHandler = new RansimPciHandler();
-		}
-		return rsPciHandler;
-	}
-
 	static Logger log = Logger.getLogger(RansimPciHandler.class
 			.getName());
-
-	RansimController rsCtrlr = RansimController.getRansimController();
-
+	
+	@Autowired
+	RansimRepositoryService ransimRepo ;
+	
+	@Autowired
+	RansimControllerServices rscServices;
+	
+	@Autowired
+	RANSliceConfigService ranSliceConfigService;
+	
 	static Map<String, String> globalFmCellIdUuidMap = new ConcurrentHashMap<String, String>();
 	static Map<String, String> globalPmCellIdUuidMap = new ConcurrentHashMap<String, String>();
 
@@ -94,10 +85,11 @@ public class RansimPciHandler {
 	List<PmParameters> pmParameters = new ArrayList<PmParameters>();
 	int next = 0;
 
-	static FmAlarmInfo setCollisionConfusionFromFile(String cellNodeId) {
+	
+
+	public FmAlarmInfo setCollisionConfusionFromFile(String cellNodeId) {
 
 		FmAlarmInfo result = new FmAlarmInfo();
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
 
 		try {
 
@@ -107,15 +99,14 @@ public class RansimPciHandler {
 			List<Long> ConfusionPcis = new ArrayList<Long>();
 			int collisionCount = 0;
 			int confusionCount = 0;
-			CellDetails currentCell = rsDb.getCellDetail(cellNodeId);
-
+			CellDetails currentCell = ransimRepo.getCellDetail(cellNodeId);
 			log.info("Setting confusion/collision for Cell :" + cellNodeId);
 
 			GetNeighborList cellNbrDetails = generateNeighborList(cellNodeId);
 
 			for (CellDetails firstLevelNbr : cellNbrDetails.getCellsWithHo()) {
 				if (nbrPcis
-						.contains(new Long(firstLevelNbr.getPhysicalCellId()))) {
+						.contains((Long)firstLevelNbr.getPhysicalCellId())) {
 					confusionDetected = true;
 					if (ConfusionPcis.contains(firstLevelNbr
 							.getPhysicalCellId())) {
@@ -126,7 +117,7 @@ public class RansimPciHandler {
 					}
 
 				} else {
-					nbrPcis.add(new Long(firstLevelNbr.getPhysicalCellId()));
+					nbrPcis.add((Long)firstLevelNbr.getPhysicalCellId());
 				}
 
 				if (currentCell.getPhysicalCellId() == firstLevelNbr
@@ -165,7 +156,7 @@ public class RansimPciHandler {
 			result.setCollisionCount("" + collisionCount);
 			result.setConfusionCount("" + confusionCount);
 
-			rsDb.mergeCellDetails(currentCell);
+			ransimRepo.mergeCellDetails(currentCell);
 
 			return result;
 
@@ -185,29 +176,26 @@ public class RansimPciHandler {
 	 *            Node Id of cell for which the neighbor list is generated
 	 * @return Returns GetNeighborList object
 	 */
-	static GetNeighborList generateNeighborList(String nodeId) {
+	public GetNeighborList generateNeighborList(String nodeId) {
 
-		EntityManagerFactory emfactory = Persistence
-				.createEntityManagerFactory("ransimctrlrdb");
-		EntityManager entitymanager = emfactory.createEntityManager();
+	
 		try {
 			log.info("inside generateNeighborList for: " + nodeId);
-			RansimControllerDatabase rsDb = new RansimControllerDatabase();
-			CellNeighbor neighborList = entitymanager.find(CellNeighbor.class,
-					nodeId);
+			CellNeighbor neighborList = ransimRepo.getCellNeighbor(nodeId);
 			GetNeighborList result = new GetNeighborList();
-
+			 neighborList.display();
 			List<CellDetails> cellsWithNoHO = new ArrayList<CellDetails>();
 			List<CellDetails> cellsWithHO = new ArrayList<CellDetails>();
 
-			List<NeighborDetails> nbrList = new ArrayList<NeighborDetails>(
-					neighborList.getNeighborList());
-			long readCellDetail = 0;
-			long checkBlacklisted = 0;
+			List<NeighborDetails> nbrList = new ArrayList<>();
+			if(neighborList != null) {
+				nbrList.addAll(
+						 neighborList.getNeighborList());
+			}
 
 			for (int i = 0; i < nbrList.size(); i++) {
 
-				CellDetails nbr = entitymanager.find(CellDetails.class, nbrList
+				CellDetails nbr = ransimRepo.getCellDetail(nbrList
 						.get(i).getNeigbor().getNeighborCell());
 
 				if (nbrList.get(i).isBlacklisted()) {
@@ -221,26 +209,17 @@ public class RansimPciHandler {
 			result.setNodeId(nodeId);
 			result.setCellsWithHo(cellsWithHO);
 			result.setCellsWithNoHo(cellsWithNoHO);
-
 			return result;
 
 		} catch (Exception eu) {
 			log.info("/getNeighborList", eu);
-			if (entitymanager.getTransaction().isActive()) {
-				entitymanager.getTransaction().rollback();
-			}
 			return null;
-		} finally {
-			entitymanager.close();
-			emfactory.close();
 		}
 	}
 
-	static void checkCollisionAfterModify() {
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
+	public void checkCollisionAfterModify() {
 		try {
-			List<CellDetails> checkCollisionConfusion = rsDb
-					.getCellsWithCollisionOrConfusion();
+			List<CellDetails> checkCollisionConfusion = ransimRepo.getCellsWithCollisionOrConfusion();
 
 			for (int i = 0; i < checkCollisionConfusion.size(); i++) {
 				log.info(checkCollisionConfusion.get(i).getNodeId());
@@ -271,14 +250,13 @@ public class RansimPciHandler {
 
 		int result = 111;
 
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
 		log.info("modifyCellFunction nodeId:" + nodeId + ", physicalCellId:"
 				+ physicalCellId);
-		CellDetails modifyCell = rsDb.getCellDetail(nodeId);
+		CellDetails modifyCell = ransimRepo.getCellDetail(nodeId);
 
 		if (modifyCell != null) {
 			if (physicalCellId < 0
-					|| physicalCellId > rsCtrlr.maxPciValueAllowed) {
+					|| physicalCellId > RansimControllerServices.maxPciValueAllowed) {
 				log.info("NewPhysicalCellId is empty or invalid");
 				result = 400;
 			} else {
@@ -288,10 +266,10 @@ public class RansimPciHandler {
 							oldPciId);
 
 					modifyCell.setPhysicalCellId(physicalCellId);
-					rsDb.mergeCellDetails(modifyCell);
+					ransimRepo.mergeCellDetails(modifyCell);
 				}
 
-				CellNeighbor neighbors = rsDb.getCellNeighbor(nodeId);
+				CellNeighbor neighbors = ransimRepo.getCellNeighbor(nodeId);
 				List<NeighborDetails> oldNbrList = new ArrayList<NeighborDetails>(
 						neighbors.getNeighborList());
 				List<NeighborDetails> oldNbrListWithHo = new ArrayList<NeighborDetails>();
@@ -367,12 +345,12 @@ public class RansimPciHandler {
 				for (NeighborDetails cell : deletedNbrs) {
 					NeighborDetails removeHo = new NeighborDetails(
 							cell.getNeigbor(), true);
-					rsDb.mergeNeighborDetails(removeHo);
+					ransimRepo.mergeNeighborDetails(removeHo);
 					newNeighborList.add(removeHo);
 				}
 
 				for (NeighborDetails cell : addedNbrs) {
-					rsDb.mergeNeighborDetails(cell);
+					ransimRepo.mergeNeighborDetails(cell);
 					newNeighborList.add(cell);
 				}
 
@@ -391,7 +369,7 @@ public class RansimPciHandler {
 					Set<NeighborDetails> updatedNbrList = new HashSet<NeighborDetails>(
 							newNeighborList);
 					neighbors.setNeighborList(updatedNbrList);
-					rsDb.mergeCellNeighbor(neighbors);
+					ransimRepo.mergeCellNeighbor(neighbors);
 				}
 
 				generateFmData(source, modifyCell, newNeighborList);
@@ -409,14 +387,11 @@ public class RansimPciHandler {
 
 	public void checkCellsWithIssue() {
 
-		EntityManagerFactory emfactory = Persistence
-				.createEntityManagerFactory("ransimctrlrdb");
-		EntityManager entitymanager = emfactory.createEntityManager();
+		
 		try {
 
 			for (String id : cellsWithIssues) {
-				CellDetails currentCell = entitymanager.find(CellDetails.class,
-						id);
+				CellDetails currentCell = ransimRepo.getCellDetail(id);
 				FmMessage fmDataMessage = new FmMessage();
 				List<EventFm> data = new ArrayList<EventFm>();
 
@@ -463,39 +438,25 @@ public class RansimPciHandler {
 			}
 
 		} catch (Exception eu) {
-			if (entitymanager.getTransaction().isActive()) {
-				entitymanager.getTransaction().rollback();
-			}
-			log.info("Exception:", eu);
-		} finally {
-			entitymanager.close();
-			emfactory.close();
-		}
-
+			log.error("Exception:", eu);
+		} 
 	}
 
-	void updatePciOperationsTable(String nodeId, String source, long physicalCellId, long oldPciId) {
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("ransimctrlrdb");
-        EntityManager entitymanager = emfactory.createEntityManager();
+	public void updatePciOperationsTable(String nodeId, String source, long physicalCellId, long oldPciId) {
+        
         OperationLog operationLog = new OperationLog();
         
-        entitymanager.getTransaction().begin();
         operationLog.setNodeId(nodeId);
         operationLog.setFieldName("PCID");
         operationLog.setOperation("Modify");
         operationLog.setSource(source);
         operationLog.setTime(System.currentTimeMillis());
         operationLog.setMessage("PCID value changed from " + oldPciId + " to " + physicalCellId);
-        entitymanager.merge(operationLog);
-        entitymanager.flush();
-        entitymanager.getTransaction().commit();
+        ransimRepo.mergeOperationLog(operationLog);
     }
     
-    void updateNbrsOperationsTable(String nodeId, String source, String addedNbrs, String deletedNbrs) {
+    public void updateNbrsOperationsTable(String nodeId, String source, String addedNbrs, String deletedNbrs) {
         
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("ransimctrlrdb");
-        EntityManager entitymanager = emfactory.createEntityManager();
-        entitymanager.getTransaction().begin();
         OperationLog operationLogNbrChng = new OperationLog();
         operationLogNbrChng.setNodeId(nodeId);
         operationLogNbrChng.setFieldName("Neighbors");
@@ -515,10 +476,7 @@ public class RansimPciHandler {
         
         operationLogNbrChng.setMessage(message);
         operationLogNbrChng.setTime(System.currentTimeMillis());
-        entitymanager.merge(operationLogNbrChng);
-        entitymanager.flush();
-        entitymanager.getTransaction().commit();
-        
+        ransimRepo.mergeOperationLog(operationLogNbrChng);
     }
 	
 	/**
@@ -533,14 +491,13 @@ public class RansimPciHandler {
 
 		log.info("Sending PM message to netconf agent");
 
-		String ipPort = rsCtrlr.serverIdIpPortMapping.get(serverId);
+		String ipPort = RansimControllerServices.serverIdIpPortMapping.get(serverId);
 
 		if (ipPort != null && !ipPort.trim().equals("")) {
 
-			String[] ipPortArr = ipPort.split(":");
 			if (ipPort != null && !ipPort.trim().equals("")) {
 
-				Session clSess = rsCtrlr.webSocketSessions.get(ipPort);
+				Session clSess = RansimControllerServices.webSocketSessions.get(ipPort);
 				log.info("PM message. Netconf agent IP:" + ipPort);
 				if (clSess != null) {
 					RansimWebSocketServer.sendPmMessage(pmMessage, clSess);
@@ -568,10 +525,8 @@ public class RansimPciHandler {
 	public void readPmParameters() {
 
 		File dumpFile = null;
-		String kpiName = "";
 		PmDataDump pmDump = null;
 		String jsonString = "";
-		int next = 0;
 		dumpFile = new File("PM_Kpi_Data.json");
 
 		BufferedReader br = null;
@@ -613,10 +568,10 @@ public class RansimPciHandler {
 	 *            List of node Ids with poor performance values
 	 * @return It returns the pm message
 	 */
+	@Transactional
 	public List<String> generatePmData(String nodeIdBad, String nodeIdPoor) {
 
 		List<String> result = new ArrayList<>();
-		RansimControllerDatabase rcDb = new RansimControllerDatabase();
 
 		String parameter1 = "";
 		String successValue1 = "";
@@ -648,8 +603,8 @@ public class RansimPciHandler {
 				log.info("Exception: ", e);
 			}
 
-			List<NetconfServers> cnl = rcDb.getNetconfServersList();
-			log.info("obtained data from db");
+			List<NetconfServers> cnl = ransimRepo.getNetconfServersList();
+			log.debug("obtained data from db");
 			String[] cellIdsBad = null;
 			String[] cellIdsPoor = null;
 			Set<String> nodeIdsBad = new HashSet<String>();
@@ -713,7 +668,7 @@ public class RansimPciHandler {
 					}
 
 					long endTimeCheckBadPoor = System.currentTimeMillis();
-
+					log.debug("Time taken CheckBadPoor : " + (endTimeCheckBadPoor - startTimeCheckBadPoor));
 					List<AdditionalMeasurements> additionalMeasurements = new ArrayList<AdditionalMeasurements>();
 					if (checkPoor || checkBad) {
 
@@ -784,6 +739,7 @@ public class RansimPciHandler {
 
 					data.add(event);
 					long endTimeCell = System.currentTimeMillis();
+					log.debug("Time taken to Process Cell list : " + (endTimeCell - startTimeCell));
 				}
 
 				long endTime = System.currentTimeMillis();
@@ -898,9 +854,6 @@ public class RansimPciHandler {
 		List<EventFm> listCellIssue = new ArrayList<EventFm>();
 		Set<String> ncs = new HashSet<>();
 		log.info("Generating Fm data");
-
-		RansimControllerDatabase rsDb = new RansimControllerDatabase();
-
 		FmAlarmInfo op1 = setCollisionConfusionFromFile(cell.getNodeId());
 
 		if (source.equals("GUI")) {
@@ -919,7 +872,7 @@ public class RansimPciHandler {
 		for (NeighborDetails cd : newNeighborList) {
 			FmAlarmInfo op2 = setCollisionConfusionFromFile(cd.getNeigbor()
 					.getNeighborCell());
-			CellDetails nbrCell = rsDb.getCellDetail(cd.getNeigbor()
+			CellDetails nbrCell = ransimRepo.getCellDetail(cd.getNeigbor()
 					.getNeighborCell());
 
 			if (source.equals("GUI")) {
@@ -985,14 +938,13 @@ public class RansimPciHandler {
 
 		log.info("Fm Data jsonStr: " + jsonStr);
 
-		String ipPort = rsCtrlr.serverIdIpPortMapping.get(serverId);
+		String ipPort = RansimControllerServices.serverIdIpPortMapping.get(serverId);
 
 		if (ipPort != null && !ipPort.trim().equals("")) {
 
-			String[] ipPortArr = ipPort.split(":");
 			log.info("Connection estabilished with ip: " + ipPort);
 			if (ipPort != null && !ipPort.trim().equals("")) {
-				Session clSess = rsCtrlr.webSocketSessions.get(ipPort);
+				Session clSess = RansimControllerServices.webSocketSessions.get(ipPort);
 				if (clSess != null) {
 					log.info("FM message sent.");
 					RansimWebSocketServer.sendFmMessage(jsonStr, clSess);

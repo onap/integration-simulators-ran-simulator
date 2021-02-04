@@ -20,45 +20,45 @@
 package org.onap.ransim.rest.api.models;
 
 public class NeighborPmDetails {
-    
-    private String nbrCellId;
-    private String kpiName;
-    private int kpiValue;
-    
-    public NeighborPmDetails(String nbrCellId, String kpiName, int kpiValue) {
-        super();
-        this.nbrCellId = nbrCellId;
-        this.kpiName = kpiName;
-        this.kpiValue = kpiValue;
-    }
-    
-    public NeighborPmDetails() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public String getNbrCellId() {
-        return nbrCellId;
-    }
-    
-    public void setNbrCellId(String nbrCellId) {
-        this.nbrCellId = nbrCellId;
-    }
-    
-    public String getKpiName() {
-        return kpiName;
-    }
-    
-    public void setKpiName(String kpiName) {
-        this.kpiName = kpiName;
-    }
-    
-    public int getKpiValue() {
-        return kpiValue;
-    }
-    
-    public void setKpiValue(int kpiValue) {
-        this.kpiValue = kpiValue;
-    }
-    
+
+	private String nbrCellId;
+	private String kpiName;
+	private int kpiValue;
+
+	public NeighborPmDetails(String nbrCellId, String kpiName, int kpiValue) {
+		super();
+		this.nbrCellId = nbrCellId;
+		this.kpiName = kpiName;
+		this.kpiValue = kpiValue;
+	}
+
+	public NeighborPmDetails() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getNbrCellId() {
+		return nbrCellId;
+	}
+
+	public void setNbrCellId(String nbrCellId) {
+		this.nbrCellId = nbrCellId;
+	}
+
+	public String getKpiName() {
+		return kpiName;
+	}
+
+	public void setKpiName(String kpiName) {
+		this.kpiName = kpiName;
+	}
+
+	public int getKpiValue() {
+		return kpiValue;
+	}
+
+	public void setKpiValue(int kpiValue) {
+		this.kpiValue = kpiValue;
+	}
+
 }

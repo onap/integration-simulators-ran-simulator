@@ -3,7 +3,7 @@ networks:
   default:
     driver: bridge
     driver_opts:
-      com.docker.network.driver.mtu: ${MTU}
+      com.docker.network.driver.mtu: 1400
 services:
   mariadb:
     image: 'mariadb:10.0.34'
@@ -20,9 +20,15 @@ services:
   ransim:
     image: 'onap/ransim:1.0.0-SNAPSHOT'
     container_name: ransim
-    hostname: ransimsvr
+    environment:
+      - SDNR_IP=10.31.4.51
+      - SDNR_PORT=30267
+      - SDNR_USER=admin
+      - SDNR_PASSWORD=Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U
+    hostname: ransim
     ports:
       - '8081:8081'
     command: ransim
     volumes:
       - './config/ransim:/tmp/ransim-install/config'
+      - './config/ransim/jssecacerts:/tmp/cert/jssecacerts'

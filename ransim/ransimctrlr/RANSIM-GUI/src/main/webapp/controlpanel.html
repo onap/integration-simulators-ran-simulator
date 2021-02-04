@@ -21,19 +21,16 @@
 
 <!DOCTYPE html>
 <html ng-app="myApp" ng-controller="myCtrl">
-  <head>
-	<script src="angular.min.js"></script> 
-	 <style>
-        .can {
-            padding-top:40px;
-        }
-        </style>
-	<script>		  
+<head>
+<script src="angular.min.js"></script>
+<style>
+.can {
+	padding-top: 40px;
+}
+</style>
+<script>		  
 	var app = angular.module('myApp', []);
 	app.controller('myCtrl', function($scope, $window) {
-		/*$scope.startSimulator = function() {
-			$window.open('SimulationTrigger.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=250px');
-		};*/
 		$scope.startSimulatorFile = function() {
                         document.getElementById("stopSimulator").disabled = false;
 			document.getElementById("startSimulator").disabled = true;
@@ -56,25 +53,6 @@
 			document.getElementById("stopPm").disabled = false;
 				document.getElementById("startPm").disabled = true;
 			$window.open('startsPm.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=400px');
-			/*
-			var status;
-			var xmlhttp = new XMLHttpRequest();
-            		xmlhttp.onreadystatechange = function() {
-                		if (this.readyState == 4 && this.status == 200) {
-                    			status = JSON.parse(this.responseText);
-					console.log(status);
-					console.log("status");
-                		}
-            		};
-           		 xmlhttp.open("GET", "/ransim/api/GetPmDataStatus",
-               			 true);
-            		xmlhttp.send();
-			
-			if(status == true){
-				document.getElementById("stopPm").disabled = false;
-				document.getElementById("startPm").disabled = true;
-			}*/
-			
 		};
 		$scope.stopPm = function() {
 			document.getElementById("stopPm").disabled = true;
@@ -82,36 +60,36 @@
 			$window.open('stopPm.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=250px');
 		};	
 
-					
+		$scope.uploadFile = function() {
+			$window.open('uploadFile.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=250px');
+		}			
 		
 	});
 	</script>
-  </head>
-  <body>
+</head>
+<body>
 	<div id="controlpanel" class="absolute">
-		RAN Simulation
-		<br>
+		RAN Simulation <br>
 		<!-- button ng-click="startSimulator()">StartHoneycomb</button-->
 		<button id="startSimulator" ng-click="startSimulatorFile()">Start</button>
-		<button id="stopSimulator" ng-click="stopSimulator()" disabled>Stop</button><br>
-		<br>
-                <div id="operupdate" name="operuodate">Click view to check details of the updated cells</div>
+		<button id="stopSimulator" ng-click="stopSimulator()" disabled>Stop</button>
+		<br> <br>
+		<button id="uploadFile" ng-click="uploadFile()">Upload Dump File</button>
+		<br><br>
+		<div id="operupdate" name="operuodate">Click view to check
+			details of the updated cells</div>
 		<button ng-click="showOperationTable()">View</button>
-		<br>
-		<br>
+		<br> <br>
 		<button ng-click="showNetconfServerDetails()">Netconf Details</button>
-		<br>
-		<br>
+		<br> <br>
 		<div>PM data</div>
 		<button id="startPm" ng-click="startPm()">Start</button>
 		<button id="stopPm" ng-click="stopPm()" disabled>Stop</button>
-		<br>
-		<br>
-
+		<br> <br>
 	</div>
-        <p></p>
-        <canvas id="Canvas2" class="can" width="4000" height="10000"></canvas>
-	</body>
+	<p></p>
+	<canvas id="Canvas2" class="can" width="4000" height="10000"></canvas>
+</body>
 <script>
 var canvas = document.getElementById('Canvas2');
 var ctx = canvas.getContext('2d');
