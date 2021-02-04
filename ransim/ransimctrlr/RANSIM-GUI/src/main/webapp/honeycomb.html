@@ -23,49 +23,45 @@
 <html>
 
 <head>
-  <script src="angular.min.js"></script>
-  <style>
-    .show {
-      z-index: 1000;
-      position: absolute;
-      padding: 2px;
-      display: block;
-      margin: 0;
-      list-style-type: none;
-      list-style: none;
-    }
+<script src="angular.min.js"></script>
+<style>
+.show {
+	z-index: 1000;
+	position: absolute;
+	padding: 2px;
+	display: block;
+	margin: 0;
+	list-style-type: none;
+	list-style: none;
+}
 
-    .hide {
-      display: none;
-    }
+.hide {
+	display: none;
+}
 
-    .btn-group .button {
-      background-color: LightGrey;
-      color: black;
-      border: 1px solid Black;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100px;
-      display: block;
-    }
+.btn-group .button {
+	background-color: LightGrey;
+	color: black;
+	border: 1px solid Black;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	width: 100px;
+	display: block;
+}
 
-    .btn-group .button:not (:last-child) {
-      border-bottom:
+.btn-group .button:not (:last-child ) {
+	border-bottom: none;
+}
 
-        none;
-
-
-    }
-
-    .btn-group .button:hover {
-      background-color: lightblue;
-      color: white;
-    }
-  </style>
-  <script>
+.btn-group .button:hover {
+	background-color: lightblue;
+	color: white;
+}
+</style>
+<script>
   document.body.addEventListener("wheel", e=>{
       if(e.ctrlKey)
         event.preventDefault();//prevent zoom
@@ -202,8 +198,6 @@
         if (typeof topoObj.cellTopology[i].color != 'undefined') {
           confuColor = topoObj.cellTopology[i].color;
         }
-        //alert(nodeId+" "+physicalCellId+" "+col+" "+row+" "+confusion+" "+confuColor+" ");
-
         if (collision) {
 	   if (confusion) {
           context.fillStyle = "#FF0000";
@@ -240,14 +234,12 @@
         }
         context.strokeStyle = "black";
         context.stroke();
-        //alert(nodeId+" Circle X " + (rad+gaps*col) + " Y: "+ (rad+gaps*row));
         context.closePath();
         context.fill();
 
         context.font = "12px Comic Sans MS";
         context.fillStyle = "white";
         context.textAlign = "center";
-        //fillMultiLineText(context,"cid:"+nodeId+"\npcid:"+physicalCellId, rad+gaps*col,rad+ gaps*row);
 
         if (col % 2 == 0) {
           context.fillText("" + nodeId + "," + physicalCellId, (col +
@@ -292,8 +284,6 @@
               gaps)) {
             var nodeVal = topoObj.cellTopology[i].nodeId;
             var cellVal = topoObj.cellTopology[i].physicalCellId;
-            //alert('click on circle: ' + topoObj.cellTopology[i].nodeId);
-            //alert(pos.x + " "+pos.y);
             document.getElementById("rmenu").className =
               "show";
             document.getElementById('rmenu').style.top =
@@ -332,7 +322,6 @@
       var point = cellInfo.split(":");
       var gridX = point[0];
       var gridY = point[1];
-      //alert("Cell X : "+gridX+" Y: "+ gridY);
       window.childWin = window.open('createCell.html?gridX=' + gridX +
         '&gridY=' + gridY, '',
         'menubar=no, locationbar=no, toolbar=no, width=600px, height=250px'
@@ -342,7 +331,6 @@
     }
 
     function modifyNode(cid, pcid) {
-      //alert("Modify CID "+cid + " PCID " + pcid);
       window.childWin = window.open('modifyCell.html?cid=' + cid +
         '&pcid=' + pcid, '',
         'menubar=no, locationbar=no, toolbar=no, width=600px, height=250px'
@@ -352,7 +340,6 @@
     }
 
     function deleteNode(cid, pcid) {
-      //alert("Delete CID "+cid + " PCID " + pcid);
       window.childWin = window.open('deleteCell.html?cid=' + cid +
         '&pcid=' + pcid, '',
         'menubar=no, locationbar=no, toolbar=no, width=600px, height=250px'
@@ -425,8 +412,8 @@
 </head>
 
 <body onLoad="init();" style="margin: 0px">
-  <div class="hide" id="rmenu"></div>
-  <canvas id="myCanvas" />
+	<div class="hide" id="rmenu"></div>
+	<canvas id="myCanvas" />
 </body>
 
 </html>

@@ -20,31 +20,28 @@
 
 package org.onap.ransim.websocket.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AdditionalMeasurements {
-    
-    private String name;
-    private Map<String, String> hashMap = new HashMap<String, String>();
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public Map<String, String> getHashMap() {
-        return hashMap;
-    }
+	private String name;
+	private Map<String, String> hashMap = new HashMap<String, String>();
 
-    public void setHashMap(Map<String, String> hashMap) {
-        this.hashMap = hashMap;
-    }
-    
-    
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Map<String, String> getHashMap() {
+		return hashMap;
+	}
+
+	public void setHashMap(Map<String, String> hashMap) {
+		this.hashMap = hashMap;
+	}
+
 }
