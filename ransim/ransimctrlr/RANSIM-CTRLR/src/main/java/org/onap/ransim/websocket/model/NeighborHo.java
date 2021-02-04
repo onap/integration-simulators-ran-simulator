@@ -21,31 +21,33 @@
 package org.onap.ransim.websocket.model;
 
 public class NeighborHo {
-    
-    private String nodeId;
-    private long pciId;
-    private boolean blacklisted;
-    
-    public String getNodeId() {
-        return nodeId;
-    }
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-    
-    public long getPciId() {
-        return pciId;
-    }
-    public void setPciId(long pciId) {
-        this.pciId = pciId;
-    }
-    public boolean isBlacklisted() {
-        return blacklisted;
-    }
-    public void setBlacklisted(boolean blacklisted) {
-        this.blacklisted = blacklisted;
-    }
-    
-    
-    
+
+	private String nodeId;
+	private long pciId;
+	private boolean blacklisted;
+
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public long getPciId() {
+		return pciId;
+	}
+
+	public void setPciId(long pciId) {
+		this.pciId = pciId;
+	}
+
+	public boolean isBlacklisted() {
+		return blacklisted;
+	}
+
+	public void setBlacklisted(boolean blacklisted) {
+		this.blacklisted = blacklisted;
+	}
+
 }

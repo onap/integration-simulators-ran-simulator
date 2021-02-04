@@ -23,33 +23,33 @@ package org.onap.ransim.websocket.model;
 import java.util.List;
 
 public class ModifyNeighbor {
-    
-    private String pnfName;
-    private String cellId;
-    private List<NeighborHo> neighborList;
-    
-    public String getPnfName() {
-        return pnfName;
-    }
-    
-    public void setPnfName(String pnfName) {
-        this.pnfName = pnfName;
-    }
-    
-    public String getCellId() {
-        return cellId;
-    }
-    
-    public void setCellId(String cellId) {
-        this.cellId = cellId;
-    }
-    
-    public List<NeighborHo> getNeighborList() {
-        return neighborList;
-    }
-    
-    public void setNeighborList(List<NeighborHo> neighborList) {
-        this.neighborList = neighborList;
-    }
-    
+
+	private String pnfName;
+	private String cellId;
+	private List<NeighborHo> neighborList;
+
+	public String getPnfName() {
+		return pnfName;
+	}
+
+	public void setPnfName(String pnfName) {
+		this.pnfName = pnfName;
+	}
+
+	public String getCellId() {
+		return cellId;
+	}
+
+	public void setCellId(String cellId) {
+		this.cellId = cellId;
+	}
+
+	public List<NeighborHo> getNeighborList() {
+		return neighborList;
+	}
+
+	public void setNeighborList(List<NeighborHo> neighborList) {
+		this.neighborList = neighborList;
+	}
+
 }
