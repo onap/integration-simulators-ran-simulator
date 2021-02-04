@@ -20,66 +20,76 @@
  -->
 
 <html>
-   <head>
-      <title>Simulator Configuration</title>
-      <script src="angular.min.js"></script>      
-      <style>
-         table, th , td {
-            border: 1px solid grey;
-            border-collapse: collapse;
-            padding: 5px;
-         }
-         
-         table tr:nth-child(odd) {
-            background-color: #f2f2f2;
-         }
-         
-         table tr:nth-child(even) {
-            background-color: #ffffff;
-         }
-      </style>
-   </head>
-   <body><center>
-      <h2>Simulator Configuration</h2>
-      <div align="center" ng-app = "mainApp" ng-controller = "configController">         
-         <form name = "configForm" novalidate >
-            <table border = "0" align=center>
-               <tr>
-                  <td>Cluster Level::</td>
-                  <td><input name = "clusterLevel" type = "number" ng-model = "configui.clusterLevel" required>
-                     <br><span style = "color:red" ng-show = "configForm.clusterLevel.$dirty && configForm.clusterLevel.$invalid">
-                        <span ng-show = "configForm.clusterLevel.$error.required">Cluster Level is mandatory.</span>
-                     </span>
-                  </td>
-               </tr>               
-               <tr>
-                  <td>Grid Size:</td>
-                  <td><input name = "gridSize"  type = "number" ng-model = "configui.gridSize" required>
-                     <br><span style = "color:red" ng-show = "configForm.gridSize.$dirty && configForm.gridSize.$invalid">
-                        <span ng-show = "configForm.gridSize.$error.required">Grid Size is mandatory.</span>
-                     </span>
-                  </td>
-               </tr>  
-               <tr>
-                  <td>No. of Clusters: </td><td><input name = "numberOfClusters" type = "number" ng-model = "configui.numberOfClusters" required>
-                     <br><span style = "color:red" ng-show = "configForm.numberOfClusters.$dirty && configForm.numberOfClusters.$invalid">
-                        <span ng-show = "configForm.numberOfClusters.$error.required">No. of Clusters is mandatory.</span>
-                     </span>
-                  </td>
-               </tr>               
-               <tr>
-                  <td colspan=2 align=right>                  
-                     <button ng-model = "configure" ng-disabled = "configForm.clusterLevel.$dirty &&
+<head>
+<title>Simulator Configuration</title>
+<script src="angular.min.js"></script>
+<style>
+table, th, td {
+	border: 1px solid grey;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+table tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+table tr:nth-child(even) {
+	background-color: #ffffff;
+}
+</style>
+</head>
+<body>
+	<center>
+		<h2>Simulator Configuration</h2>
+		<div align="center" ng-app="mainApp" ng-controller="configController">
+			<form name="configForm" novalidate>
+				<table border="0" align=center>
+					<tr>
+						<td>Cluster Level::</td>
+						<td><input name="clusterLevel" type="number"
+							ng-model="configui.clusterLevel" required> <br>
+						<span style="color: red"
+							ng-show="configForm.clusterLevel.$dirty && configForm.clusterLevel.$invalid">
+								<span ng-show="configForm.clusterLevel.$error.required">Cluster
+									Level is mandatory.</span>
+						</span></td>
+					</tr>
+					<tr>
+						<td>Grid Size:</td>
+						<td><input name="gridSize" type="number"
+							ng-model="configui.gridSize" required> <br>
+						<span style="color: red"
+							ng-show="configForm.gridSize.$dirty && configForm.gridSize.$invalid">
+								<span ng-show="configForm.gridSize.$error.required">Grid
+									Size is mandatory.</span>
+						</span></td>
+					</tr>
+					<tr>
+						<td>No. of Clusters:</td>
+						<td><input name="numberOfClusters" type="number"
+							ng-model="configui.numberOfClusters" required> <br>
+						<span style="color: red"
+							ng-show="configForm.numberOfClusters.$dirty && configForm.numberOfClusters.$invalid">
+								<span ng-show="configForm.numberOfClusters.$error.required">No.
+									of Clusters is mandatory.</span>
+						</span></td>
+					</tr>
+					<tr>
+						<td colspan=2 align=right>
+							<button ng-model="configure"
+								ng-disabled="configForm.clusterLevel.$dirty &&
                         configForm.clusterLevel.$invalid || configForm.gridSize.$dirty &&
                         configForm.gridSize.$invalid || configForm.numberOfClusters.$dirty &&
-                        configForm.configui.numberOfClusters.$invalid" ng-click="triggerSimulatorConfig()">Configure</button>
-					   <button ng-model = "close" ng-click = "close()">Close</button>
-                  </td>
-               </tr>					
-            </table>
-         </form>
-      </div>
-      <script>
+                        configForm.configui.numberOfClusters.$invalid"
+								ng-click="triggerSimulatorConfig()">Configure</button>
+							<button ng-model="close" ng-click="close()">Close</button>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<script>
          var mainApp = angular.module("mainApp", []);
          mainApp.controller('configController',['$scope', '$http', function($scope, $http) {
             $scope.triggerSimulatorConfig = function(){	
@@ -104,6 +114,7 @@
 				window.close();
 			}
          }]);
-      </script>      
-   <center></body>
+      </script>
+		<center>
+</body>
 </html>

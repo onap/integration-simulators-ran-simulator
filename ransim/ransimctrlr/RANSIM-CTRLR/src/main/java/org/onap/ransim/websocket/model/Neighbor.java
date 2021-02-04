@@ -22,67 +22,68 @@ package org.onap.ransim.websocket.model;
 
 public class Neighbor {
 
-    private String plmnId;
-    private String nodeId;
-    private long physicalCellId;
-    private String serverId;
-    private String pnfName;
-    private boolean blacklisted;
+	private String plmnId;
+	private String nodeId;
+	private long physicalCellId;
+	private String serverId;
+	private String pnfName;
+	private boolean blacklisted;
 
-    public String getPlmnId() {
-        return plmnId;
-    }
+	public String getPlmnId() {
+		return plmnId;
+	}
 
-    public void setPlmnId(String plmnId) {
-        this.plmnId = plmnId;
-    }
+	public void setPlmnId(String plmnId) {
+		this.plmnId = plmnId;
+	}
 
-    public String getNodeId() {
-        return nodeId;
-    }
+	public String getNodeId() {
+		return nodeId;
+	}
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
 
-    public long getPhysicalCellId() {
-        return physicalCellId;
-    }
+	public long getPhysicalCellId() {
+		return physicalCellId;
+	}
 
-    public void setPhysicalCellId(long physicalCellId) {
-        this.physicalCellId = physicalCellId;
-    }
+	public void setPhysicalCellId(long physicalCellId) {
+		this.physicalCellId = physicalCellId;
+	}
 
-    public String getServerId() {
-        return serverId;
-    }
+	public String getServerId() {
+		return serverId;
+	}
 
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
 
-    public String getPnfName() {
-        return pnfName;
-    }
+	public String getPnfName() {
+		return pnfName;
+	}
 
-    public void setPnfName(String pnfName) {
-        this.pnfName = pnfName;
-    }
+	public void setPnfName(String pnfName) {
+		this.pnfName = pnfName;
+	}
 
-    public Neighbor() {
-        // TODO Auto-generated constructor stub
-    }
+	public Neighbor() {
+		// TODO Auto-generated constructor stub
+	}
 
-    public boolean isBlacklisted() {
-        return blacklisted;
-    }
+	public boolean isBlacklisted() {
+		return blacklisted;
+	}
 
-    public void setBlacklisted(boolean blacklisted) {
-        this.blacklisted = blacklisted;
-    }
-    @Override
-    public String toString() {
-        return "Neighbor [nodeId=" + nodeId + ", physicalCellId=" + physicalCellId + ", serverId=" + serverId
-                + ", pnfName=" + pnfName + "]";
-    }
+	public void setBlacklisted(boolean blacklisted) {
+		this.blacklisted = blacklisted;
+	}
+
+	@Override
+	public String toString() {
+		return "Neighbor [nodeId=" + nodeId + ", physicalCellId=" + physicalCellId + ", serverId=" + serverId
+				+ ", pnfName=" + pnfName + "]";
+	}
 }

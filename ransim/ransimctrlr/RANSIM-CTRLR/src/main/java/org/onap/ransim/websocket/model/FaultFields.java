@@ -23,66 +23,65 @@ package org.onap.ransim.websocket.model;
 import java.util.Map;
 
 public class FaultFields {
-    
-    private String alarmCondition;
-    private String eventSourceType;
-    private String specificProblem;
-    private String eventSeverity;
-    private Map<String, String> alarmAdditionalInformation;
-    
-    public FaultFields() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public FaultFields(String alarmCondition, String eventSourceType, String specificProblem,
-            String eventSeverity, Map<String, String> alarmAdditionalInformation) {
-        super();
-        this.alarmCondition = alarmCondition;
-        this.eventSourceType = eventSourceType;
-        this.specificProblem = specificProblem;
-        this.eventSeverity = eventSeverity;
-        this.alarmAdditionalInformation = alarmAdditionalInformation;
-    }
-    
-    public String getAlarmCondition() {
-        return alarmCondition;
-    }
-    
-    public void setAlarmCondition(String alarmCondition) {
-        this.alarmCondition = alarmCondition;
-    }
-    
-    public String getEventSourceType() {
-        return eventSourceType;
-    }
-    
-    public void setEventSourceType(String eventSourceType) {
-        this.eventSourceType = eventSourceType;
-    }
-    
-    public String getSpecificProblem() {
-        return specificProblem;
-    }
-    
-    public void setSpecificProblem(String specificProblem) {
-        this.specificProblem = specificProblem;
-    }
-    
-    public String getEventSeverity() {
-        return eventSeverity;
-    }
-    
-    public void setEventSeverity(String eventSeverity) {
-        this.eventSeverity = eventSeverity;
-    }
-    
-    public Map<String, String> getAlarmAdditionalInformation() {
-        return alarmAdditionalInformation;
-    }
-    
-    public void setAlarmAdditionalInformation(Map<String, String> alarmAdditionalInformation) {
-        this.alarmAdditionalInformation = alarmAdditionalInformation;
-    }
-    
+
+	private String alarmCondition;
+	private String eventSourceType;
+	private String specificProblem;
+	private String eventSeverity;
+	private Map<String, String> alarmAdditionalInformation;
+
+	public FaultFields() {
+		super();
+	}
+
+	public FaultFields(String alarmCondition, String eventSourceType, String specificProblem, String eventSeverity,
+			Map<String, String> alarmAdditionalInformation) {
+		super();
+		this.alarmCondition = alarmCondition;
+		this.eventSourceType = eventSourceType;
+		this.specificProblem = specificProblem;
+		this.eventSeverity = eventSeverity;
+		this.alarmAdditionalInformation = alarmAdditionalInformation;
+	}
+
+	public String getAlarmCondition() {
+		return alarmCondition;
+	}
+
+	public void setAlarmCondition(String alarmCondition) {
+		this.alarmCondition = alarmCondition;
+	}
+
+	public String getEventSourceType() {
+		return eventSourceType;
+	}
+
+	public void setEventSourceType(String eventSourceType) {
+		this.eventSourceType = eventSourceType;
+	}
+
+	public String getSpecificProblem() {
+		return specificProblem;
+	}
+
+	public void setSpecificProblem(String specificProblem) {
+		this.specificProblem = specificProblem;
+	}
+
+	public String getEventSeverity() {
+		return eventSeverity;
+	}
+
+	public void setEventSeverity(String eventSeverity) {
+		this.eventSeverity = eventSeverity;
+	}
+
+	public Map<String, String> getAlarmAdditionalInformation() {
+		return alarmAdditionalInformation;
+	}
+
+	public void setAlarmAdditionalInformation(Map<String, String> alarmAdditionalInformation) {
+		this.alarmAdditionalInformation = alarmAdditionalInformation;
+	}
+
 }

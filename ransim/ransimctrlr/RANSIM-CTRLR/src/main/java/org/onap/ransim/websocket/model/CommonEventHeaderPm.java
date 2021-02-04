@@ -21,42 +21,42 @@
 package org.onap.ransim.websocket.model;
 
 public class CommonEventHeaderPm {
-    
-    private String sourceName;
-    private String sourceUuid;
-    private long startEpochMicrosec;
-    private long lastEpochMicrosec;
 
-    public String getSourceName() {
-        return sourceName;
-    }
-    
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
+	private String sourceName;
+	private String sourceUuid;
+	private long startEpochMicrosec;
+	private long lastEpochMicrosec;
 
-    public String getSourceUuid() {
-        return sourceUuid;
-    }
+	public String getSourceName() {
+		return sourceName;
+	}
 
-    public void setSourceUuid(String sourceUuid) {
-        this.sourceUuid = sourceUuid;
-    }
+	public void setSourceName(String sourceName) {
+		this.sourceName = sourceName;
+	}
 
-    public long getStartEpochMicrosec() {
-        return startEpochMicrosec;
-    }
-    
-    public void setStartEpochMicrosec(long startEpochMicrosec) {
-        this.startEpochMicrosec = startEpochMicrosec;
-    }
-    
-    public long getLastEpochMicrosec() {
-        return lastEpochMicrosec;
-    }
-    
-    public void setLastEpochMicrosec(long lastEpochMicrosec) {
-        this.lastEpochMicrosec = lastEpochMicrosec;
-    }
-    
+	public String getSourceUuid() {
+		return sourceUuid;
+	}
+
+	public void setSourceUuid(String sourceUuid) {
+		this.sourceUuid = sourceUuid;
+	}
+
+	public long getStartEpochMicrosec() {
+		return startEpochMicrosec;
+	}
+
+	public void setStartEpochMicrosec(long startEpochMicrosec) {
+		this.startEpochMicrosec = startEpochMicrosec;
+	}
+
+	public long getLastEpochMicrosec() {
+		return lastEpochMicrosec;
+	}
+
+	public void setLastEpochMicrosec(long lastEpochMicrosec) {
+		this.lastEpochMicrosec = lastEpochMicrosec;
+	}
+
 }
