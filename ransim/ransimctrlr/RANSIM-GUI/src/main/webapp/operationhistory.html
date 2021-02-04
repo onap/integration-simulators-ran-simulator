@@ -21,29 +21,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cell Operations History</title>
-    <style>
-        th, td, p, input {
-            font:14px Verdana;
-        }
-        table, th, td 
-        {
-            border: solid 1px #DDD;
-            border-collapse: collapse;
-            padding: 2px 3px;
-            text-align: center;
-        }
-        th {
-            font-weight:bold;
-        }
-        .odd{background-color: white;} 
-        .even{background-color: gray;} 
-    </style>
+<title>Cell Operations History</title>
+<style>
+th, td, p, input {
+	font: 14px Verdana;
+}
+
+table, th, td {
+	border: solid 1px #DDD;
+	border-collapse: collapse;
+	padding: 2px 3px;
+	text-align: center;
+}
+
+th {
+	font-weight: bold;
+}
+
+.odd {
+	background-color: white;
+}
+
+.even {
+	background-color: gray;
+}
+</style>
 </head>
 <body onload="getOperationLogs()">
-    <center><h3>Cell Operations History</h3></center><br>
-    <p id="showData"></p>
-    <input align=right type=button name=close value="Close" onclick="window.close();"> 
+	<center>
+		<h3>Cell Operations History</h3>
+	</center>
+	<br>
+	<p id="showData"></p>
+	<input align=right type=button name=close value="Close"
+		onclick="window.close();">
 </body>
 
 <script>
@@ -62,13 +73,11 @@
             xmlhttp.send();
         }
 
-    function drawTable(myBooks) {
+    function drawTable(data) {
         // EXTRACT VALUE FOR HTML HEADER. 
-        // ('Book ID', 'Book Name', 'Category' and 'Price')
-        //alert("Draw Table");
         var col = [];
-        for (var i = 0; i < myBooks.length; i++) {
-            for (var key in myBooks[i]) {
+        for (var i = 0; i < data.length; i++) {
+            for (var key in data[i]) {
                 if (col.indexOf(key) === -1) {
                     col.push(key);
                 }
@@ -92,7 +101,7 @@
         }
 
         // ADD JSON DATA TO THE TABLE AS ROWS.
-        for (var i = 0; i < myBooks.length; i++) {
+        for (var i = 0; i < data.length; i++) {
 
             tr = table.insertRow(-1);
 	    //manipulate rows 
@@ -108,10 +117,10 @@
 		if (j == 0) continue; 
                 var tabCell = tr.insertCell(-1);
                 if (j==1) {
-		var d = new Date(myBooks[i][col[j]] + 19800000);
+		var d = new Date(data[i][col[j]] + 19800000);
                    tabCell.innerHTML = d;
                 } else {
-                   tabCell.innerHTML = myBooks[i][col[j]];
+                   tabCell.innerHTML = data[i][col[j]];
                 }
             }
         }

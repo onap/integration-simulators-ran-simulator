@@ -23,58 +23,55 @@ package org.onap.ransim.rest.api.models;
 import java.io.Serializable;
 
 public class CreateACellReq implements Serializable {
-    
-    private long physicalCellId;
-    
-    private int gridX;
-    private int gridY;
-    
-    private static final long serialVersionUID = 3736300675426332512L;
-    
-    public CreateACellReq() {
-        // Default constructor for CreateACellReq
-    }
-    
-    /**
-     * A constructor for CreateACellReq.
-     *
-     * @param physicalCellId
-     *            PCI number of the new cell
-     * @param gridX
-     *            x coordinate value for the cell
-     * @param gridY
-     *            y coordinate value for the cell
-     */
-    public CreateACellReq(long physicalCellId, int gridX, int gridY) {
-        super();
-        
-        this.physicalCellId = physicalCellId;
-        
-        this.gridX = gridX;
-        this.gridY = gridY;
-    }
-    
-    public long getPhysicalCellId() {
-        return physicalCellId;
-    }
-    
-    public void setPhysicalCellId(long physicalCellId) {
-        this.physicalCellId = physicalCellId;
-    }
-    
-    public int getGridX() {
-        return gridX;
-    }
-    
-    public void setGridX(int gridX) {
-        this.gridX = gridX;
-    }
-    
-    public int getGridY() {
-        return gridY;
-    }
-    
-    public void setGridY(int gridY) {
-        this.gridY = gridY;
-    }
+
+	private long physicalCellId;
+
+	private int gridX;
+	private int gridY;
+
+	private static final long serialVersionUID = 3736300675426332512L;
+
+	public CreateACellReq() {
+		// Default constructor for CreateACellReq
+	}
+
+	/**
+	 * A constructor for CreateACellReq.
+	 *
+	 * @param physicalCellId PCI number of the new cell
+	 * @param gridX          x coordinate value for the cell
+	 * @param gridY          y coordinate value for the cell
+	 */
+	public CreateACellReq(long physicalCellId, int gridX, int gridY) {
+		super();
+
+		this.physicalCellId = physicalCellId;
+
+		this.gridX = gridX;
+		this.gridY = gridY;
+	}
+
+	public long getPhysicalCellId() {
+		return physicalCellId;
+	}
+
+	public void setPhysicalCellId(long physicalCellId) {
+		this.physicalCellId = physicalCellId;
+	}
+
+	public int getGridX() {
+		return gridX;
+	}
+
+	public void setGridX(int gridX) {
+		this.gridX = gridX;
+	}
+
+	public int getGridY() {
+		return gridY;
+	}
+
+	public void setGridY(int gridY) {
+		this.gridY = gridY;
+	}
 }

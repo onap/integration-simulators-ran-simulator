@@ -32,26 +32,26 @@ import java.util.Set;
 
 import mockit.Mock;
 import mockit.MockUp;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-//import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.onap.ransim.rest.api.models.CellDetails;
 import org.onap.ransim.rest.api.models.CellNeighbor;
 import org.onap.ransim.rest.api.models.FmAlarmInfo;
-import org.onap.ransim.rest.api.models.GetNeighborList;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NeihborId;
 import org.onap.ransim.rest.api.models.NetconfServers;
+import org.onap.ransim.rest.api.services.RansimControllerServices;
+import org.onap.ransim.rest.api.services.RansimRepositoryService;
 import org.onap.ransim.rest.client.RestClient;
 import org.onap.ransim.websocket.model.CommonEventHeaderFm;
 import org.onap.ransim.websocket.model.EventFm;
 import org.onap.ransim.websocket.model.FaultFields;
 import org.springframework.context.annotation.PropertySource;
-
-import com.google.gson.Gson;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author ubuntu16
@@ -60,17 +60,17 @@ import com.google.gson.Gson;
 @RunWith(MockitoJUnitRunner.class)
 @PropertySource("classpath:ransim.properties")
 public class TestRansimController {
+	
 	@Test
 	public void testGetRansimController() {
-
-		RansimController rc = RansimController.getRansimController();
-		assertNotNull(rc);
-	}
-
+		RansimControllerServices rc = Mockito.mock(RansimControllerServices.class);
+         assertNotNull(rc);
+         }
+	
 	@Test  
 	public void testsetNetconfServers() {
 		// fail("Not yet implemented");
-		RansimController rscontroller = Mockito.mock(RansimController.class);
+		RansimControllerServices rscontroller = Mockito.mock(RansimControllerServices.class);
 		CellDetails cell1 = new CellDetails("Chn01", 1, "nc1");
 		CellDetails cell2 = new CellDetails("Chn02", 2, "nc1");
 		CellDetails cell3 = new CellDetails("Chn03", 3, "nc1");
@@ -80,24 +80,25 @@ public class TestRansimController {
 		cells.add(cell1);
 		cells.add(cell2);
 		cells.add(cell3);
+		cells.add(cell4);
 
 		NetconfServers server = new NetconfServers("nc1", null, null, cells);
 
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			NetconfServers getNetconfServer(String serverId) {
 
 				return server;
 			}
 		};
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			CellDetails getCellDetail(String nodeId) {
 
 				return cell4;
 			}
 		};
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			void mergeNetconfServers(NetconfServers netconfServers) {
 
@@ -115,7 +116,7 @@ public class TestRansimController {
 	@Test
 	public void testGenerateNeighborList() {
 		// fail("Not yet implemented");
-		RansimController rscontroller = Mockito.mock(RansimController.class);
+		RansimControllerServices rscontroller = Mockito.mock(RansimControllerServices.class);
 		Set<NeighborDetails> neighborList = new HashSet<NeighborDetails>();
 		NeighborDetails nbr1 = new NeighborDetails(new NeihborId("Chn00", "Chn01"), false);
 		NeighborDetails nbr2 = new NeighborDetails(new NeihborId("Chn00", "Chn02"), false);
@@ -134,7 +135,7 @@ public class TestRansimController {
 		cellNbr.setNodeId("Chn00");
 		cellNbr.setNeighborList(neighborList);
 
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			CellNeighbor getCellNeighbor(String nodeId) {
 				if (nodeId.equals("Chn00")) {
@@ -146,7 +147,7 @@ public class TestRansimController {
 			}
 		};
 
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			CellDetails getCellDetail(String nodeId) {
 				if (nodeId.equals("Chn00")) {
@@ -181,7 +182,7 @@ public class TestRansimController {
 	@Test
 	public void testSetEventFm() {
 		// fail("Not yet implemented");
-		RansimController rscontroller = Mockito.mock(RansimController.class);
+		RansimControllerServices rscontroller = Mockito.mock(RansimControllerServices.class);
 		Map<String, String> alarmAdditionalInformation = new HashMap<String, String>();
 		alarmAdditionalInformation.put("networkId", "abc");
 		alarmAdditionalInformation.put("collisions", "1");
@@ -191,7 +192,7 @@ public class TestRansimController {
 				alarmAdditionalInformation);
 		EventFm checkObj = new EventFm(commonEventHeader, faultFields);
 
-		new MockUp<RansimController>() {
+		new MockUp<RansimControllerServices>() {
 			@Mock
 			String getUuid() {
 				return "";
@@ -230,9 +231,9 @@ public class TestRansimController {
 
 	//@Test
 	public void testStopAllCells() {
-		RansimController rscontroller = Mockito.mock(RansimController.class);
+		RansimControllerServices rscontroller = Mockito.mock(RansimControllerServices.class);
 
-		new MockUp<RansimControllerDatabase>() {
+		new MockUp<RansimRepositoryService>() {
 			@Mock
 			List<NetconfServers> getNetconfServersList() {
 				System.out.println("getNetconfServersList");
@@ -254,9 +255,58 @@ public class TestRansimController {
 			}
 		};
 
-		String result = rscontroller.stopAllCells();
+		String result = rscontroller.stopAllSimulation();
 		System.out.println("testStopAllCells: " + result);
 		assertEquals("Netconf servers unmounted.", result);
+	}
+
+        @Test
+        public void testStartRanSimulation() throws Exception {
+
+        ResponseEntity<String> rsEntity = new ResponseEntity<>("Simulation started", HttpStatus.OK);
+        RansimController rscontroller = Mockito.mock(RansimController.class);
+        when(rscontroller.startRanSliceSimulation()).thenReturn(rsEntity);
+        assertEquals(rscontroller.startRanSliceSimulation(), rsEntity);
+
+        }
+
+	@Test
+	public void testFailureStartRanSimulation() throws Exception {
+
+        RansimController rscontroller = new RansimController();
+	ResponseEntity<String> result = rscontroller.startRanSliceSimulation();
+        assertEquals(result.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+	}
+
+	@Test
+	public void testStopRanSimulation() throws Exception {  
+		
+        ResponseEntity<String> rsEntity = new ResponseEntity<>("Simulation stopped", HttpStatus.OK);
+        RansimController rscontroller = Mockito.mock(RansimController.class);
+        when(rscontroller.stopRanSliceSimulation()).thenReturn(rsEntity);
+        assertEquals(rscontroller.stopRanSliceSimulation(), rsEntity);
+
+	}
+
+	@Test
+	public void testGenerateIntelligentSlicingPmData() throws Exception {
+
+        ResponseEntity<String> rsEntity = new ResponseEntity<>("IntelligentSlicing PM data generated", HttpStatus.OK);
+        RansimController rscontroller = Mockito.mock(RansimController.class);
+        when(rscontroller.generateIntelligentSlicingPmData()).thenReturn(rsEntity);
+        assertEquals(rscontroller.generateIntelligentSlicingPmData(), rsEntity);
+
+	}
+
+	@Test
+	public void testStopIntelligentSlicingPmData() throws Exception {
+
+        ResponseEntity<String> rsEntity = new ResponseEntity<>("Stopped PM data generation.", HttpStatus.OK);
+        RansimController rscontroller = Mockito.mock(RansimController.class);
+        when(rscontroller.stopIntelligentSlicingPmData()).thenReturn(rsEntity);
+        assertEquals(rscontroller.stopIntelligentSlicingPmData(), rsEntity);
+
 	}
 
 }

@@ -30,37 +30,32 @@ import javax.persistence.GenerationType;
 @Entity
 @Table(name = "OperationLog")
 public class OperationLog {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int rowId;
-    private long time;
-    private String nodeId;
-    private String source;
-    
-    @Column(name = "message", length = 300)
-    private String message;
-    private String fieldName;
-    private String operation;
-    /*private String prevValue;
-    
-    @Column(name = "currValue", length = 500)
-    private String currValue;*/
-    
-    public int getRowId() {
-        return rowId;
-    }
-    
-    public void setRowId(int rowId) {
-        this.rowId = rowId;
-    }
-    
-    public long getTime() {
-        return time;
-    }
-    
-    
-    public String getSource() {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int rowId;
+	private long time;
+	private String nodeId;
+	private String source;
+
+	@Column(name = "message", length = 300)
+	private String message;
+	private String fieldName;
+	private String operation;
+
+	public int getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public String getSource() {
 		return source;
 	}
 
@@ -69,40 +64,39 @@ public class OperationLog {
 	}
 
 	public void setTime(long time) {
-        this.time = time;
-    }
-    
-    public String getNodeId() {
-        return nodeId;
-    }
-    
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-    
-    public String getMessage() {
-        return message;
-    }
-    
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    
-    public String getFieldName() {
-        return fieldName;
-    }
-    
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-    
-    public String getOperation() {
-        return operation;
-    }
-    
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
-    
-        
+		this.time = time;
+	}
+
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
 }

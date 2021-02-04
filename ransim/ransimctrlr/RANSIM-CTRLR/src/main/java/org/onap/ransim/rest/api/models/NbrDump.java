@@ -20,35 +20,35 @@
 package org.onap.ransim.rest.api.models;
 
 public class NbrDump {
-    
-    private String nodeId;
-    private String blacklisted;
-    
-    public NbrDump() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public NbrDump(String nodeId, String blacklisted) {
-        super();
-        this.nodeId = nodeId;
-        this.blacklisted = blacklisted;
-    }
-    
-    public String getNodeId() {
-        return nodeId;
-    }
-    
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-    
-    public String getBlacklisted() {
-        return blacklisted;
-    }
-    
-    public void setBlacklisted(String blacklisted) {
-        this.blacklisted = blacklisted;
-    }
-    
+
+	private String nodeId;
+	private String blacklisted;
+
+	public NbrDump() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public NbrDump(String nodeId, String blacklisted) {
+		super();
+		this.nodeId = nodeId;
+		this.blacklisted = blacklisted;
+	}
+
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public String getBlacklisted() {
+		return blacklisted;
+	}
+
+	public void setBlacklisted(String blacklisted) {
+		this.blacklisted = blacklisted;
+	}
+
 }

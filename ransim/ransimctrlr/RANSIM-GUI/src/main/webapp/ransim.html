@@ -23,56 +23,58 @@
 <html>
 
 <head>
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,target-densitydpi=device-dpi, user-scalable=no" />
-    <style>
-        .show {
-            z-index: 1000;
-            position: absolute;
-            padding: 2px;
-            display: block;
-            margin: 0;
-            list-style-type: none;
-            list-style: none;
-        }
-        
-        .hide {
-            display: none;
-        }
-        
-        .btn-group .button {
-            background-color: LightGrey;
-            color: black;
-            border: 1px solid Black;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100px;
-            display: block;
-        }
-        
-        .btn-group .button:not (:last-child) {
-            border-bottom: none;
-        }
-        
-        .btn-group .button:hover {
-            background-color: lightblue;
-            color: white;
-        }
-        .button {
-		     background-color: #4CAF50; /* Green */
-		    border: none;
-		    color: white;
-		    text-align: center;
-		    text-decoration: none;
-		    display: inline-block;
-		    font-size: 16px;
-		    margin: 4px 2px;
-		    cursor: pointer;
-		}
-    </style>
-    <script>
+<meta name="viewport"
+	content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,target-densitydpi=device-dpi, user-scalable=no" />
+<style>
+.show {
+	z-index: 1000;
+	position: absolute;
+	padding: 2px;
+	display: block;
+	margin: 0;
+	list-style-type: none;
+	list-style: none;
+}
+
+.hide {
+	display: none;
+}
+
+.btn-group .button {
+	background-color: LightGrey;
+	color: black;
+	border: 1px solid Black;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	width: 100px;
+	display: block;
+}
+
+.btn-group .button:not (:last-child ) {
+	border-bottom: none;
+}
+
+.btn-group .button:hover {
+	background-color: lightblue;
+	color: white;
+}
+
+.button {
+	background-color: #4CAF50; /* Green */
+	border: none;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+</style>
+<script>
         var childWindow;
 
         var ScreenConfig;
@@ -138,11 +140,7 @@
                 var physicalCellId = topoObj.cellTopology[i].physicalCellId;
                 var serverId = topoObj.cellTopology[i].serverId;
                 var confColor = noProblemColor;
-                /*if (typeof topoObj.cellTopology[i].color != 'undefined') {
-                    confColor = topoObj.cellTopology[i].color;
-			console.log("topoObj.cellTopology[i].color:");
-			console.log(topoObj.cellTopology[i].color);
-                }*/
+            
 		confColor = topoObj.cellTopology[i].color;
 			console.log("topoObj.cellTopology[i].color:");
 			console.log(topoObj.cellTopology[i].color);
@@ -249,7 +247,6 @@
                         		'menubar=no, locationbar=no, toolbar=no, width=500px, height=300px'
                    		 );
 
-                                //alert("Cell Id:" + nodeVal + "\nPhysical Cell Id:" + cellVal + "\nPnf Name:" + pnfName);
                             });
                         document.getElementById("showNeighbours").addEventListener("click",
                             function() {
@@ -301,35 +298,6 @@
             ScreenConfig, topoObj) {
             document.getElementById("modified").innerHTML = 'b';
            
-            /* for (i in topoObj.cellTopology) {
-                var n = topoObj.cellTopology[i].nodeId;
-                var p = topoObj.cellTopology[i].physicalCellId;
-                if (typeof topoObj.cellTopology[i].color != 'undefined') {
-                    confColor = topoObj.cellTopology[i].color;
-                }
-                var x = (topoObj.cellTopology[i].screenX - topoObj.minScreenX ) * ScreenConfig.xScaleUnit + 20;
-                var y = (topoObj.cellTopology[i].screenY - topoObj.minScreenY ) * ScreenConfig.yScaleUnit + 20;
-
-                if (topoObj.cellTopology[i].sectorNumber == 1) {
-                    x -= RADIUS;
-                } else if (topoObj.cellTopology[i].sectorNumber == 2) {
-                    x += RADIUS;
-                } else if (topoObj.cellTopology[i].sectorNumber == 3) {
-                    y += 1.8 * RADIUS;
-                }
-
-                ScreenConfig.context.fillStyle = "#BFBFBF";
-                ScreenConfig.context.beginPath();
-                ScreenConfig.context.arc(x, y, RADIUS, 0, Math.PI * 2, true);
-                ScreenConfig.context.strokeStyle = "black";
-                ScreenConfig.context.stroke();
-                ScreenConfig.context.closePath();
-                ScreenConfig.context.fill();
-                ScreenConfig.context.font = "bold 11px Comic Sans MS";
-                ScreenConfig.context.fillStyle = "black";
-                ScreenConfig.context.textAlign = "center";
-                fillMultiLineText(ScreenConfig.context, p, x, y);
-            } */
 
             for (i in neighbour.cellsWithHo) {
                 var neighbourNodeId = neighbour.cellsWithHo[i].nodeId;
@@ -392,9 +360,6 @@
                 ScreenConfig.context.lineTo(nbrCellX-headlen*Math.cos(angle+Math.PI/6),nbrCellY-headlen*Math.sin(angle+Math.PI/6));
                 ScreenConfig.context.stroke();
                 ScreenConfig.context.closePath();
-
-                  
-
                 ScreenConfig.context.fillStyle = confuColor;
                 ScreenConfig.context.beginPath();
                 ScreenConfig.context.arc(nbrCellX, nbrCellY, RADIUS, 0, Math.PI * 2, true);
@@ -495,7 +460,6 @@
                 "nodeId": cid
             }
             var dataObj = JSON.stringify(formVal);
-            //var dataObj = JSON.stringify(formVal);
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
@@ -529,7 +493,6 @@
                 "nodeId": cid
             }
             var dataObj = JSON.stringify(formVal);
-            //var dataObj = JSON.stringify(formVal);
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
@@ -541,12 +504,7 @@
                         else
                             neighbourNodeIds += ',' + neighbour.cellsWithHo[i].nodeId;
                     }
-		    /*for (i in neighbour.cellsWithNoHo) {
-                        if (neighbourNodeIds.length == 0)
-                            neighbourNodeIds += neighbour.cellsWithNoHo[i].nodeId;
-                        else
-                            neighbourNodeIds += ',' + neighbour.cellsWithNoHo[i].nodeId;
-                    }*/
+		 
                     var neighbrList = escape(neighbourNodeIds);
                     childWindow = window.open('modifyCellPci.html?cid=' + cid +
                         '&pcid=' + pcid + '&neighbrList=' + neighbrList, '',
@@ -585,8 +543,6 @@
         }
 
         function isIntersect(point, currCell, cellX, cellY, ScreenConfig) {
-            //var cellX = currCell.screenX * ScreenConfig.xScaleUnit;
-            //var cellY = currCell.screenY * ScreenConfig.yScaleUnit;
 
             if (currCell.sectorNumber == 1) {
                 cellX -= ScreenConfig.RADIUS;
@@ -616,7 +572,6 @@
         }
         
         function searchCell(){
-        	//alert("enter netconf server id");
         	var serverId = document.getElementById("myText").value;;
         	netconfServerUserInput = serverId;
         	console.log("netconfServerUserInput");
@@ -677,15 +632,16 @@
 </head>
 
 <body onLoad="init();" style="margin: 0px">
-    <div class="hide" id="rmenu"></div>
-    <div class="hide" id="modified"></div>
-    <div id="ransim" class="absolute">
-    PNF/Cell name: <input type="text" id="myText" size="9" value="ncserver00">	
+	<div class="hide" id="rmenu"></div>
+	<div class="hide" id="modified"></div>
+	<div id="ransim" class="absolute">
+		PNF/Cell name: <input type="text" id="myText" size="9"
+			value="ncserver00">
 		<button onclick="searchCell()">Search</button>
 		<br>
-		
+
 	</div>
-    <canvas id="myCanvas" width="500000" height="500000"></canvas>
+	<canvas id="myCanvas" width="500000" height="500000"></canvas>
 </body>
 
 </html>

@@ -22,55 +22,51 @@ package org.onap.ransim.rest.api.models;
 import java.util.List;
 
 public class GetNeighborList {
-    
-    private String nodeId;
-    private List<CellDetails> cellsWithNoHo;
-    private List<CellDetails> cellsWithHo;
-    
-    public GetNeighborList() {
-        super();
-    }
-    
-    /**
-     * Constructor with all fields.
-     * 
-     * @param nodeId
-     *            Node Id of cell
-     * @param cellsWithNoHO
-     *            List of neighbors with unsuccessful handover.
-     * @param cellsWithHO
-     *            List of neighbors with successful handover.
-     */
-    public GetNeighborList(String nodeId, List<CellDetails> cellsWithNoHo,
-            List<CellDetails> cellsWithHo) {
-        super();
-        this.nodeId = nodeId;
-        this.cellsWithNoHo = cellsWithNoHo;
-        this.cellsWithHo = cellsWithHo;
-    }
-    
-    public String getNodeId() {
-        return nodeId;
-    }
-    
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-    
-    public List<CellDetails> getCellsWithNoHo() {
-        return cellsWithNoHo;
-    }
-    
-    public void setCellsWithNoHo(List<CellDetails> cellsWithNoHo) {
-        this.cellsWithNoHo = cellsWithNoHo;
-    }
-    
-    public List<CellDetails> getCellsWithHo() {
-        return cellsWithHo;
-    }
-    
-    public void setCellsWithHo(List<CellDetails> cellsWithHo) {
-        this.cellsWithHo = cellsWithHo;
-    }
-    
+
+	private String nodeId;
+	private List<CellDetails> cellsWithNoHo;
+	private List<CellDetails> cellsWithHo;
+
+	public GetNeighborList() {
+		super();
+	}
+
+	/**
+	 * Constructor with all fields.
+	 * 
+	 * @param nodeId        Node Id of cell
+	 * @param cellsWithNoHO List of neighbors with unsuccessful handover.
+	 * @param cellsWithHO   List of neighbors with successful handover.
+	 */
+	public GetNeighborList(String nodeId, List<CellDetails> cellsWithNoHo, List<CellDetails> cellsWithHo) {
+		super();
+		this.nodeId = nodeId;
+		this.cellsWithNoHo = cellsWithNoHo;
+		this.cellsWithHo = cellsWithHo;
+	}
+
+	public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public List<CellDetails> getCellsWithNoHo() {
+		return cellsWithNoHo;
+	}
+
+	public void setCellsWithNoHo(List<CellDetails> cellsWithNoHo) {
+		this.cellsWithNoHo = cellsWithNoHo;
+	}
+
+	public List<CellDetails> getCellsWithHo() {
+		return cellsWithHo;
+	}
+
+	public void setCellsWithHo(List<CellDetails> cellsWithHo) {
+		this.cellsWithHo = cellsWithHo;
+	}
+
 }

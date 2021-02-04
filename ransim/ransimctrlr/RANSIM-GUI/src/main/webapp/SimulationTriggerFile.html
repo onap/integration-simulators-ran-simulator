@@ -20,47 +20,53 @@
  -->
 
 <html>
-   <head>
-      <title>Simulator Configuration</title>
-      <script src="angular.min.js"></script>      
-      <style>
-         table, th , td {
-            border: 1px solid grey;
-            border-collapse: collapse;
-            padding: 5px;
-         }
-         
-         table tr:nth-child(odd) {
-            background-color: #f2f2f2;
-         }
-         
-         table tr:nth-child(even) {
-            background-color: #ffffff;
-         }
-      </style>
-   </head>
-   <body><center>
-      <h2>Simulator Configuration</h2>
-      <div align="center" ng-app = "mainApp" ng-controller = "configController">         
-         <form name = "configForm" novalidate >
-            Using dump file to load simulation data.
-            <br>
-            <table border = "0" align=center>
-               <tr>
-                  <td colspan=2 align=right>                  
-                     <button ng-model = "configure" ng-click="triggerSimulatorConfig()">Configure</button>
-					   <button ng-model = "close" ng-click = "close()">Close</button>
-                  </td>
-               </tr>					
-            </table>
-         </form>
-      </div>
-      <script>
+<head>
+<title>Simulator Configuration</title>
+<script src="angular.min.js"></script>
+<style>
+table, th, td {
+	border: 1px solid grey;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+table tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+table tr:nth-child(even) {
+	background-color: #ffffff;
+}
+</style>
+</head>
+<body>
+	<center>
+		<h2>Simulator Configuration</h2>
+		<div align="center" data-ng-init="onloadFun()" ng-app="mainApp" ng-controller="configController">
+			<form name="configForm" novalidate>
+				Using dump file to load simulation data. <br><br>
+				<select ng-required="required"  ng-model="dumpfile"  ng-options="x for x in files" required="required">
+				<option value="" selected="selected" disabled="disabled">select dump file</option>
+				</select> 
+				<br>
+				<br>
+				<table border="0" align=center>
+					<tr>
+						<td colspan=2 align=right>
+							<button ng-model="configure" ng-click="triggerSimulatorConfig()">Configure</button>
+							<button ng-model="close" ng-click="close()">Close</button>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<script>
          var mainApp = angular.module("mainApp", []);
          mainApp.controller('configController',['$scope', '$http', function($scope, $http) {
             $scope.triggerSimulatorConfig = function(){			
-				
-                 var res = $http.post('/ransim/api/StartSimulation')
+            	var files = { "dumpfile" :$scope.dumpfile}
+            	var obj= JSON.stringify(files);;
+                 var res = $http.post('/ransim/api/StartSimulation',obj)
 					.then(function successCallback(response){
 						alert( "Simulation successfully triggered");
 						window.close();
@@ -69,11 +75,24 @@
 						window.close();
 					}); 
 				                            				
-			};			
+			};	
+			
+			$scope.onloadFun=function() {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						var files = JSON.parse(this.responseText);
+						$scope.files =files;
+					}
+				};
+				xmlhttp.open("GET", "/ransim/file/dumpfiles", false);
+				xmlhttp.send(); 
+			};	
 			$scope.close = function(){	
 				window.close();
 			}
          }]);
-      </script>      
-   <center></body>
+      </script>
+		<center>
+</body>
 </html>

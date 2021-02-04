@@ -27,12 +27,10 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.servlet.MultipartConfigElement;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -43,57 +41,51 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableWebMvc
 @EnableSwagger2
 @ComponentScan(basePackages = { "org.onap.*", "com.*" })
-public class RansimRestConfig extends WebMvcConfigurerAdapter {
+public class RansimRestConfig {
+	private static final Logger log = Logger.getLogger(RansimRestConfig.class);
 
-    /**
-     * init.
-     */
-    @PostConstruct
-    public void init() {
-        Properties prop = new Properties();
-        try (InputStream input = new FileInputStream("rs.properties")) {
-            // load a properties file
-            prop.load(input);
-        } catch (Exception e) {
-            System.out.println("Exception Occured while loading properties file" + e);
-        }
-    }
+	/**
+	 * init.
+	 */
+	@PostConstruct
+	public void init() {
+		Properties prop = new Properties();
+		try (InputStream input = new FileInputStream("rs.properties")) {
+			// load a properties file
+			prop.load(input);
+		} catch (Exception e) {
+			log.error("Exception Occured while loading properties file : {} ", e);
+		}
+	}
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("Ran Simulator Controller REST API")
+				.description("This API helps to make queries against Ran Simulator Controller").version("3.0").build();
+	}
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Ran Simulator Controller REST API")
-                .description("This API helps to make queries against Ran Simulator Controller").version("3.0").build();
-    }
+	/**
+	 * ransimappApi .
+	 *
+	 * @return returns api info
+	 */
+	@Bean
+	public Docket ransimappApi() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("org.onap.ransim.rest.api")).paths(PathSelectors.any())
+				.build().apiInfo(apiInfo());
+	}
 
-    /**
-     * ransimappApi .
-     *
-     * @return returns api info
-     */
-    @Bean
-    public Docket ransimappApi() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage("org.onap.ransim.rest.api")).paths(PathSelectors.any())
-                .build().apiInfo(apiInfo());
-    }
+	/**
+	 * MultipartConfigElement.
+	 *
+	 * @return returns MultipartConfigElement
+	 */
+	@Bean
+	public MultipartConfigElement multipartConfigElement() {
+		String location = System.getProperty("java.io.tmpdir");
+		return new MultipartConfigElement(location);
+	}
 
-    /**
-     * MultipartConfigElement.
-     *
-     * @return returns MultipartConfigElement
-     */
-    @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        String location = System.getProperty("java.io.tmpdir");
-        MultipartConfigElement mp = new MultipartConfigElement(location);
-        return mp;
-    }
 }
