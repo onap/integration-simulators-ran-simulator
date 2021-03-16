@@ -1,3 +1,23 @@
+/*
+ * ============LICENSE_START=======================================================
+ * Ran Simulator Controller
+ * ================================================================================
+ * Copyright (C) 2020-2021 Wipro Limited.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
 package org.onap.ransim.rest.api.services;
 
 import java.util.ArrayList;
@@ -9,10 +29,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +66,7 @@ import org.onap.ransim.rest.web.mapper.RRMPolicyRatioModel;
 
 @Service
 public class RANSliceConfigService {
-	private static final Logger logger = LoggerFactory.getLogger(RANSliceConfigService.class);
+        private static Logger logger = Logger.getLogger(RANSliceConfigService.class.getName());
 	@Autowired
 	private NRCellCURepository nRCellCURepository;
 	
@@ -596,8 +615,11 @@ public class RANSliceConfigService {
 		logger.debug("Request recieved to fetch all DUs");
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		List<GNBDUFunction> duList = (List<GNBDUFunction>) gNBDURepository.findAll();
-		List<GNBDUModel> duModels = duList.stream()
-				.map(duEntity -> modelMapper.map(duEntity, GNBDUModel.class)).collect(Collectors.toList());
+		List<GNBDUModel> duModels = duList.stream().map(duEntity -> {
+			GNBDUModel gnbDuModel = modelMapper.map(duEntity, GNBDUModel.class);
+			gnbDuModel.setNearRTRICId(duEntity.getNearRTRIC().getNearRTRICId());
+			return gnbDuModel;
+		}).collect(Collectors.toList());
 		return duModels;
 	}
 	

@@ -1,3 +1,23 @@
+/*
+ * ============LICENSE_START=======================================================
+ * Ran Simulator Controller
+ * ================================================================================
+ * Copyright (C) 2020-2021 Wipro Limited.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
 package org.onap.ransim.rest.api.controller;
 
 import java.util.List;
@@ -40,7 +60,7 @@ public class RANSliceConfigController {
 	//SDN-R APIs
 	/**
 	 * This method updates the slice details, config details of CUCP
-	 * 
+	 *
 	 * @param GNBCUCPModel
 	 * @return ResponseEntity<GNBCUCPModel>
 	 */
@@ -57,7 +77,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the CUCP details
-	 * 
+	 *
 	 * @param gNBCUCPName
 	 * @return ResponseEntity<GNBCUCPModel>
 	 */
@@ -69,7 +89,7 @@ public class RANSliceConfigController {
 				return new ResponseEntity<GNBCUCPModel>(ranSliceConfigService.fetchGNBCUCPData(gNBCUCPName), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<GNBCUCPModel>(ranSliceConfigService.fetchGNBCUCPData(gNBCUCPName), HttpStatus.NO_CONTENT);
-			}			
+			}
 		} catch (Exception e) {
 			logger.error("Error while fetching GNBCUCP:" + e.getMessage());
 			return new ResponseEntity<GNBCUCPModel>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +98,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * This method updates the slice details, config details of CUUP
-	 * 
+	 *
 	 * @param GNBCUUPModel
 	 * @return ResponseEntity<GNBCUUPModel>
 	 */
@@ -95,7 +115,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the CUCP details
-	 * 
+	 *
 	 * @param gNBCUCPName
 	 * @return ResponseEntity<GNBCUCPModel>
 	 */
@@ -116,7 +136,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * This method updates the slice details, config details of gNBDU
-	 * 
+	 *
 	 * @param GNBDUModel
 	 * @return ResponseEntity<GNBDUModel>
 	 */
@@ -133,7 +153,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the gNBDU details
-	 * 
+	 *
 	 * @param gNBDUId
 	 * @return ResponseEntity<GNBDUModel>
 	 */
@@ -154,7 +174,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * This method updates the NearRTRIC details
-	 * 
+	 *
 	 * @param nearRTRICModel
 	 * @return ResponseEntity<NearRTRICModel>
 	 */
@@ -172,7 +192,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the nearRTRIC details
-	 * 
+	 *
 	 * @param nearRTRICId
 	 * @return ResponseEntity<GNBDUModel>
 	 */
@@ -187,7 +207,7 @@ public class RANSliceConfigController {
 				return new ResponseEntity<NearRTRICModel>(ranSliceConfigService.fetchNearRTRICData(nearRTRICId),
 						HttpStatus.NO_CONTENT);
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("Error while fetching nearRTRIC:" + e.getMessage());
 			return new ResponseEntity<NearRTRICModel>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -196,7 +216,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the RRMPolicy of CU/DU
-	 * 
+	 *
 	 * @param resourceType
 	 * @param resourceId
 	 * @return
@@ -221,7 +241,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * This method updates the RRM policy of a network function
-	 * 
+	 *
 	 * @param nearRTRICModel
 	 * @return ResponseEntity<NearRTRICModel>
 	 */
@@ -236,12 +256,12 @@ public class RANSliceConfigController {
 		}
 	}
 
-	
+
 	/**
 	 * To find the list of RICs from tracking area
 	 * 1. Find Cells from TA
 	 * 2. find List of RICs of the cells
-	 * 
+	 *
 	 * @param trackingArea
 	 * @return
 	 */
@@ -250,7 +270,7 @@ public class RANSliceConfigController {
 		logger.info("Request Received");
 		try {
 			List<String> cellIds = this.findListOfCells(trackingArea).getBody();
-			List<Integer> cellIdList =cellIds.stream().map(Integer::parseInt).collect(Collectors.toList());			
+			List<Integer> cellIdList =cellIds.stream().map(Integer::parseInt).collect(Collectors.toList());
 			if(ranSliceConfigService.findNearRTRICofCells(cellIdList).size()>0) {
 				return new ResponseEntity<List<NearRTRICModel>>(ranSliceConfigService.findNearRTRICofCells(cellIdList),
 					HttpStatus.OK);
@@ -266,7 +286,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To find the list of CUs in a tracking area
-	 * 
+	 *
 	 * @param trackingArea
 	 * @return
 	 */
@@ -278,16 +298,16 @@ public class RANSliceConfigController {
 				return new ResponseEntity<List<String>>(ranSliceConfigService.fetchCellsofTA(trackingArea), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<List<String>>(ranSliceConfigService.fetchCellsofTA(trackingArea), HttpStatus.NO_CONTENT);
-			}			
+			}
 		} catch (Exception e) {
 			logger.error("Error while fetching the Cells:" + e.getMessage());
 			return new ResponseEntity<List<String>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To find the list of CU-Cells
-	 * 
+	 *
 	 * @param nearRTRICId
 	 * @return
 	 */
@@ -306,13 +326,13 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<NRCellCUModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
+
+
 	/**
 	 * To find the nearRTRIC of NSSI
-	 * 
+	 *
 	 * This API can be used in Terminate/activate/deactivate to find the RIC from ranNFNSSIId in SO request
-	 * 
+	 *
 	 * @param ranNFNSSIId
 	 * @return List<NearRTRICModel>
 	 */
@@ -330,10 +350,10 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<NearRTRICModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To find the list of DU-Cells
-	 * 
+	 *
 	 * @param nearRTRICId
 	 * @return
 	 */
@@ -345,18 +365,18 @@ public class RANSliceConfigController {
 				return new ResponseEntity<Map<Integer, List<NRCellDUModel>>>(ranSliceConfigService.fetchDUCellsofRIC(sNSSAI), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<Map<Integer, List<NRCellDUModel>>>(ranSliceConfigService.fetchDUCellsofRIC(sNSSAI), HttpStatus.NO_CONTENT);
-			}			
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Error while fetching the Cells-DU:" + e.getMessage());
 			return new ResponseEntity<Map<Integer, List<NRCellDUModel>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	//Inventory APIs
 	/**
 	 * This method updates the RAN slice details
-	 * 
+	 *
 	 * @param ranSliceInfoModel
 	 * @return ResponseEntity<RANSliceInfoModel>
 	 */
@@ -374,7 +394,7 @@ public class RANSliceConfigController {
 
 	/**
 	 * To fetch the RAN slice Details
-	 * 
+	 *
 	 * @param ranNFNSSIId
 	 * @return RANSliceInfoModel
 	 */
@@ -386,17 +406,17 @@ public class RANSliceConfigController {
 				return new ResponseEntity<RANSliceInfoModel>(ranSliceConfigService.fetchRANSlice(ranNFNSSIId), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<RANSliceInfoModel>(ranSliceConfigService.fetchRANSlice(ranNFNSSIId), HttpStatus.NO_CONTENT);
-			}			
+			}
 		} catch (Exception e) {
 			logger.error("Error while fetching the RAN slice Details:" + e.getMessage());
 			return new ResponseEntity<RANSliceInfoModel>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	//Slice Analysis MS APIs
 	/**
 	 * To fetch The NearRTRICs serving the sNSSAI
-	 * 
+	 *
 	 * @param sNSSAI
 	 * @return List<NearRTRICModel>
 	 */
@@ -414,10 +434,10 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<NearRTRICModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the configuration requested for a slice
-	 * 
+	 *
 	 * @param sNSSAI
 	 * @return
 	 */
@@ -429,16 +449,16 @@ public class RANSliceConfigController {
 				return new ResponseEntity<Map<String,Integer>>(ranSliceConfigService.findSliceProfileconfig(sNSSAI), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<Map<String,Integer>>(ranSliceConfigService.findSliceProfileconfig(sNSSAI), HttpStatus.NO_CONTENT);
-			}			
+			}
 		} catch (Exception e) {
 			logger.error("Error while fetching the Requested Configuration:" + e.getMessage());
 			return new ResponseEntity<Map<String,Integer>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the configuration of a slice in RIC
-	 * 
+	 *
 	 * @param sNSSAI
 	 * @return
 	 */
@@ -457,11 +477,11 @@ public class RANSliceConfigController {
 			return new ResponseEntity<Map<Integer, NSSAIConfig>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the DU details
-	 * 
-	 * @param 
+	 *
+	 * @param
 	 * @return List<GNBDUModel>
 	 */
 	@GetMapping(path="/du-list/{sNSSAI}")
@@ -479,11 +499,11 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<GNBDUModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the DU details
-	 * 
-	 * @param 
+	 *
+	 * @param
 	 * @return List<GNBDUModel>
 	 */
 	@GetMapping(path="/cucp-list/{sNSSAI}")
@@ -500,11 +520,11 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<GNBCUCPModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
-	 * To fetch the Customer Details 
-	 * 
-	 * @param 
+	 * To fetch the Customer Details
+	 *
+	 * @param
 	 * @return Map<String, String>
 	 */
 	@GetMapping(path="/subscriber-details/{sNSSAI}")
@@ -521,11 +541,11 @@ public class RANSliceConfigController {
 			return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the cu details
-	 * 
-	 * @param 
+	 *
+	 * @param
 	 * @return List<GNBCUCPModel>
 	 */
 	@GetMapping(path="/cucp-list")
@@ -542,11 +562,11 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<GNBCUCPModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * To fetch the DU details
-	 * 
-	 * @param 
+	 *
+	 * @param
 	 * @return List<GNBDUModel>
 	 */
 	@GetMapping(path="/du-list")
@@ -563,5 +583,5 @@ public class RANSliceConfigController {
 			return new ResponseEntity<List<GNBDUModel>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 }
