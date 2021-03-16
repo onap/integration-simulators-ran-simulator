@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11c01dee_b256f19c",
+        "filename": "ransim/docker/config/db/ransim_schema.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2021-03-16T15:02:33Z",
+      "side": 1,
+      "message": "How is this related to license additions?",
+      "range": {
+        "startLine": 133,
+        "startChar": 1,
+        "endLine": 133,
+        "endChar": 13
+      },
+      "revId": "fac95ac63d258935d740e28934f22a5dcd8928ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e3d0cb8_bd712742",
+        "filename": "ransim/ransimctrlr/RANSIM-CTRLR/src/main/java/org/onap/ransim/netconf/NetconfClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2021-03-16T15:02:33Z",
+      "side": 1,
+      "message": "These files should be formatted with ONAP Java style (preferably in a separate commit), see https://wiki.onap.org/display/DW/Java+code+style",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 1
+      },
+      "revId": "fac95ac63d258935d740e28934f22a5dcd8928ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
