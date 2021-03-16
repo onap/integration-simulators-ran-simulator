@@ -366,4 +366,3 @@ INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrp
 INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, operationalstate,gnbduid) VALUES(15549,'PRB','UNLOCKED','ACTIVE',12,310,'ENABLED',6);
 
 INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, operationalstate,gnbduid) VALUES(14427,'PRB','UNLOCKED','ACTIVE',12,310,'ENABLED',6);
-

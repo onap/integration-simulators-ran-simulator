@@ -1,4 +1,26 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * Ran Simulator Controller
+ * ================================================================================
+ * Copyright (C) 2021 Wipro Limited.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
 package org.onap.ransim.rest.api.services;
+import java.util.Collection;
+import java.util.Set;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -10,14 +32,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.websocket.Session;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.ByteArrayOutputStream;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-
 
 import org.onap.ransim.rest.api.exceptions.RansimException;
 import org.onap.ransim.rest.api.models.NSSAIConfig;
@@ -40,6 +61,8 @@ import org.onap.ransim.rest.xml.models.MeasType;
 import org.onap.ransim.rest.xml.models.MeasValue;
 import org.onap.ransim.rest.xml.models.ReportingPeriod;
 import org.onap.ransim.rest.xml.models.Result;
+import org.onap.ransim.websocket.model.SlicingPmMessage;
+import org.onap.ransim.websocket.server.RansimWebSocketServer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -51,6 +74,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
 
 @Service
 public class SlicingPMDataGenerator {
@@ -69,83 +94,38 @@ public class SlicingPMDataGenerator {
 	 * 
 	 * @throws RansimException
 	 */
-	public void generateClosedLoopPmData(long startTime)  {
-	try{
-		String requestUrl = "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/du-list";
-		List<GNBDUModel> duList = sendGetRequestToransimDb(requestUrl).getBody();;
-NSSAIConfig  nSSAIConfig  = new NSSAIConfig();
-nSSAIConfig.setdLThptPerSlice(27);
-nSSAIConfig.setuLThptPerSlice(30);
-nSSAIConfig.setMaxNumberOfConns(3000);
-
-NSSAIData nSSAIData = new NSSAIData();
-nSSAIData.setsNSSAI("001-010000");
-nSSAIData.setStatus("ACTIVE");
-nSSAIData.setGlobalSubscriberId("Customer-001");
-nSSAIData.setSubscriptionServiceType("Premium");
-nSSAIData.setConfigData(nSSAIConfig);
-NSSAIData nSSAIData2 = new NSSAIData();
-nSSAIData2.setsNSSAI("001-010001");
-nSSAIData2.setStatus("ACTIVE");
-nSSAIData2.setGlobalSubscriberId("Customer-001");
-nSSAIData2.setSubscriptionServiceType("Premium");
-nSSAIData2.setConfigData(nSSAIConfig);
-
-PLMNInfoModel pLMNInfoModel1 = new PLMNInfoModel();
-pLMNInfoModel1.setpLMNId("310-410 ");
-pLMNInfoModel1.setsNSSAI(nSSAIData);
-PLMNInfoModel pLMNInfoModel2 = new PLMNInfoModel();
-pLMNInfoModel2.setpLMNId("310-411 ");
-pLMNInfoModel2.setsNSSAI(nSSAIData2);
-
-List<PLMNInfoModel> myPLMNInfoModelList = new ArrayList<PLMNInfoModel>();
-myPLMNInfoModelList.add(pLMNInfoModel1);
-myPLMNInfoModelList.add(pLMNInfoModel2);
-
-
- for (GNBDUModel du : duList) {
-    List<NRCellDUModel> duCellList = du.getCellDUList();
-    for (NRCellDUModel cell : duCellList ) {
-    cell.setpLMNInfoList(myPLMNInfoModelList);
-}
-}
-
-duList.forEach(x->logger.debug("DU : " + x));
-		for (GNBDUModel du : duList) {
-			logger.info("Generating PM data for DU :  " + du.getgNBDUName()+ " Id :" + du.getgNBDUId());
-
-   Map<String, Integer > myactiveNssai = new HashMap<>();			
-Map<String, NSSAIConfig> activeNssaiDetails = new HashMap<String, NSSAIConfig>();
-			List<NRCellDUModel> duCellList = du.getCellDUList();
-logger.debug("duCellList.size : " + duCellList.size());
-			int ricId = du.getNearRTRICId();
-logger.debug("RIC ID : " + ricId);
-			List<PLMNInfoModel> plmnInfoList = new ArrayList<>();
-			duCellList.forEach(cell -> plmnInfoList.addAll(cell.getpLMNInfoList()));
-			List<NSSAIData> nssaiData = new ArrayList<>();
-			plmnInfoList.forEach(plmnInfo -> nssaiData.add(plmnInfo.getsNSSAI()));
-			nssaiData.stream().filter(nssai -> nssai.getStatus().equalsIgnoreCase("active"))
-					.forEach(x -> activeNssaiDetails.put(x.getsNSSAI(), x.getConfigData()));
-logger.debug("Goin to produceMeasurementCollectionFile");
-
-                         for (NRCellDUModel cell : duCellList ) {
-                        nssaiData.stream().filter(nssai -> nssai.getStatus().equalsIgnoreCase("active"))
-                                        .forEach(x -> myactiveNssai.put(x.getsNSSAI(), cell.getCellLocalId()));
-                    }   
-logger.debug("myactiveNssai.size : " + myactiveNssai.size());
-			produceMeasurementCollectionFile(du, activeNssaiDetails, duCellList, ricId);
-			logger.info("PM data generated for DU : "+ du.getgNBDUName() + " Id: " + du.getgNBDUId());
+	public void generateClosedLoopPmData(long startTime) {
+		try {
+			String requestUrl = "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/du-list";
+			List<GNBDUModel> duList = sendGetRequestToransimDb(requestUrl).getBody();
+			for (GNBDUModel du : duList) {
+				logger.info("Generating PM data for DU :  " + du.getgNBDUName() + " Id :" + du.getgNBDUId());
+				Map<String, NSSAIConfig> activeNssaiDetails = new HashMap<String, NSSAIConfig>();
+				List<NRCellDUModel> duCellList = du.getCellDUList();
+				int ricId = du.getNearRTRICId();
+				List<PLMNInfoModel> plmnInfoList = new ArrayList<>();
+				duCellList.forEach(cell -> plmnInfoList.addAll(cell.getpLMNInfoList()));
+				List<NSSAIData> nssaiData = new ArrayList<>();
+				plmnInfoList.forEach(plmnInfo -> nssaiData.add(plmnInfo.getsNSSAI()));
+				nssaiData.stream().filter(nssai -> nssai.getStatus().equalsIgnoreCase("active"))
+						.forEach(x -> activeNssaiDetails.put(x.getsNSSAI(), x.getConfigData()));
+				produceMeasurementCollectionFile(du, activeNssaiDetails, duCellList, ricId);
+				logger.info("PM data generated for DU : " + du.getgNBDUName() + " Id: " + du.getgNBDUId());
+			}
+		} catch (RansimException e) {
+			logger.debug("ERROR in closed lopp PM data generation : ");
+			logger.debug(e);
+		} catch (Exception exp) {
+			logger.debug(exp);
 		}
-}catch(RansimException e){
-	logger.debug("ERROR in closed lopp PM data generation : ");
-logger.debug(e);
- } catch(Exception er){
-logger.debug(er);
 	}
-}
+
 	private void produceMeasurementCollectionFile(GNBDUModel du, Map<String, NSSAIConfig> activeNssaiDetails,
 			List<NRCellDUModel> duCellList, int ricId) throws RansimException {
-logger.debug("produceMeasurementCollectionFile");
+		logger.debug("produceing MeasurementCollectionFile ");
+		SlicingPmMessage pmMessage = new SlicingPmMessage();
+		pmMessage.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
+		pmMessage.setSourceName(du.getgNBDUName());
 		LocalDateTime beginTime = LocalDateTime.now();
 		String beginTimeString = beginTime.toString();
 		MeasCollec measCollec = new MeasCollec(beginTimeString);
@@ -155,10 +135,10 @@ logger.debug("produceMeasurementCollectionFile");
 		int jobId = r.nextInt((9999 - 1000) + 1) + 1000;
 		Job job = new Job(String.valueOf(jobId));
 		ReportingPeriod reportingPeriod = new ReportingPeriod("PT900S");
-		
+
 		List<MeasType> measTypeList = setMeasurementTypes(activeNssaiDetails);
-		List<MeasValue> measValueList = setMeasurementValues(duCellList,getMaxVariation(ricId));
-		
+		List<MeasValue> measValueList = setMeasurementValues(duCellList, getMaxVariation(ricId), measTypeList);
+
 		ManagedElement managedElement = new ManagedElement("r0.1", du.getgNBDUName());
 		LocalDateTime grabularityEndTime = LocalDateTime.now();
 		String grabularityEndTimeString = grabularityEndTime.toString();
@@ -172,66 +152,41 @@ logger.debug("produceMeasurementCollectionFile");
 		measDataList.add(measData);
 		LocalDateTime endTime = LocalDateTime.now();
 		String endTimeString = endTime.toString();
+		pmMessage.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
 		MeasCollecEnd measCollecEnd = new MeasCollecEnd(endTimeString);
 		FileFooter fileFooter = new FileFooter(measCollecEnd);
 		MeasCollecFile measCollecFile = new MeasCollecFile(fileHeader, measDataList, fileFooter,
 				"http://www.3gpp.org/ftp/specs/archive/32_series/32.435#measCollec");
 
-		JAXBContext jaxbContext;
 		try {
-			jaxbContext = JAXBContext.newInstance(MeasCollecFile.class);
-			Marshaller marshaller = jaxbContext.createMarshaller();
-
-                        marshaller.setProperty("jaxb.encoding", "UTF-8");   
-                     marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    XMLStreamWriter xmlStreamWriter = XMLOutputFactory.newFactory().createXMLStreamWriter(
-        baos, (String) marshaller.getProperty(Marshaller.JAXB_ENCODING));
-    xmlStreamWriter.writeStartDocument(
-        (String) marshaller.getProperty(Marshaller.JAXB_ENCODING), "1.0");
-   
-   
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-             marshaller.setProperty("com.sun.xml.bind.xmlHeaders",
-      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); 
 			String startDate = beginTimeString.replace(':', '-');
 			String endDate = endTimeString.replace(':', '-');
-			String fileName = "./" + "A" + startDate + "-" + endDate + "-" + String.valueOf(jobId) + "-" + du.getgNBDUName()
-					+ ".xml";
-logger.debug("Craeting file");
-			marshaller.marshal(measCollecFile, new File("/tmp/ransim-install/ClosedLoopData/" + fileName));
-			marshaller.marshal(measCollecFile, System.out);
-                         marshaller.marshal(measCollecFile, xmlStreamWriter);
-		} catch (JAXBException e) {
-			throw new RansimException(e);
+			String fileName = "A" + startDate + "-" + endDate + "-" + String.valueOf(jobId) + "-"
+					+ du.getgNBDUName() + ".xml";
+			pmMessage.setFileName(fileName);
+			Gson gson = new Gson();
+			String pmData = gson.toJson(measCollecFile);
+			pmMessage.setPmData(pmData);
+			closedLoopPmData(pmMessage);
+		} catch (Exception exp) {
+			logger.debug(exp);
 		}
-catch(Exception er){
-logger.debug(er);
-        }
 
-		logger.info("measCollec: " + measCollecFile.toString());
 	}
 
-	private List<MeasValue> setMeasurementValues(List<NRCellDUModel> duCellList, double ricIdVariation) {
-logger.debug("setMeasurementValues");
+	private List<MeasValue> setMeasurementValues(List<NRCellDUModel> duCellList, double ricIdVariation,
+			List<MeasType> measTypeList) {
+		logger.debug("setting MeasurementValues");
 		List<MeasValue> measValueList = new ArrayList<MeasValue>();
 		duCellList.forEach(cell -> {
-			int pvalue = 1;
-			int prbs = cell.getPrbs();
-			int prbsUsedDl = (int) (Math.random() * ricIdVariation * prbs);
-			int prbsUsedUl = (int) (Math.random() * ricIdVariation * prbs);
-                        int prbsUsedDl1 = (int) (Math.random() * ricIdVariation * prbs);
-                        int prbsUsedUl2 = (int) (Math.random() * ricIdVariation * prbs);
+			AtomicInteger pValue = new AtomicInteger(1);
 			List<Result> resultList = new ArrayList<>();
-			Result result1 = new Result(pvalue++, prbsUsedDl);
-			Result result2 = new Result(pvalue++, prbsUsedUl);
-                        Result result3 = new Result(pvalue++, prbsUsedDl1);
-                        Result result4 = new Result(pvalue++, prbsUsedUl2);
-
-                        resultList.add(result1);
-                        resultList.add(result2);
-                        resultList.add(result3);
-                        resultList.add(result4);
+			int prbs = cell.getPrbs();
+			measTypeList.forEach(meas -> {
+				int prbsUsed = (int) (Math.random() * ricIdVariation * prbs);
+				Result result = new Result(pValue.getAndIncrement(), prbsUsed);
+				resultList.add(result);
+			});
 			MeasValue measValue = new MeasValue(cell.getCellLocalId(), resultList, false);
 			measValueList.add(measValue);
 
@@ -253,6 +208,7 @@ logger.debug("setMeasurementValues");
 	}
 
 	private List<MeasType> setMeasurementTypes(Map<String, NSSAIConfig> activeNssaiDetails) {
+		logger.debug("setting MeasurementTypes");
 		List<MeasType> measTypeList = new ArrayList<MeasType>();
 		AtomicInteger pValue = new AtomicInteger(1);
 		activeNssaiDetails.forEach((nssai, configData) -> {
@@ -263,7 +219,7 @@ logger.debug("setMeasurementValues");
 		});
 		return measTypeList;
 	}
-	
+
 	public static <T> ResponseEntity<List<GNBDUModel>> sendGetRequestToransimDb(String requestUrl) {
 		HttpHeaders headers = new HttpHeaders();
 		logger.info("sending request to ransimdb : " + requestUrl);
@@ -276,6 +232,29 @@ logger.debug("setMeasurementValues");
 					});
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	public void closedLoopPmData(SlicingPmMessage pmMessage) {
+		Gson gson = new Gson();
+		String jsonStr = gson.toJson(pmMessage);
+		logger.info("ClosedPmData " + jsonStr);
+		String ipPort = RansimControllerServices.serverIdIpPortMapping.get(pmMessage.getSourceName());
+		if (ipPort != null && !ipPort.trim().equals("")) {
+			logger.info("Connection estabilished with ip: " + ipPort);
+			if (ipPort != null && !ipPort.trim().equals("")) {
+				Session clSess = RansimControllerServices.webSocketSessions.get(ipPort);
+				if (clSess != null) {
+					logger.info("PM Data message sent.");
+					RansimWebSocketServer.sendIntelligentSlicingPmData(jsonStr, clSess);
+				} else {
+					logger.info("No client session for " + ipPort);
+				}
+			} else {
+				logger.info("No client for this serverId");
+			}
+		} else {
+			logger.info("No client for ");
 		}
 	}
 }
