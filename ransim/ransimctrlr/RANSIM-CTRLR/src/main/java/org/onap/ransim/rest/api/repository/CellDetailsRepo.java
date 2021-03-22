@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.repository;
 
 import java.util.List;
@@ -29,9 +30,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CellDetailsRepo extends CrudRepository<CellDetails, String> {
 
-	@Query("SELECT n FROM CellDetails n WHERE n.serverId is null")
-	List<CellDetails> findCellsWithNoServerId();
-	
-	@Query("SELECT cd from CellDetails cd where cd.pciCollisionDetected=true or cd.pciConfusionDetected=true")
-	List<CellDetails> getCellsWithCollisionOrConfusion();
+    @Query("SELECT n FROM CellDetails n WHERE n.serverId is null")
+    List<CellDetails> findCellsWithNoServerId();
+
+    @Query("SELECT cd from CellDetails cd where cd.pciCollisionDetected=true or cd.pciConfusionDetected=true")
+    List<CellDetails> getCellsWithCollisionOrConfusion();
 }

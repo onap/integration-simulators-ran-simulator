@@ -24,32 +24,32 @@ import java.util.List;
 
 public class ModifyNeighbor {
 
-	private String pnfName;
-	private String cellId;
-	private List<NeighborHo> neighborList;
+    private String pnfName;
+    private String cellId;
+    private List<NeighborHo> neighborList;
 
-	public String getPnfName() {
-		return pnfName;
-	}
+    public String getPnfName() {
+        return pnfName;
+    }
 
-	public void setPnfName(String pnfName) {
-		this.pnfName = pnfName;
-	}
+    public void setPnfName(String pnfName) {
+        this.pnfName = pnfName;
+    }
 
-	public String getCellId() {
-		return cellId;
-	}
+    public String getCellId() {
+        return cellId;
+    }
 
-	public void setCellId(String cellId) {
-		this.cellId = cellId;
-	}
+    public void setCellId(String cellId) {
+        this.cellId = cellId;
+    }
 
-	public List<NeighborHo> getNeighborList() {
-		return neighborList;
-	}
+    public List<NeighborHo> getNeighborList() {
+        return neighborList;
+    }
 
-	public void setNeighborList(List<NeighborHo> neighborList) {
-		this.neighborList = neighborList;
-	}
+    public void setNeighborList(List<NeighborHo> neighborList) {
+        this.neighborList = neighborList;
+    }
 
 }

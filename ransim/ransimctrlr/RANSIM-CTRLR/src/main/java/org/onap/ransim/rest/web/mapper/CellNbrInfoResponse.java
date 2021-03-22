@@ -20,58 +20,49 @@
 
 package org.onap.ransim.rest.web.mapper;
 
-import javax.persistence.Column;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Column;
+
 public class CellNbrInfoResponse {
-	
-	
-	
-	@JsonProperty("cellId")
-	private String cellId;
 
+    @JsonProperty("cellId")
+    private String cellId;
 
+    @JsonProperty("targetCellId")
+    private String targetCellId;
 
-	@JsonProperty("targetCellId")
-	private String targetCellId;
-	
-	private boolean ho;
-	
-	
-	public CellNbrInfoResponse(String cellId,String targetCellId,boolean ho) {
-		this.cellId =  cellId;
-		this.targetCellId = targetCellId;
-		this.ho =  ho;
-		
-		
-	}
+    private boolean ho;
 
-	public String getCellId() {
-		return cellId;
-	}
+    public CellNbrInfoResponse(String cellId, String targetCellId, boolean ho) {
+        this.cellId = cellId;
+        this.targetCellId = targetCellId;
+        this.ho = ho;
 
-	public void setCellId(String cellId) {
-		this.cellId = cellId;
-	}
+    }
 
-	public String getTargetCellId() {
-		return targetCellId;
-	}
+    public String getCellId() {
+        return cellId;
+    }
 
-	public void setTargetCellId(String targetCellId) {
-		this.targetCellId = targetCellId;
-	}
+    public void setCellId(String cellId) {
+        this.cellId = cellId;
+    }
 
-	public boolean isHo() {
-		return ho;
-	}
+    public String getTargetCellId() {
+        return targetCellId;
+    }
 
-	public void setHo(boolean ho) {
-		this.ho = ho;
-	}
-	
-	
-	
+    public void setTargetCellId(String targetCellId) {
+        this.targetCellId = targetCellId;
+    }
+
+    public boolean isHo() {
+        return ho;
+    }
+
+    public void setHo(boolean ho) {
+        this.ho = ho;
+    }
 
 }

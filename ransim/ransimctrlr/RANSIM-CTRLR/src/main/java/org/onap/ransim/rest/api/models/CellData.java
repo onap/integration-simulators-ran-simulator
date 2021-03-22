@@ -24,39 +24,39 @@ import java.util.List;
 
 public class CellData {
 
-	private CellInfo Cell;
-	private List<NbrDump> neighbor;
+    private CellInfo Cell;
+    private List<NbrDump> neighbor;
 
-	public CellData() {
-		super();
-	}
+    public CellData() {
+        super();
+    }
 
-	/**
-	 * Constructor with all parameters
-	 * 
-	 * @param cell     Contains cell details.
-	 * @param neighbor Contains list of neighbor details.
-	 */
-	public CellData(CellInfo cell, List<NbrDump> neighbor) {
-		super();
-		Cell = cell;
-		this.neighbor = neighbor;
-	}
+    /**
+     * Constructor with all parameters
+     *
+     * @param cell Contains cell details.
+     * @param neighbor Contains list of neighbor details.
+     */
+    public CellData(CellInfo cell, List<NbrDump> neighbor) {
+        super();
+        Cell = cell;
+        this.neighbor = neighbor;
+    }
 
-	public CellInfo getCell() {
-		return Cell;
-	}
+    public CellInfo getCell() {
+        return Cell;
+    }
 
-	public void setCell(CellInfo cell) {
-		Cell = cell;
-	}
+    public void setCell(CellInfo cell) {
+        Cell = cell;
+    }
 
-	public List<NbrDump> getNeighbor() {
-		return neighbor;
-	}
+    public List<NbrDump> getNeighbor() {
+        return neighbor;
+    }
 
-	public void setNeighbor(List<NbrDump> neighbor) {
-		this.neighbor = neighbor;
-	}
+    public void setNeighbor(List<NbrDump> neighbor) {
+        this.neighbor = neighbor;
+    }
 
 }

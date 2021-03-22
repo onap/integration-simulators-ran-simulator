@@ -27,8 +27,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -39,48 +39,48 @@ import org.onap.ransim.rest.api.controller.RansimController;
 @Table(name = "CellNeighbor")
 public class CellNeighbor {
 
-	@Id
-	@Column(name = "nodeId", unique = true, nullable = false, length = 52)
-	private String nodeId;
+    @Id
+    @Column(name = "nodeId", unique = true, nullable = false, length = 52)
+    private String nodeId;
 
-	@OneToMany(targetEntity = NeighborDetails.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<NeighborDetails> neighborList;
+    @OneToMany(targetEntity = NeighborDetails.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<NeighborDetails> neighborList;
 
-	public CellNeighbor() {
-		super();
-	}
+    public CellNeighbor() {
+        super();
+    }
 
-	public CellNeighbor(String nodeId, Set<NeighborDetails> neighborList) {
-		super();
-		this.nodeId = nodeId;
-		this.neighborList = neighborList;
-	}
+    public CellNeighbor(String nodeId, Set<NeighborDetails> neighborList) {
+        super();
+        this.nodeId = nodeId;
+        this.neighborList = neighborList;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public Set<NeighborDetails> getNeighborList() {
-		return neighborList;
-	}
+    public Set<NeighborDetails> getNeighborList() {
+        return neighborList;
+    }
 
-	public void setNeighborList(Set<NeighborDetails> neighborList) {
-		this.neighborList = neighborList;
-	}
+    public void setNeighborList(Set<NeighborDetails> neighborList) {
+        this.neighborList = neighborList;
+    }
 
-	static Logger log = Logger.getLogger(RansimController.class.getName());
+    static Logger log = Logger.getLogger(RansimController.class.getName());
 
-	public void display() {
+    public void display() {
 
-		List<NeighborDetails> iterator = new ArrayList<>(neighborList);
-		for (int ii = 0; ii < iterator.size(); ii++) {
-			log.info("neighbors NeighborList: " + iterator.get(ii).getNeigbor().getSourceCellNodeId() + " "
-					+ iterator.get(ii).getNeigbor().getNeighborCell() + " " + iterator.get(ii).isBlacklisted());
-		}
+        List<NeighborDetails> iterator = new ArrayList<>(neighborList);
+        for (int ii = 0; ii < iterator.size(); ii++) {
+            log.info("neighbors NeighborList: " + iterator.get(ii).getNeigbor().getSourceCellNodeId() + " "
+                    + iterator.get(ii).getNeigbor().getNeighborCell() + " " + iterator.get(ii).isBlacklisted());
+        }
 
-	}
+    }
 }

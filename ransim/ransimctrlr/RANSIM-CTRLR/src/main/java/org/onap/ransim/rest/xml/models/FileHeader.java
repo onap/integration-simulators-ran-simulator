@@ -25,73 +25,72 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class FileHeader {
-	private String dnPrefix;
-	private String vendorName;
-	private String fileFormatVersion;
-	private MeasCollec measCollec;
-	private FileSender fileSender;
+    private String dnPrefix;
+    private String vendorName;
+    private String fileFormatVersion;
+    private MeasCollec measCollec;
+    private FileSender fileSender;
 
-	public FileHeader() {
+    public FileHeader() {
 
-	}
+    }
 
-	public FileHeader(String dnPrefix, String vendorName, String fileFormatVersion, MeasCollec measCollec,
-			FileSender fileSender) {
-		super();
-		this.dnPrefix = dnPrefix;
-		this.vendorName = vendorName;
-		this.fileFormatVersion = fileFormatVersion;
-		this.measCollec = measCollec;
-		this.fileSender = fileSender;
-	}
+    public FileHeader(String dnPrefix, String vendorName, String fileFormatVersion, MeasCollec measCollec,
+            FileSender fileSender) {
+        super();
+        this.dnPrefix = dnPrefix;
+        this.vendorName = vendorName;
+        this.fileFormatVersion = fileFormatVersion;
+        this.measCollec = measCollec;
+        this.fileSender = fileSender;
+    }
 
-	public MeasCollec getMeasCollec() {
-		return measCollec;
-	}
+    public MeasCollec getMeasCollec() {
+        return measCollec;
+    }
 
-	public void setMeasCollec(MeasCollec measCollec) {
-		this.measCollec = measCollec;
-	}
+    public void setMeasCollec(MeasCollec measCollec) {
+        this.measCollec = measCollec;
+    }
 
-	@XmlAttribute
-	public String getDnPrefix() {
-		return dnPrefix;
-	}
+    @XmlAttribute
+    public String getDnPrefix() {
+        return dnPrefix;
+    }
 
-	public void setDnPrefix(String dnPrefix) {
-		this.dnPrefix = dnPrefix;
-	}
+    public void setDnPrefix(String dnPrefix) {
+        this.dnPrefix = dnPrefix;
+    }
 
-	@XmlAttribute
-	public String getVendorName() {
-		return vendorName;
-	}
+    @XmlAttribute
+    public String getVendorName() {
+        return vendorName;
+    }
 
-	public void setVendorName(String vendorName) {
-		this.vendorName = vendorName;
-	}
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
 
-	@XmlAttribute
-	public String getFileFormatVersion() {
-		return fileFormatVersion;
-	}
+    @XmlAttribute
+    public String getFileFormatVersion() {
+        return fileFormatVersion;
+    }
 
-	public void setFileFormatVersion(String fileFormatVersion) {
-		this.fileFormatVersion = fileFormatVersion;
-	}
+    public void setFileFormatVersion(String fileFormatVersion) {
+        this.fileFormatVersion = fileFormatVersion;
+    }
 
-	public FileSender getFileSender() {
-		return fileSender;
-	}
+    public FileSender getFileSender() {
+        return fileSender;
+    }
 
-	public void setFileSender(FileSender fileSender) {
-		this.fileSender = fileSender;
-	}
+    public void setFileSender(FileSender fileSender) {
+        this.fileSender = fileSender;
+    }
 
-	@Override
-	public String toString() {
-		return "FileHeader [dnPrefix=" + dnPrefix + ", vendorName=" + vendorName + ", fileFormatVersion="
-				+ fileFormatVersion + ", measCollec=" + measCollec + ", fileSender=" + fileSender + "]";
-	}
+    @Override
+    public String toString() {
+        return "FileHeader [dnPrefix=" + dnPrefix + ", vendorName=" + vendorName + ", fileFormatVersion="
+                + fileFormatVersion + ", measCollec=" + measCollec + ", fileSender=" + fileSender + "]";
+    }
 }
-

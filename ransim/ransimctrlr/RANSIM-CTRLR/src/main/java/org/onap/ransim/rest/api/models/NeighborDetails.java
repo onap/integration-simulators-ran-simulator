@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.models;
 
 import javax.persistence.EmbeddedId;
@@ -27,35 +28,35 @@ import javax.persistence.Table;
 @Table(name = "NeighborDetails")
 public class NeighborDetails {
 
-	@EmbeddedId
-	private NeihborId neigbor;
+    @EmbeddedId
+    private NeihborId neigbor;
 
-	private boolean blacklisted;
+    private boolean blacklisted;
 
-	public NeighborDetails() {
+    public NeighborDetails() {
 
-	}
+    }
 
-	public NeighborDetails(NeihborId neigbor, boolean blacklisted) {
-		super();
-		this.neigbor = neigbor;
-		this.blacklisted = blacklisted;
-	}
+    public NeighborDetails(NeihborId neigbor, boolean blacklisted) {
+        super();
+        this.neigbor = neigbor;
+        this.blacklisted = blacklisted;
+    }
 
-	public NeihborId getNeigbor() {
-		return neigbor;
-	}
+    public NeihborId getNeigbor() {
+        return neigbor;
+    }
 
-	public void setNeigbor(NeihborId neigbor) {
-		this.neigbor = neigbor;
-	}
+    public void setNeigbor(NeihborId neigbor) {
+        this.neigbor = neigbor;
+    }
 
-	public boolean isBlacklisted() {
-		return blacklisted;
-	}
+    public boolean isBlacklisted() {
+        return blacklisted;
+    }
 
-	public void setBlacklisted(boolean blacklisted) {
-		this.blacklisted = blacklisted;
-	}
+    public void setBlacklisted(boolean blacklisted) {
+        this.blacklisted = blacklisted;
+    }
 
 }

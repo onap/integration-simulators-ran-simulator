@@ -22,60 +22,60 @@ package org.onap.ransim.websocket.model;
 
 public class UpdateCell {
 
-	private String serverId;
-	private String ip;
-	private String netconfPort;
-	Topology oneCell;
+    private String serverId;
+    private String ip;
+    private String netconfPort;
+    Topology oneCell;
 
-	public UpdateCell() {
-	}
+    public UpdateCell() {
+    }
 
-	public String getServerId() {
-		return serverId;
-	}
+    public String getServerId() {
+        return serverId;
+    }
 
-	public void setServerId(String serverId) {
-		this.serverId = serverId;
-	}
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
 
-	public String getIp() {
-		return ip;
-	}
+    public String getIp() {
+        return ip;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public String getNetconfPort() {
-		return netconfPort;
-	}
+    public String getNetconfPort() {
+        return netconfPort;
+    }
 
-	public void setNetconfPort(String netconfPort) {
-		this.netconfPort = netconfPort;
-	}
+    public void setNetconfPort(String netconfPort) {
+        this.netconfPort = netconfPort;
+    }
 
-	public Topology getOneCell() {
-		return oneCell;
-	}
+    public Topology getOneCell() {
+        return oneCell;
+    }
 
-	public void setOneCell(Topology oneCell) {
-		this.oneCell = oneCell;
-	}
+    public void setOneCell(Topology oneCell) {
+        this.oneCell = oneCell;
+    }
 
-	/**
-	 * Update cell details based on input.
-	 *
-	 * @param serverId    netconf server id
-	 * @param ip          ip address
-	 * @param netconfPort port number
-	 * @param oneCell     topology details
-	 */
-	public UpdateCell(String serverId, String ip, String netconfPort, Topology oneCell) {
-		super();
-		this.serverId = serverId;
-		this.ip = ip;
-		this.netconfPort = netconfPort;
-		this.oneCell = oneCell;
-	}
+    /**
+     * Update cell details based on input.
+     *
+     * @param serverId netconf server id
+     * @param ip ip address
+     * @param netconfPort port number
+     * @param oneCell topology details
+     */
+    public UpdateCell(String serverId, String ip, String netconfPort, Topology oneCell) {
+        super();
+        this.serverId = serverId;
+        this.ip = ip;
+        this.netconfPort = netconfPort;
+        this.oneCell = oneCell;
+    }
 
 }

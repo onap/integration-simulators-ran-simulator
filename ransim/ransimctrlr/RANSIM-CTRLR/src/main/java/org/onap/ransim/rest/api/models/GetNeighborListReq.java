@@ -22,28 +22,28 @@ package org.onap.ransim.rest.api.models;
 
 public class GetNeighborListReq {
 
-	private String nodeId;
+    private String nodeId;
 
-	public GetNeighborListReq() {
+    public GetNeighborListReq() {
 
-	}
+    }
 
-	/**
-	 * A constructor for GetNeighborListReq.
-	 *
-	 * @param nodeId node Id of the cell who's neighbor list is required
-	 */
-	public GetNeighborListReq(String nodeId) {
-		super();
-		this.nodeId = nodeId;
-	}
+    /**
+     * A constructor for GetNeighborListReq.
+     *
+     * @param nodeId node Id of the cell who's neighbor list is required
+     */
+    public GetNeighborListReq(String nodeId) {
+        super();
+        this.nodeId = nodeId;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
 }

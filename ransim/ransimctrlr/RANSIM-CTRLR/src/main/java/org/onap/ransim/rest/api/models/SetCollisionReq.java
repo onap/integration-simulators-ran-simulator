@@ -22,28 +22,28 @@ package org.onap.ransim.rest.api.models;
 
 public class SetCollisionReq {
 
-	private boolean collision;
+    private boolean collision;
 
-	/**
-	 * A constructor for SetCollisionReq.
-	 *
-	 * @param collision to set if the new simulation has collision between the cells
-	 */
-	public SetCollisionReq(boolean collision) {
-		super();
-		this.collision = collision;
-	}
+    /**
+     * A constructor for SetCollisionReq.
+     *
+     * @param collision to set if the new simulation has collision between the cells
+     */
+    public SetCollisionReq(boolean collision) {
+        super();
+        this.collision = collision;
+    }
 
-	public SetCollisionReq() {
+    public SetCollisionReq() {
 
-	}
+    }
 
-	public boolean isCollision() {
-		return collision;
-	}
+    public boolean isCollision() {
+        return collision;
+    }
 
-	public void setCollision(boolean collision) {
-		this.collision = collision;
-	}
+    public void setCollision(boolean collision) {
+        this.collision = collision;
+    }
 
 }

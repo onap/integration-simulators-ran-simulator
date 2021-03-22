@@ -20,41 +20,46 @@
 
 package org.onap.ransim.websocket.model;
 
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GNBDUFunction {
-    
+
     private String idGNBDUFunction;
-    
+
     private Attributes attributes;
-    
+
     @JsonProperty("NRCellDU")
     public List<NRCellDU> nRCellDU;
-    
+
     public String getIdGNBDUFunction() {
-     return idGNBDUFunction;
+        return idGNBDUFunction;
     }
+
     public void setIdGNBDUFunction(String idGNBDUFunction) {
-     this.idGNBDUFunction = idGNBDUFunction;
+        this.idGNBDUFunction = idGNBDUFunction;
     }
+
     public Attributes getAttributes() {
-     return attributes;
+        return attributes;
     }
+
     public void setAttributes(Attributes attributes) {
-     this.attributes = attributes;
+        this.attributes = attributes;
     }
+
     public List<NRCellDU> getnRCellDU() {
-     return nRCellDU;
+        return nRCellDU;
     }
+
     public void setnRCellDU(List<NRCellDU> nRCellDU) {
-     this.nRCellDU = nRCellDU;
-    } 
-    public GNBDUFunction()
-    {
-    
+        this.nRCellDU = nRCellDU;
+    }
+
+    public GNBDUFunction() {
+
     }
 }
-

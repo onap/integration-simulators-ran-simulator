@@ -42,34 +42,32 @@ public class TestRansimControllerServices {
     @Test
     public void testGetOperationLog() {
         ResponseEntity<String> rsEntity = Mockito.mock(ResponseEntity.class);
-        
+
         EntityManagerFactory emfactory = Mockito.mock(EntityManagerFactory.class);
         EntityManager entityManager = Mockito.mock(EntityManager.class);
         Mockito.when(emfactory.createEntityManager()).thenReturn(entityManager);
-        
+
         TypedQuery<CellDetails> query = Mockito.mock(TypedQuery.class);
         Mockito.when(entityManager.createQuery("from CellDetails cd", CellDetails.class)).thenReturn(query);
-        
+
         List<CellDetails> cellDetailList = new ArrayList<CellDetails>();
         Mockito.when(query.getResultList()).thenReturn(cellDetailList);
         assertNotNull(rsEntity);
-        
+
     }
-    
+
     @Test
     public void testModifyACell() {
-        
+
         ResponseEntity<String> rsEntity = Mockito.mock(ResponseEntity.class);
-        
+
         EntityManagerFactory emfactory = Mockito.mock(EntityManagerFactory.class);
         EntityManager entityManager = Mockito.mock(EntityManager.class);
         Mockito.when(emfactory.createEntityManager()).thenReturn(entityManager);
-        
+
         TypedQuery<CellDetails> query = Mockito.mock(TypedQuery.class);
         Mockito.when(entityManager.createQuery("from CellDetails cd", CellDetails.class)).thenReturn(query);
-        
-        
+
     }
 
-    
 }

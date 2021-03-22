@@ -21,94 +21,93 @@
 package org.onap.ransim.rest.api.models;
 
 public class PLMNInfoModel {
-	private String pLMNId;
-	private String snssai;
-	private String status;
-	private String gnbType;
-	private int gnbId;
-	private int nrCellId;
-	private String nearrtricid;
-	private long maxNumberOfConns;
+    private String pLMNId;
+    private String snssai;
+    private String status;
+    private String gnbType;
+    private int gnbId;
+    private int nrCellId;
+    private String nearrtricid;
+    private long maxNumberOfConns;
 
-	public PLMNInfoModel() {
+    public PLMNInfoModel() {
 
-	}
+    }
 
-	public PLMNInfoModel(String pLMNId, String snssai, String status, String gnbType, int gnbId, int nrCellId,
-			String nearrtricid, long maxNumberOfConns) {
-		super();
-		this.pLMNId = pLMNId;
-		this.snssai = snssai;
-		this.status = status;
-		this.gnbType = gnbType;
-		this.gnbId = gnbId;
-		this.nrCellId = nrCellId;
-		this.nearrtricid = nearrtricid;
-		this.maxNumberOfConns = maxNumberOfConns;
-	}
+    public PLMNInfoModel(String pLMNId, String snssai, String status, String gnbType, int gnbId, int nrCellId,
+            String nearrtricid, long maxNumberOfConns) {
+        super();
+        this.pLMNId = pLMNId;
+        this.snssai = snssai;
+        this.status = status;
+        this.gnbType = gnbType;
+        this.gnbId = gnbId;
+        this.nrCellId = nrCellId;
+        this.nearrtricid = nearrtricid;
+        this.maxNumberOfConns = maxNumberOfConns;
+    }
 
-	public String getpLMNId() {
-		return pLMNId;
-	}
+    public String getpLMNId() {
+        return pLMNId;
+    }
 
-	public void setpLMNId(String pLMNId) {
-		this.pLMNId = pLMNId;
-	}
+    public void setpLMNId(String pLMNId) {
+        this.pLMNId = pLMNId;
+    }
 
-	public String getSnssai() {
-		return snssai;
-	}
+    public String getSnssai() {
+        return snssai;
+    }
 
-	public void setSnssai(String snssai) {
-		this.snssai = snssai;
-	}
+    public void setSnssai(String snssai) {
+        this.snssai = snssai;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public String getGnbType() {
-		return gnbType;
-	}
+    public String getGnbType() {
+        return gnbType;
+    }
 
-	public void setGnbType(String gnbType) {
-		this.gnbType = gnbType;
-	}
+    public void setGnbType(String gnbType) {
+        this.gnbType = gnbType;
+    }
 
-	public int getGnbId() {
-		return gnbId;
-	}
+    public int getGnbId() {
+        return gnbId;
+    }
 
-	public void setGnbId(int gnbId) {
-		this.gnbId = gnbId;
-	}
+    public void setGnbId(int gnbId) {
+        this.gnbId = gnbId;
+    }
 
-	public int getNrCellId() {
-		return nrCellId;
-	}
+    public int getNrCellId() {
+        return nrCellId;
+    }
 
-	public void setNrCellId(int nrCellId) {
-		this.nrCellId = nrCellId;
-	}
+    public void setNrCellId(int nrCellId) {
+        this.nrCellId = nrCellId;
+    }
 
-	public String getNearrtricid() {
-		return nearrtricid;
-	}
+    public String getNearrtricid() {
+        return nearrtricid;
+    }
 
-	public void setNearrtricid(String nearrtricid) {
-		this.nearrtricid = nearrtricid;
-	}
+    public void setNearrtricid(String nearrtricid) {
+        this.nearrtricid = nearrtricid;
+    }
 
-	public long getMaxNumberOfConns() {
-		return maxNumberOfConns;
-	}
+    public long getMaxNumberOfConns() {
+        return maxNumberOfConns;
+    }
 
-	public void setMaxNumberOfConns(long maxNumberOfConns) {
-		this.maxNumberOfConns = maxNumberOfConns;
-	}
+    public void setMaxNumberOfConns(long maxNumberOfConns) {
+        this.maxNumberOfConns = maxNumberOfConns;
+    }
 }
-

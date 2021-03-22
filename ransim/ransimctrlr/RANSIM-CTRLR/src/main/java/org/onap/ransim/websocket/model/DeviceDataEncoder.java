@@ -26,22 +26,22 @@ import javax.websocket.EndpointConfig;
 
 public class DeviceDataEncoder implements Encoder.Text<DeviceData> {
 
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
+    @Override
+    public void destroy() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void init(EndpointConfig arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void init(EndpointConfig arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public String encode(DeviceData msg) throws EncodeException {
-		String result = msg.getType() + ":" + msg.getMessage();
-		return result;
-	}
+    @Override
+    public String encode(DeviceData msg) throws EncodeException {
+        String result = msg.getType() + ":" + msg.getMessage();
+        return result;
+    }
 
 }

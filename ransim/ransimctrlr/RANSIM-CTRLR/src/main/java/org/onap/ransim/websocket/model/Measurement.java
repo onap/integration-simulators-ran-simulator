@@ -17,29 +17,30 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.websocket.model;
 
 import java.util.List;
 
 public class Measurement {
 
-	private int measurementInterval;
-	private List<AdditionalMeasurements> additionalMeasurements;
+    private int measurementInterval;
+    private List<AdditionalMeasurements> additionalMeasurements;
 
-	public int getMeasurementInterval() {
-		return measurementInterval;
-	}
+    public int getMeasurementInterval() {
+        return measurementInterval;
+    }
 
-	public void setMeasurementInterval(int measurementInterval) {
-		this.measurementInterval = measurementInterval;
-	}
+    public void setMeasurementInterval(int measurementInterval) {
+        this.measurementInterval = measurementInterval;
+    }
 
-	public List<AdditionalMeasurements> getAdditionalMeasurements() {
-		return additionalMeasurements;
-	}
+    public List<AdditionalMeasurements> getAdditionalMeasurements() {
+        return additionalMeasurements;
+    }
 
-	public void setAdditionalMeasurements(List<AdditionalMeasurements> additionalMeasurements) {
-		this.additionalMeasurements = additionalMeasurements;
-	}
+    public void setAdditionalMeasurements(List<AdditionalMeasurements> additionalMeasurements) {
+        this.additionalMeasurements = additionalMeasurements;
+    }
 
 }

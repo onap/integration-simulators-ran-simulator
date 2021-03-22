@@ -17,39 +17,40 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.utilities;
 
 /**
- * 
+ *
  * Class with Utilities used across ransim
  */
 public class RansimUtilities {
 
-	/**
-	 * @param angle
-	 * @return
-	 */
-	public static double degToRadians(double angle) {
-		double radians = 57.2957795;
-		return (angle / radians);
-	}
+    /**
+     * @param angle
+     * @return
+     */
+    public static double degToRadians(double angle) {
+        double radians = 57.2957795;
+        return (angle / radians);
+    }
 
-	/**
-	 * @param angle
-	 * @return
-	 */
-	public static double metersDeglon(double angle) {
-		double d2r = degToRadians(angle);
-		return ((111415.13 * Math.cos(d2r)) - (94.55 * Math.cos(3.0 * d2r)) + (0.12 * Math.cos(5.0 * d2r)));
-	}
+    /**
+     * @param angle
+     * @return
+     */
+    public static double metersDeglon(double angle) {
+        double d2r = degToRadians(angle);
+        return ((111415.13 * Math.cos(d2r)) - (94.55 * Math.cos(3.0 * d2r)) + (0.12 * Math.cos(5.0 * d2r)));
+    }
 
-	/**
-	 * @param angle
-	 * @return
-	 */
-	public static double metersDeglat(double angle) {
-		double d2r = degToRadians(angle);
-		return (111132.09 - (566.05 * Math.cos(2.0 * d2r)) + (1.20 * Math.cos(4.0 * d2r))
-				- (0.002 * Math.cos(6.0 * d2r)));
-	}
+    /**
+     * @param angle
+     * @return
+     */
+    public static double metersDeglat(double angle) {
+        double d2r = degToRadians(angle);
+        return (111132.09 - (566.05 * Math.cos(2.0 * d2r)) + (1.20 * Math.cos(4.0 * d2r))
+                - (0.002 * Math.cos(6.0 * d2r)));
+    }
 }

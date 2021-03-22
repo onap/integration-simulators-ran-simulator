@@ -130,6 +130,7 @@ create table nrcelldu (
         nrtac integer,
         operationalstate varchar(255),
         gnbduid integer,
+	prb integer,
         primary key (celllocalid)
     ) engine=InnoDB;
 -- -----------------------------------------------------

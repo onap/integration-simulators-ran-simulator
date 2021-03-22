@@ -50,42 +50,42 @@ import org.springframework.web.multipart.MultipartFile;
 @PropertySource(value = "classpath:dumpfileNames.properties")
 public class FileController {
 
-	static Logger log = Logger.getLogger(FileController.class.getName());
+    static Logger log = Logger.getLogger(FileController.class.getName());
 
-	private static final String fileBasePath = "/tmp/ransim-install/config/";
+    private static final String fileBasePath = "/tmp/ransim-install/config/";
 
-	@Value("${defaultFiles:}")
-	List<String> fileList = new ArrayList<>();
+    @Value("${defaultFiles:}")
+    List<String> fileList = new ArrayList<>();
 
-	/**
-	 * Method to upload dump file
-	 * 
-	 * @param file
-	 * @return
-	 */
-	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
-		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-		Path path = Paths.get(fileBasePath + fileName);
-		try {
-			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-			fileList.add(fileName);
-			log.info("File downloaded in " + fileBasePath + fileName);
-		} catch (IOException e) {
-			log.error(e);
-		}
-		log.info("Copied in path : " + path);
-		return ResponseEntity.ok("Uploaded successfully");
-	}
+    /**
+     * Method to upload dump file
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path path = Paths.get(fileBasePath + fileName);
+        try {
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            fileList.add(fileName);
+            log.info("File downloaded in " + fileBasePath + fileName);
+        } catch (IOException e) {
+            log.error(e);
+        }
+        log.info("Copied in path : " + path);
+        return ResponseEntity.ok("Uploaded successfully");
+    }
 
-	/**
-	 * Method to retrieve list of available dump files
-	 * 
-	 * @return
-	 */
-	@GetMapping(value = "/dumpfiles", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<String>> getFiles() {
-		return ResponseEntity.ok(fileList);
-	}
+    /**
+     * Method to retrieve list of available dump files
+     * 
+     * @return
+     */
+    @GetMapping(value = "/dumpfiles", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getFiles() {
+        return ResponseEntity.ok(fileList);
+    }
 
 }

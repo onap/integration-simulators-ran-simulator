@@ -40,30 +40,32 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
-@EnableJpaRepositories(basePackages = "org.onap.ransim.rest.api.repository"
-        + "", entityManagerFactoryRef = "entityManager", transactionManagerRef = "transactionManager")
+@EnableJpaRepositories(
+        basePackages = "org.onap.ransim.rest.api.repository" + "",
+        entityManagerFactoryRef = "entityManager",
+        transactionManagerRef = "transactionManager")
 @ComponentScan(basePackages = "org.onap.ransim")
 public class RansimDbConfig {
-	
-	@Autowired
-	Environment env;
-	
-	@Bean
-	@Primary
-	LocalContainerEntityManagerFactoryBean entityManager () {
-		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		em.setPackagesToScan("org.onap.ransim.rest.api.models");
-		em.setDataSource(dataSource());
-		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+
+    @Autowired
+    Environment env;
+
+    @Bean
+    @Primary
+    LocalContainerEntityManagerFactoryBean entityManager() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setPackagesToScan("org.onap.ransim.rest.api.models");
+        em.setDataSource(dataSource());
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
         properties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
         em.setJpaPropertyMap(properties);
         return em;
-	}
-	
-	 /**
+    }
+
+    /**
      * User data source Bean.
      */
     @Primary
@@ -89,6 +91,5 @@ public class RansimDbConfig {
         transactionManager.setEntityManagerFactory(entityManager().getObject());
         return transactionManager;
     }
-	
 
 }
