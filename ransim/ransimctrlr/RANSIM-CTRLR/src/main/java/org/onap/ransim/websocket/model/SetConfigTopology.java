@@ -24,70 +24,70 @@ import java.util.List;
 
 public class SetConfigTopology {
 
-	private String serverId;
-	private String uuid;
-	private String ip;
-	private String netconfPort;
-	private List<Topology> topology;
+    private String serverId;
+    private String uuid;
+    private String ip;
+    private String netconfPort;
+    private List<Topology> topology;
 
-	public SetConfigTopology() {
+    public SetConfigTopology() {
 
-	}
+    }
 
-	/**
-	 * Cell details for the given netconf server.
-	 *
-	 * @param serverId    netconf server id
-	 * @param ip          ip address
-	 * @param netconfPort port number
-	 * @param topology    cell topology for given server id
-	 */
-	public SetConfigTopology(String serverId, String ip, String netconfPort, List<Topology> topology) {
-		super();
-		this.serverId = serverId;
-		this.ip = ip;
-		this.netconfPort = netconfPort;
-		this.topology = topology;
-	}
+    /**
+     * Cell details for the given netconf server.
+     *
+     * @param serverId netconf server id
+     * @param ip ip address
+     * @param netconfPort port number
+     * @param topology cell topology for given server id
+     */
+    public SetConfigTopology(String serverId, String ip, String netconfPort, List<Topology> topology) {
+        super();
+        this.serverId = serverId;
+        this.ip = ip;
+        this.netconfPort = netconfPort;
+        this.topology = topology;
+    }
 
-	public String getServerId() {
-		return serverId;
-	}
+    public String getServerId() {
+        return serverId;
+    }
 
-	public void setServerId(String serverId) {
-		this.serverId = serverId;
-	}
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
 
-	public String getUuid() {
-		return uuid;
-	}
+    public String getUuid() {
+        return uuid;
+    }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-	public String getIp() {
-		return ip;
-	}
+    public String getIp() {
+        return ip;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public String getNetconfPort() {
-		return netconfPort;
-	}
+    public String getNetconfPort() {
+        return netconfPort;
+    }
 
-	public void setNetconfPort(String netconfPort) {
-		this.netconfPort = netconfPort;
-	}
+    public void setNetconfPort(String netconfPort) {
+        this.netconfPort = netconfPort;
+    }
 
-	public List<Topology> getTopology() {
-		return topology;
-	}
+    public List<Topology> getTopology() {
+        return topology;
+    }
 
-	public void setTopology(List<Topology> topology) {
-		this.topology = topology;
-	}
+    public void setTopology(List<Topology> topology) {
+        this.topology = topology;
+    }
 
 }

@@ -20,83 +20,83 @@
 
 package org.onap.ransim.rest.api.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "OperationLog")
 public class OperationLog {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int rowId;
-	private long time;
-	private String nodeId;
-	private String source;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int rowId;
+    private long time;
+    private String nodeId;
+    private String source;
 
-	@Column(name = "message", length = 300)
-	private String message;
-	private String fieldName;
-	private String operation;
+    @Column(name = "message", length = 300)
+    private String message;
+    private String fieldName;
+    private String operation;
 
-	public int getRowId() {
-		return rowId;
-	}
+    public int getRowId() {
+        return rowId;
+    }
 
-	public void setRowId(int rowId) {
-		this.rowId = rowId;
-	}
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
+    }
 
-	public long getTime() {
-		return time;
-	}
+    public long getTime() {
+        return time;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-	public void setTime(long time) {
-		this.time = time;
-	}
+    public void setTime(long time) {
+        this.time = time;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return fieldName;
+    }
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
-	}
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
 }

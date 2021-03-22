@@ -22,62 +22,63 @@ package org.onap.ransim.websocket.model;
 
 public class SlicingPmMessage {
 
-	private String sourceName;
-	private String fileName;
-	private double startEpochMicrosec;
-	private double lastEpochMicrosec;
-	private String pmData;
+    private String sourceName;
+    private String fileName;
+    private double startEpochMicrosec;
+    private double lastEpochMicrosec;
+    private String pmData;
 
-	public String getSourceName() {
-		return sourceName;
-	}
+    public String getSourceName() {
+        return sourceName;
+    }
 
-	public void setSourceName(String sourceName) {
-		this.sourceName = sourceName;
-	}
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public double getStartEpochMicrosec() {
-		return startEpochMicrosec;
-	}
+    public double getStartEpochMicrosec() {
+        return startEpochMicrosec;
+    }
 
-	public void setStartEpochMicrosec(double startEpochMicrosec) {
-		this.startEpochMicrosec = startEpochMicrosec;
-	}
+    public void setStartEpochMicrosec(double startEpochMicrosec) {
+        this.startEpochMicrosec = startEpochMicrosec;
+    }
 
-	public double getLastEpochMicrosec() {
-		return lastEpochMicrosec;
-	}
+    public double getLastEpochMicrosec() {
+        return lastEpochMicrosec;
+    }
 
-	public void setLastEpochMicrosec(double lastEpochMicrosec) {
-		this.lastEpochMicrosec = lastEpochMicrosec;
-	}
-	
-	public String getPmData() {
-	    return pmData;
-	}
-	
-	public void setPmData(String pmData) {
-	    this.pmData = pmData;
-	}
-	
-	public SlicingPmMessage(String sourceName, String fileName, double startEpochMicrosec, double lastEpochMicrosec, String pmData) {
-	    this.sourceName = sourceName;
-	    this.fileName = fileName;
-	    this.startEpochMicrosec = startEpochMicrosec;
-	    this.lastEpochMicrosec = lastEpochMicrosec;
-	    this.pmData = pmData;
-	}
-	
-	public SlicingPmMessage() {
-	    
-	}
+    public void setLastEpochMicrosec(double lastEpochMicrosec) {
+        this.lastEpochMicrosec = lastEpochMicrosec;
+    }
+
+    public String getPmData() {
+        return pmData;
+    }
+
+    public void setPmData(String pmData) {
+        this.pmData = pmData;
+    }
+
+    public SlicingPmMessage(String sourceName, String fileName, double startEpochMicrosec, double lastEpochMicrosec,
+            String pmData) {
+        this.sourceName = sourceName;
+        this.fileName = fileName;
+        this.startEpochMicrosec = startEpochMicrosec;
+        this.lastEpochMicrosec = lastEpochMicrosec;
+        this.pmData = pmData;
+    }
+
+    public SlicingPmMessage() {
+
+    }
 
 }

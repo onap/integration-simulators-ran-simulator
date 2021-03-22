@@ -22,52 +22,52 @@ package org.onap.ransim.rest.api.models;
 
 public class ModifyACellReq {
 
-	private String nodeId;
-	private Long newPhysicalCellId;
-	private String newNbrs;
+    private String nodeId;
+    private Long newPhysicalCellId;
+    private String newNbrs;
 
-	/**
-	 * A constructor for ModifyACellReq.
-	 *
-	 * @param nodeId            node Id of the cell which is to be modified
-	 * @param newPhysicalCellId new PCI number for the cell
-	 * @param newNbrs           new neighbor list for the cell
-	 */
-	public ModifyACellReq(String nodeId, Long newPhysicalCellId, String newNbrs) {
-		super();
-		this.nodeId = nodeId;
-		this.newPhysicalCellId = newPhysicalCellId;
-		this.newNbrs = newNbrs;
+    /**
+     * A constructor for ModifyACellReq.
+     *
+     * @param nodeId node Id of the cell which is to be modified
+     * @param newPhysicalCellId new PCI number for the cell
+     * @param newNbrs new neighbor list for the cell
+     */
+    public ModifyACellReq(String nodeId, Long newPhysicalCellId, String newNbrs) {
+        super();
+        this.nodeId = nodeId;
+        this.newPhysicalCellId = newPhysicalCellId;
+        this.newNbrs = newNbrs;
 
-	}
+    }
 
-	public ModifyACellReq() {
+    public ModifyACellReq() {
 
-		// Default constructor for ModifyCell
-	}
+        // Default constructor for ModifyCell
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public Long getNewPhysicalCellId() {
-		return newPhysicalCellId;
-	}
+    public Long getNewPhysicalCellId() {
+        return newPhysicalCellId;
+    }
 
-	public void setNewPhysicalCellId(Long newPhysicalCellId) {
-		this.newPhysicalCellId = newPhysicalCellId;
-	}
+    public void setNewPhysicalCellId(Long newPhysicalCellId) {
+        this.newPhysicalCellId = newPhysicalCellId;
+    }
 
-	public String getNewNbrs() {
-		return newNbrs;
-	}
+    public String getNewNbrs() {
+        return newNbrs;
+    }
 
-	public void setNewNbrs(String newNbrs) {
-		this.newNbrs = newNbrs;
-	}
+    public void setNewNbrs(String newNbrs) {
+        this.newNbrs = newNbrs;
+    }
 
 }

@@ -22,95 +22,95 @@ package org.onap.ransim.rest.api.models;
 
 public class CellInfo {
 
-	private String networkId;
-	private String nodeId;
-	private long physicalCellId;
-	private String pnfName;
-	private int sectorNumber;
-	private String latitude;
-	private String longitude;
+    private String networkId;
+    private String nodeId;
+    private long physicalCellId;
+    private String pnfName;
+    private int sectorNumber;
+    private String latitude;
+    private String longitude;
 
-	/**
-	 * A constructor for CellInfo.
-	 *
-	 * @param networkId      network Id of the cell
-	 * @param nodeId         node Id of the cell
-	 * @param physicalCellId PCI number of the cell
-	 * @param pnfName        netconf server id
-	 * @param sectorNumber   sector number for the cell
-	 * @param latitude       latitude of the node
-	 * @param longitude      longitude of the node
-	 */
-	public CellInfo(String networkId, String nodeId, long physicalCellId, String pnfName, int sectorNumber,
-			String latitude, String longitude) {
-		super();
-		this.networkId = networkId;
-		this.nodeId = nodeId;
-		this.physicalCellId = physicalCellId;
-		this.pnfName = pnfName;
-		this.sectorNumber = sectorNumber;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
+    /**
+     * A constructor for CellInfo.
+     *
+     * @param networkId network Id of the cell
+     * @param nodeId node Id of the cell
+     * @param physicalCellId PCI number of the cell
+     * @param pnfName netconf server id
+     * @param sectorNumber sector number for the cell
+     * @param latitude latitude of the node
+     * @param longitude longitude of the node
+     */
+    public CellInfo(String networkId, String nodeId, long physicalCellId, String pnfName, int sectorNumber,
+            String latitude, String longitude) {
+        super();
+        this.networkId = networkId;
+        this.nodeId = nodeId;
+        this.physicalCellId = physicalCellId;
+        this.pnfName = pnfName;
+        this.sectorNumber = sectorNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-	public CellInfo() {
+    public CellInfo() {
 
-	}
+    }
 
-	public String getNetworkId() {
-		return networkId;
-	}
+    public String getNetworkId() {
+        return networkId;
+    }
 
-	public void setNetworkId(String networkId) {
-		this.networkId = networkId;
-	}
+    public void setNetworkId(String networkId) {
+        this.networkId = networkId;
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
-	public long getPhysicalCellId() {
-		return physicalCellId;
-	}
+    public long getPhysicalCellId() {
+        return physicalCellId;
+    }
 
-	public void setPhysicalCellId(long physicalCellId) {
-		this.physicalCellId = physicalCellId;
-	}
+    public void setPhysicalCellId(long physicalCellId) {
+        this.physicalCellId = physicalCellId;
+    }
 
-	public String getPnfName() {
-		return pnfName;
-	}
+    public String getPnfName() {
+        return pnfName;
+    }
 
-	public void setPnfName(String pnfName) {
-		this.pnfName = pnfName;
-	}
+    public void setPnfName(String pnfName) {
+        this.pnfName = pnfName;
+    }
 
-	public int getSectorNumber() {
-		return sectorNumber;
-	}
+    public int getSectorNumber() {
+        return sectorNumber;
+    }
 
-	public void setSectorNumber(int sectorNumber) {
-		this.sectorNumber = sectorNumber;
-	}
+    public void setSectorNumber(int sectorNumber) {
+        this.sectorNumber = sectorNumber;
+    }
 
-	public String getLatitude() {
-		return latitude;
-	}
+    public String getLatitude() {
+        return latitude;
+    }
 
-	public void setLatitude(String latitude) {
-		this.latitude = latitude;
-	}
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 
-	public String getLongitude() {
-		return longitude;
-	}
+    public String getLongitude() {
+        return longitude;
+    }
 
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
-	}
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
 }

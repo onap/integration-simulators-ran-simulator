@@ -25,23 +25,23 @@ import java.util.Map;
 
 public class AdditionalMeasurements {
 
-	private String name;
-	private Map<String, String> hashMap = new HashMap<String, String>();
+    private String name;
+    private Map<String, String> hashMap = new HashMap<String, String>();
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Map<String, String> getHashMap() {
-		return hashMap;
-	}
+    public Map<String, String> getHashMap() {
+        return hashMap;
+    }
 
-	public void setHashMap(Map<String, String> hashMap) {
-		this.hashMap = hashMap;
-	}
+    public void setHashMap(Map<String, String> hashMap) {
+        this.hashMap = hashMap;
+    }
 
 }

@@ -26,40 +26,39 @@ import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement
 public class Result {
-	private int p;
-	private int measValue;
+    private int p;
+    private int measValue;
 
-	public Result() {
-	}
+    public Result() {
+    }
 
-	public Result(int p, int measValue) {
-		super();
-		this.p = p;
-		this.measValue = measValue;
-	}
+    public Result(int p, int measValue) {
+        super();
+        this.p = p;
+        this.measValue = measValue;
+    }
 
-	@XmlAttribute
-	public int getP() {
-		return p;
-	}
+    @XmlAttribute
+    public int getP() {
+        return p;
+    }
 
-	public void setP(int p) {
-		this.p = p;
-	}
+    public void setP(int p) {
+        this.p = p;
+    }
 
-	@XmlValue
-	public double getMeasValue() {
-		return measValue;
-	}
+    @XmlValue
+    public double getMeasValue() {
+        return measValue;
+    }
 
-	public void setMeasValue(int measValue) {
-		this.measValue = measValue;
-	}
+    public void setMeasValue(int measValue) {
+        this.measValue = measValue;
+    }
 
-	@Override
-	public String toString() {
-		return "Result [p=" + p + ", measValue=" + measValue + "]";
-	}
+    @Override
+    public String toString() {
+        return "Result [p=" + p + ", measValue=" + measValue + "]";
+    }
 
 }
-

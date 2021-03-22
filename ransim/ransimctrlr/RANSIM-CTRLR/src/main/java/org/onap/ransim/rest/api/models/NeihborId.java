@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.models;
 
 import java.io.Serializable;
@@ -26,65 +27,65 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class NeihborId implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Column(name = "sourceCellNodeId")
-	private String sourceCellNodeId;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "neighborCellNodeId")
-	private String neighborCell;
+    @Column(name = "sourceCellNodeId")
+    private String sourceCellNodeId;
 
-	public NeihborId() {
-	}
+    @Column(name = "neighborCellNodeId")
+    private String neighborCell;
 
-	public NeihborId(String sourceCellNodeId, String neighborCell) {
-		this.sourceCellNodeId = sourceCellNodeId;
-		this.neighborCell = neighborCell;
-	}
+    public NeihborId() {
+    }
 
-	public String getSourceCellNodeId() {
-		return sourceCellNodeId;
-	}
+    public NeihborId(String sourceCellNodeId, String neighborCell) {
+        this.sourceCellNodeId = sourceCellNodeId;
+        this.neighborCell = neighborCell;
+    }
 
-	public String getNeighborCell() {
-		return neighborCell;
-	}
+    public String getSourceCellNodeId() {
+        return sourceCellNodeId;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((neighborCell == null) ? 0 : neighborCell.hashCode());
-		result = prime * result + ((sourceCellNodeId == null) ? 0 : sourceCellNodeId.hashCode());
-		return result;
-	}
+    public String getNeighborCell() {
+        return neighborCell;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		NeihborId other = (NeihborId) obj;
-		if (neighborCell == null) {
-			if (other.neighborCell != null) {
-				return false;
-			}
-		} else if (!neighborCell.equals(other.neighborCell))
-			return false;
-		if (sourceCellNodeId == null) {
-			if (other.sourceCellNodeId != null) {
-				return false;
-			}
-		} else if (!sourceCellNodeId.equals(other.sourceCellNodeId)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((neighborCell == null) ? 0 : neighborCell.hashCode());
+        result = prime * result + ((sourceCellNodeId == null) ? 0 : sourceCellNodeId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        NeihborId other = (NeihborId) obj;
+        if (neighborCell == null) {
+            if (other.neighborCell != null) {
+                return false;
+            }
+        } else if (!neighborCell.equals(other.neighborCell))
+            return false;
+        if (sourceCellNodeId == null) {
+            if (other.sourceCellNodeId != null) {
+                return false;
+            }
+        } else if (!sourceCellNodeId.equals(other.sourceCellNodeId)) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -24,14 +24,14 @@ import java.util.List;
 
 public class PmMessage {
 
-	List<EventPm> eventPmList;
+    List<EventPm> eventPmList;
 
-	public void setEventPmList(List<EventPm> data) {
-		this.eventPmList = data;
-	}
+    public void setEventPmList(List<EventPm> data) {
+        this.eventPmList = data;
+    }
 
-	public List<EventPm> getEventPmList() {
-		return eventPmList;
-	}
+    public List<EventPm> getEventPmList() {
+        return eventPmList;
+    }
 
 }

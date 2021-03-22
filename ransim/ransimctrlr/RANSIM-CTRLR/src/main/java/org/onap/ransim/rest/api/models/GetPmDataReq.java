@@ -17,43 +17,44 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.models;
 
 public class GetPmDataReq {
 
-	private String nodeIdBad;
-	private String nodeIdPoor;
+    private String nodeIdBad;
+    private String nodeIdPoor;
 
-	public GetPmDataReq() {
-		super();
-	}
+    public GetPmDataReq() {
+        super();
+    }
 
-	/**
-	 * Constructor with all fields.
-	 * 
-	 * @param nodeIdBad  Cells with bad PM value.
-	 * @param nodeIdPoor Cells with poor PM value.
-	 */
-	public GetPmDataReq(String nodeIdBad, String nodeIdPoor) {
-		super();
-		this.nodeIdBad = nodeIdBad;
-		this.nodeIdPoor = nodeIdPoor;
-	}
+    /**
+     * Constructor with all fields.
+     * 
+     * @param nodeIdBad Cells with bad PM value.
+     * @param nodeIdPoor Cells with poor PM value.
+     */
+    public GetPmDataReq(String nodeIdBad, String nodeIdPoor) {
+        super();
+        this.nodeIdBad = nodeIdBad;
+        this.nodeIdPoor = nodeIdPoor;
+    }
 
-	public String getNodeIdBad() {
-		return nodeIdBad;
-	}
+    public String getNodeIdBad() {
+        return nodeIdBad;
+    }
 
-	public void setNodeIdBad(String nodeIdBad) {
-		this.nodeIdBad = nodeIdBad;
-	}
+    public void setNodeIdBad(String nodeIdBad) {
+        this.nodeIdBad = nodeIdBad;
+    }
 
-	public String getNodeIdPoor() {
-		return nodeIdPoor;
-	}
+    public String getNodeIdPoor() {
+        return nodeIdPoor;
+    }
 
-	public void setNodeIdPoor(String nodeIdPoor) {
-		this.nodeIdPoor = nodeIdPoor;
-	}
+    public void setNodeIdPoor(String nodeIdPoor) {
+        this.nodeIdPoor = nodeIdPoor;
+    }
 
 }

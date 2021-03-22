@@ -20,22 +20,22 @@
 
 package org.onap.ransim.websocket.model;
 
-import java.util.*; 
+import java.util.*;
 
 public class SNSSAI {
-    
+
     private String sNssai;
-    
+
     private List<ConfigData> configData;
-    
+
     public String getSNssai() {
-     return sNssai;   
+        return sNssai;
     }
-    
+
     public void setSNssai(String sNssai) {
-     this.sNssai = sNssai;   
+        this.sNssai = sNssai;
     }
-    
+
     public List<ConfigData> getConfigData() {
         return configData;
     }
@@ -43,9 +43,9 @@ public class SNSSAI {
     public void setConfigData(List<ConfigData> configData) {
         this.configData = configData;
     }
-    
+
     public SNSSAI() {
-        
+
     }
-    
+
 }

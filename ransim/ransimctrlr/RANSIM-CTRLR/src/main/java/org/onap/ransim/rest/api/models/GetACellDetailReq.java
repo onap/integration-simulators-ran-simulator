@@ -22,28 +22,28 @@ package org.onap.ransim.rest.api.models;
 
 public class GetACellDetailReq {
 
-	private String nodeId;
+    private String nodeId;
 
-	/**
-	 * A constructor for GetACellDetailReq.
-	 *
-	 * @param nodeId node id of the cell
-	 */
-	public GetACellDetailReq(String nodeId) {
-		super();
-		this.nodeId = nodeId;
-	}
+    /**
+     * A constructor for GetACellDetailReq.
+     *
+     * @param nodeId node id of the cell
+     */
+    public GetACellDetailReq(String nodeId) {
+        super();
+        this.nodeId = nodeId;
+    }
 
-	public GetACellDetailReq() {
+    public GetACellDetailReq() {
 
-	}
+    }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+    public String getNodeId() {
+        return nodeId;
+    }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
 
 }

@@ -21,19 +21,19 @@
 package org.onap.ransim.websocket.model;
 
 public class MessageTypes {
-	public final static String RC_TO_HC_FMDATA = "FmData";
-	public final static String RC_TO_HC_PMDATA = "PmData";
-	public final static String RC_TO_HC_SETCONFIGTOPO = "INITIAL_CONFIG";
-	public final static String RC_TO_HC_UPDCELL = "UpdateCell";
-	public final static String RC_TO_HC_PING = "PING";
-        public final static String RC_TO_HC_PMFILEDATA = "RC_TO_HC_PMFILEDATA";
-	public final static String HC_TO_RC_MODPCI = "ModifyPci";
-	public final static String HC_TO_RC_MODANR = "ModifyAnr";
-	public final static String HC_TO_RC_RTRIC = "RTRIC_CONFIG";
-	public final static String HC_TO_RC_RRM_POLICY = "HC_TO_RC_RRM_POLICY";
-        public final static String HC_TO_RC_PLMN = "HC_TO_RC_PLMN";
-        public final static String HC_TO_RC_SLICE_PROFILE = "HC_TO_RC_SLICE_PROFILE";
-        public final static String HC_TO_RC_RRM_POLICY_DEL = "HC_TO_RC_RRM_POLICY_DEL";
-        public final static String HC_TO_RC_PLMN_DEL = "HC_TO_RC_PLMN_DEL"; 
-        public final static String HC_TO_RC_SLICE_PROFILE_DEL = "HC_TO_RC_SLICE_PROFILE_DEL";
+    public final static String RC_TO_HC_FMDATA = "FmData";
+    public final static String RC_TO_HC_PMDATA = "PmData";
+    public final static String RC_TO_HC_SETCONFIGTOPO = "INITIAL_CONFIG";
+    public final static String RC_TO_HC_UPDCELL = "UpdateCell";
+    public final static String RC_TO_HC_PING = "PING";
+    public final static String RC_TO_HC_PMFILEDATA = "RC_TO_HC_PMFILEDATA";
+    public final static String HC_TO_RC_MODPCI = "ModifyPci";
+    public final static String HC_TO_RC_MODANR = "ModifyAnr";
+    public final static String HC_TO_RC_RTRIC = "RTRIC_CONFIG";
+    public final static String HC_TO_RC_RRM_POLICY = "HC_TO_RC_RRM_POLICY";
+    public final static String HC_TO_RC_PLMN = "HC_TO_RC_PLMN";
+    public final static String HC_TO_RC_SLICE_PROFILE = "HC_TO_RC_SLICE_PROFILE";
+    public final static String HC_TO_RC_RRM_POLICY_DEL = "HC_TO_RC_RRM_POLICY_DEL";
+    public final static String HC_TO_RC_PLMN_DEL = "HC_TO_RC_PLMN_DEL";
+    public final static String HC_TO_RC_SLICE_PROFILE_DEL = "HC_TO_RC_SLICE_PROFILE_DEL";
 }

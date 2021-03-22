@@ -25,30 +25,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Job {
-	private String jobId;
+    private String jobId;
 
-	public Job() {
+    public Job() {
 
-	}
+    }
 
-	public Job(String jobId) {
-		super();
-		this.jobId = jobId;
-	}
+    public Job(String jobId) {
+        super();
+        this.jobId = jobId;
+    }
 
-	@XmlAttribute
-	public String getJobId() {
-		return jobId;
-	}
+    @XmlAttribute
+    public String getJobId() {
+        return jobId;
+    }
 
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
-	}
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
 
-	@Override
-	public String toString() {
-		return "Job [jobId=" + jobId + "]";
-	}
+    @Override
+    public String toString() {
+        return "Job [jobId=" + jobId + "]";
+    }
 
 }
-

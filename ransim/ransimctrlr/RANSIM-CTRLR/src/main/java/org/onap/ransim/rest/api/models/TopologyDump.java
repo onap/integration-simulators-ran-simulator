@@ -24,28 +24,28 @@ import java.util.List;
 
 public class TopologyDump {
 
-	private List<CellData> cellList;
+    private List<CellData> cellList;
 
-	/**
-	 * A constructor for TopologyDump.
-	 *
-	 * @param cellList list of cells
-	 */
-	public TopologyDump(List<CellData> cellList) {
+    /**
+     * A constructor for TopologyDump.
+     *
+     * @param cellList list of cells
+     */
+    public TopologyDump(List<CellData> cellList) {
 
-		this.cellList = cellList;
-	}
+        this.cellList = cellList;
+    }
 
-	public TopologyDump() {
+    public TopologyDump() {
 
-	}
+    }
 
-	public List<CellData> getCellList() {
-		return cellList;
-	}
+    public List<CellData> getCellList() {
+        return cellList;
+    }
 
-	public void setCellList(List<CellData> cellList) {
-		this.cellList = cellList;
-	}
+    public void setCellList(List<CellData> cellList) {
+        this.cellList = cellList;
+    }
 
 }

@@ -22,34 +22,34 @@ package org.onap.ransim.websocket.model;
 
 public class EventFm {
 
-	private CommonEventHeaderFm commonEventHeader;
-	private FaultFields faultFields;
+    private CommonEventHeaderFm commonEventHeader;
+    private FaultFields faultFields;
 
-	public EventFm(CommonEventHeaderFm commonEventHeader, FaultFields faultFields) {
-		super();
-		this.commonEventHeader = commonEventHeader;
-		this.faultFields = faultFields;
-	}
+    public EventFm(CommonEventHeaderFm commonEventHeader, FaultFields faultFields) {
+        super();
+        this.commonEventHeader = commonEventHeader;
+        this.faultFields = faultFields;
+    }
 
-	public EventFm() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public EventFm() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public CommonEventHeaderFm getCommonEventHeader() {
-		return commonEventHeader;
-	}
+    public CommonEventHeaderFm getCommonEventHeader() {
+        return commonEventHeader;
+    }
 
-	public void setCommonEventHeader(CommonEventHeaderFm commonEventHeader) {
-		this.commonEventHeader = commonEventHeader;
-	}
+    public void setCommonEventHeader(CommonEventHeaderFm commonEventHeader) {
+        this.commonEventHeader = commonEventHeader;
+    }
 
-	public FaultFields getFaultFields() {
-		return faultFields;
-	}
+    public FaultFields getFaultFields() {
+        return faultFields;
+    }
 
-	public void setFaultFields(FaultFields faultFields) {
-		this.faultFields = faultFields;
-	}
+    public void setFaultFields(FaultFields faultFields) {
+        this.faultFields = faultFields;
+    }
 
 }

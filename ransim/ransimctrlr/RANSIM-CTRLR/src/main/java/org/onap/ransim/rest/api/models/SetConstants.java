@@ -22,87 +22,87 @@ package org.onap.ransim.rest.api.models;
 
 public class SetConstants {
 
-	private int gridSize;
-	private int gridType;
-	private boolean collision;
+    private int gridSize;
+    private int gridType;
+    private boolean collision;
 
-	private int processCapacity;
-	private int numberOfMachines;
-	private String serverIdPrefix;
+    private int processCapacity;
+    private int numberOfMachines;
+    private String serverIdPrefix;
 
-	public SetConstants() {
+    public SetConstants() {
 
-	}
+    }
 
-	/**
-	 * A constructor for SetConstants.
-	 *
-	 * @param gridSize         grid dimension for the topology (number of cells
-	 *                         along the side)
-	 * @param gridType         honeycomb or square grid
-	 * @param collision        to set if the new simulation has collision between
-	 *                         the cells
-	 * @param processCapacity  number of netconf servers
-	 * @param numberOfMachines number of machines running in one netconf server
-	 * @param serverIdPrefix   server id prefix
-	 */
-	public SetConstants(int gridSize, int gridType, boolean collision, int processCapacity, int numberOfMachines,
-			String serverIdPrefix) {
-		super();
-		this.gridSize = gridSize;
-		this.gridType = gridType;
-		this.collision = collision;
-		this.processCapacity = processCapacity;
-		this.numberOfMachines = numberOfMachines;
-		this.serverIdPrefix = serverIdPrefix;
-	}
+    /**
+     * A constructor for SetConstants.
+     *
+     * @param gridSize grid dimension for the topology (number of cells
+     *        along the side)
+     * @param gridType honeycomb or square grid
+     * @param collision to set if the new simulation has collision between
+     *        the cells
+     * @param processCapacity number of netconf servers
+     * @param numberOfMachines number of machines running in one netconf server
+     * @param serverIdPrefix server id prefix
+     */
+    public SetConstants(int gridSize, int gridType, boolean collision, int processCapacity, int numberOfMachines,
+            String serverIdPrefix) {
+        super();
+        this.gridSize = gridSize;
+        this.gridType = gridType;
+        this.collision = collision;
+        this.processCapacity = processCapacity;
+        this.numberOfMachines = numberOfMachines;
+        this.serverIdPrefix = serverIdPrefix;
+    }
 
-	public int getGridSize() {
-		return gridSize;
-	}
+    public int getGridSize() {
+        return gridSize;
+    }
 
-	public void setGridSize(int gridSize) {
-		this.gridSize = gridSize;
-	}
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
+    }
 
-	public int getGridType() {
-		return gridType;
-	}
+    public int getGridType() {
+        return gridType;
+    }
 
-	public void setGridType(int gridType) {
-		this.gridType = gridType;
-	}
+    public void setGridType(int gridType) {
+        this.gridType = gridType;
+    }
 
-	public boolean isCollision() {
-		return collision;
-	}
+    public boolean isCollision() {
+        return collision;
+    }
 
-	public void setCollision(boolean collision) {
-		this.collision = collision;
-	}
+    public void setCollision(boolean collision) {
+        this.collision = collision;
+    }
 
-	public int getProcessCapacity() {
-		return processCapacity;
-	}
+    public int getProcessCapacity() {
+        return processCapacity;
+    }
 
-	public void setProcessCapacity(int processCapacity) {
-		this.processCapacity = processCapacity;
-	}
+    public void setProcessCapacity(int processCapacity) {
+        this.processCapacity = processCapacity;
+    }
 
-	public int getNumberOfMachines() {
-		return numberOfMachines;
-	}
+    public int getNumberOfMachines() {
+        return numberOfMachines;
+    }
 
-	public void setNumberOfMachines(int numberOfMachines) {
-		this.numberOfMachines = numberOfMachines;
-	}
+    public void setNumberOfMachines(int numberOfMachines) {
+        this.numberOfMachines = numberOfMachines;
+    }
 
-	public String getServerIdPrefix() {
-		return serverIdPrefix;
-	}
+    public String getServerIdPrefix() {
+        return serverIdPrefix;
+    }
 
-	public void setServerIdPrefix(String serverIdPrefix) {
-		this.serverIdPrefix = serverIdPrefix;
-	}
+    public void setServerIdPrefix(String serverIdPrefix) {
+        this.serverIdPrefix = serverIdPrefix;
+    }
 
 }

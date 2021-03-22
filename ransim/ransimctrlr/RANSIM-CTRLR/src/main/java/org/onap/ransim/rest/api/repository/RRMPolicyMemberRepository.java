@@ -20,12 +20,11 @@
 
 package org.onap.ransim.rest.api.repository;
 
+import org.onap.ransim.rest.api.models.RRMPolicyMember;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import org.onap.ransim.rest.api.models.RRMPolicyMember;
-
 @Repository
-public interface RRMPolicyMemberRepository extends CrudRepository<RRMPolicyMember,Integer>{
+public interface RRMPolicyMemberRepository extends CrudRepository<RRMPolicyMember, Integer> {
 
 }
