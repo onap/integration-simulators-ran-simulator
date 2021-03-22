@@ -21,19 +21,19 @@
 package org.onap.ransim.websocket.model;
 
 public class ConfigData {
-    
+
     private String configParameter;
-    
+
     private int configValue;
-    
+
     public String getConfigParameter() {
         return configParameter;
     }
-    
+
     public void setConfigParameter(String configParameter) {
         this.configParameter = configParameter;
     }
-    
+
     public int getConfigValue() {
         return configValue;
     }
@@ -41,13 +41,13 @@ public class ConfigData {
     public void setConfigValue(int configValue) {
         this.configValue = configValue;
     }
-    
+
     public ConfigData() {
-        
+
     }
-    
+
     public ConfigData(String configParameter, int configValue) {
-        this.configParameter= configParameter;
+        this.configParameter = configParameter;
         this.configValue = configValue;
     }
 }

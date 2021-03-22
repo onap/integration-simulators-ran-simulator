@@ -23,17 +23,16 @@ package org.onap.ransim.rest.xml.models;
 import java.util.List;
 
 public class MeasResult {
-	private String position;
-	private String result;
+    private String position;
+    private String result;
 
-	public MeasResult(String position, String result) {
-		super();
-		this.position = position;
-		this.result = result;
-	}
+    public MeasResult(String position, String result) {
+        super();
+        this.position = position;
+        this.result = result;
+    }
 
-	public MeasResult() {
-	}
+    public MeasResult() {
+    }
 
 }
-

@@ -35,7 +35,7 @@ public class TestApiModels {
         mcell.setNewPhysicalCellId(001L);
         assertTrue(mcell.getNewPhysicalCellId() == 001);
     }
-    
+
     @Test
     public void testsetNewPhysicalCellId1() {
         ModifyACellReq mcell = new ModifyACellReq();

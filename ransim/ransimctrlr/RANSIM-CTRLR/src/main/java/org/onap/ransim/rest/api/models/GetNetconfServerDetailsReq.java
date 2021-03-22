@@ -22,29 +22,29 @@ package org.onap.ransim.rest.api.models;
 
 public class GetNetconfServerDetailsReq {
 
-	private String serverId;
+    private String serverId;
 
-	/**
-	 * A constructor for GetNetconfServerDetailsReq.
-	 *
-	 * @param serverId server Id of the netconf server
-	 */
-	public GetNetconfServerDetailsReq(String serverId) {
-		super();
-		this.serverId = serverId;
-	}
+    /**
+     * A constructor for GetNetconfServerDetailsReq.
+     *
+     * @param serverId server Id of the netconf server
+     */
+    public GetNetconfServerDetailsReq(String serverId) {
+        super();
+        this.serverId = serverId;
+    }
 
-	public GetNetconfServerDetailsReq() {
+    public GetNetconfServerDetailsReq() {
 
-		// TODO Auto-generated constructor stub
-	}
+        // TODO Auto-generated constructor stub
+    }
 
-	public String getServerId() {
-		return serverId;
-	}
+    public String getServerId() {
+        return serverId;
+    }
 
-	public void setServerId(String serverId) {
-		this.serverId = serverId;
-	}
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
 
 }

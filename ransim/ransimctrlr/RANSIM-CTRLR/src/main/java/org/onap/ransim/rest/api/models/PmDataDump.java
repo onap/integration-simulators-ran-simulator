@@ -24,24 +24,24 @@ import java.util.List;
 
 public class PmDataDump {
 
-	private List<PmParameters> kpiDump;
+    private List<PmParameters> kpiDump;
 
-	public PmDataDump() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public PmDataDump() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public PmDataDump(List<PmParameters> kpiDump) {
-		super();
-		this.kpiDump = kpiDump;
-	}
+    public PmDataDump(List<PmParameters> kpiDump) {
+        super();
+        this.kpiDump = kpiDump;
+    }
 
-	public List<PmParameters> getKpiDump() {
-		return kpiDump;
-	}
+    public List<PmParameters> getKpiDump() {
+        return kpiDump;
+    }
 
-	public void setKpiDump(List<PmParameters> kpiDump) {
-		this.kpiDump = kpiDump;
-	}
+    public void setKpiDump(List<PmParameters> kpiDump) {
+        this.kpiDump = kpiDump;
+    }
 
 }

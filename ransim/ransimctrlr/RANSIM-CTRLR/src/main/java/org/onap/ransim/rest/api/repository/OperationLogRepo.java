@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.repository;
 
 import org.onap.ransim.rest.api.models.OperationLog;
@@ -24,6 +25,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OperationLogRepo extends CrudRepository<OperationLog, String>{
+public interface OperationLogRepo extends CrudRepository<OperationLog, String> {
 
 }

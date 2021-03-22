@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.ransim.rest.api.repository;
 
 import org.onap.ransim.rest.api.models.NetconfServers;

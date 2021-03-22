@@ -20,7 +20,7 @@
 
 package org.onap.ransim.websocket.model;
 
-import java.util.*; 
+import java.util.*;
 
 public class ConfigPLMNInfo {
 
@@ -43,7 +43,7 @@ public class ConfigPLMNInfo {
     public void setMnc(String mnc) {
         this.mnc = mnc;
     }
-    
+
     public List<SNSSAI> getSNSSAI() {
         return sNSSAI;
     }
@@ -51,8 +51,8 @@ public class ConfigPLMNInfo {
     public void setSNSSAI(List<SNSSAI> sNSSAI) {
         this.sNSSAI = sNSSAI;
     }
-    
+
     public ConfigPLMNInfo() {
-        
+
     }
 }

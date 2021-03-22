@@ -36,28 +36,28 @@ import javax.persistence.Table;
 @Embeddable
 @Table(name = "PLMNINFO")
 public class PLMNInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "PLMNID")
-	private String pLMNId;
+    @Column(name = "PLMNID")
+    private String pLMNId;
 
-	@Embedded
-	private SNSSAI sNSSAI;
+    @Embedded
+    private SNSSAI sNSSAI;
 
-	public String getpLMNId() {
-		return pLMNId;
-	}
+    public String getpLMNId() {
+        return pLMNId;
+    }
 
-	public void setpLMNId(String pLMNId) {
-		this.pLMNId = pLMNId;
-	}
+    public void setpLMNId(String pLMNId) {
+        this.pLMNId = pLMNId;
+    }
 
-	public SNSSAI getsNSSAI() {
-		return sNSSAI;
-	}
+    public SNSSAI getsNSSAI() {
+        return sNSSAI;
+    }
 
-	public void setsNSSAI(SNSSAI sNSSAI) {
-		this.sNSSAI = sNSSAI;
-	}
+    public void setsNSSAI(SNSSAI sNSSAI) {
+        this.sNSSAI = sNSSAI;
+    }
 
 }

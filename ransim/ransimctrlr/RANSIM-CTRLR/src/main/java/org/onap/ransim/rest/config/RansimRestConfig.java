@@ -42,50 +42,50 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@ComponentScan(basePackages = { "org.onap.*", "com.*" })
+@ComponentScan(basePackages = {"org.onap.*", "com.*"})
 public class RansimRestConfig {
-	private static final Logger log = Logger.getLogger(RansimRestConfig.class);
+    private static final Logger log = Logger.getLogger(RansimRestConfig.class);
 
-	/**
-	 * init.
-	 */
-	@PostConstruct
-	public void init() {
-		Properties prop = new Properties();
-		try (InputStream input = new FileInputStream("rs.properties")) {
-			// load a properties file
-			prop.load(input);
-		} catch (Exception e) {
-			log.error("Exception Occured while loading properties file : {} ", e);
-		}
-	}
+    /**
+     * init.
+     */
+    @PostConstruct
+    public void init() {
+        Properties prop = new Properties();
+        try (InputStream input = new FileInputStream("rs.properties")) {
+            // load a properties file
+            prop.load(input);
+        } catch (Exception e) {
+            log.error("Exception Occured while loading properties file : {} ", e);
+        }
+    }
 
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Ran Simulator Controller REST API")
-				.description("This API helps to make queries against Ran Simulator Controller").version("3.0").build();
-	}
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("Ran Simulator Controller REST API")
+                .description("This API helps to make queries against Ran Simulator Controller").version("3.0").build();
+    }
 
-	/**
-	 * ransimappApi .
-	 *
-	 * @return returns api info
-	 */
-	@Bean
-	public Docket ransimappApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("org.onap.ransim.rest.api")).paths(PathSelectors.any())
-				.build().apiInfo(apiInfo());
-	}
+    /**
+     * ransimappApi .
+     *
+     * @return returns api info
+     */
+    @Bean
+    public Docket ransimappApi() {
+        return new Docket(DocumentationType.SWAGGER_2).select()
+                .apis(RequestHandlerSelectors.basePackage("org.onap.ransim.rest.api")).paths(PathSelectors.any())
+                .build().apiInfo(apiInfo());
+    }
 
-	/**
-	 * MultipartConfigElement.
-	 *
-	 * @return returns MultipartConfigElement
-	 */
-	@Bean
-	public MultipartConfigElement multipartConfigElement() {
-		String location = System.getProperty("java.io.tmpdir");
-		return new MultipartConfigElement(location);
-	}
+    /**
+     * MultipartConfigElement.
+     *
+     * @return returns MultipartConfigElement
+     */
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        String location = System.getProperty("java.io.tmpdir");
+        return new MultipartConfigElement(location);
+    }
 
 }

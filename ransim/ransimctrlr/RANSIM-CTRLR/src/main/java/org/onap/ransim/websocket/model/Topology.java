@@ -24,69 +24,69 @@ import java.util.List;
 
 public class Topology {
 
-	private String pnfName;
+    private String pnfName;
 
-	private long pciId;
+    private long pciId;
 
-	private String cellId;
+    private String cellId;
 
-	private List<Neighbor> neighborList;
+    private List<Neighbor> neighborList;
 
-	public long getPciId() {
-		return pciId;
-	}
+    public long getPciId() {
+        return pciId;
+    }
 
-	public void setPciId(long pciId) {
-		this.pciId = pciId;
-	}
+    public void setPciId(long pciId) {
+        this.pciId = pciId;
+    }
 
-	public String getCellId() {
-		return cellId;
-	}
+    public String getCellId() {
+        return cellId;
+    }
 
-	public void setCellId(String cellId) {
-		this.cellId = cellId;
-	}
+    public void setCellId(String cellId) {
+        this.cellId = cellId;
+    }
 
-	public List<Neighbor> getNeighborList() {
-		return neighborList;
-	}
+    public List<Neighbor> getNeighborList() {
+        return neighborList;
+    }
 
-	public void setNeighborList(List<Neighbor> neighborList) {
-		this.neighborList = neighborList;
-	}
+    public void setNeighborList(List<Neighbor> neighborList) {
+        this.neighborList = neighborList;
+    }
 
-	@Override
-	public String toString() {
-		return "Topology [PnfName = " + pnfName + ", PciId = " + pciId + ", cellId = " + cellId + ", neighborList = "
-				+ neighborList + "]";
-	}
+    @Override
+    public String toString() {
+        return "Topology [PnfName = " + pnfName + ", PciId = " + pciId + ", cellId = " + cellId + ", neighborList = "
+                + neighborList + "]";
+    }
 
-	/**
-	 * Contails the necessary cell details.
-	 *
-	 * @param pnfName      server id name
-	 * @param pciId        pci number
-	 * @param cellId       node id for the cel
-	 * @param neighborList neighbor list for the cell
-	 */
-	public Topology(String pnfName, long pciId, String cellId, List<Neighbor> neighborList) {
-		super();
-		this.pnfName = pnfName;
-		this.pciId = pciId;
-		this.cellId = cellId;
-		this.neighborList = neighborList;
-	}
+    /**
+     * Contails the necessary cell details.
+     *
+     * @param pnfName server id name
+     * @param pciId pci number
+     * @param cellId node id for the cel
+     * @param neighborList neighbor list for the cell
+     */
+    public Topology(String pnfName, long pciId, String cellId, List<Neighbor> neighborList) {
+        super();
+        this.pnfName = pnfName;
+        this.pciId = pciId;
+        this.cellId = cellId;
+        this.neighborList = neighborList;
+    }
 
-	public Topology() {
-	}
+    public Topology() {
+    }
 
-	public String getPnfName() {
-		return pnfName;
-	}
+    public String getPnfName() {
+        return pnfName;
+    }
 
-	public void setPnfName(String pnfName) {
-		this.pnfName = pnfName;
-	}
+    public void setPnfName(String pnfName) {
+        this.pnfName = pnfName;
+    }
 
 }

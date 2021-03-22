@@ -24,14 +24,14 @@ import java.util.List;
 
 public class CellInputPayload {
 
-	List<CellObj> cellList;
+    List<CellObj> cellList;
 
-	public List<CellObj> getCellList() {
-		return cellList;
-	}
+    public List<CellObj> getCellList() {
+        return cellList;
+    }
 
-	public void setCellList(List<CellObj> cellList) {
-		this.cellList = cellList;
-	}
+    public void setCellList(List<CellObj> cellList) {
+        this.cellList = cellList;
+    }
 
 }
