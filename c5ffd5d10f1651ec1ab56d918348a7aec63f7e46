@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94fcb3ac_5f6ef829",
+        "filename": "ransim/docker/config/db/ransim_schema.sql",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 3949
+      },
+      "writtenOn": "2021-03-24T08:50:10Z",
+      "side": 1,
+      "message": "tab to spaces",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 1
+      },
+      "revId": "c5ffd5d10f1651ec1ab56d918348a7aec63f7e46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
