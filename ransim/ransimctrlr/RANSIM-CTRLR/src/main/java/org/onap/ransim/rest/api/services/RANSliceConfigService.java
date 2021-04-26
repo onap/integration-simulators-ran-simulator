@@ -330,7 +330,7 @@ public class RANSliceConfigService {
      * @param trackingArea
      * @return List<NearRTRICModel>
      */
-    public List<NearRTRICModel> findRICsInTA(String trackingArea) {
+    public List<NearRTRICModel> findRICsInTA(int trackingArea) {
         logger.debug("Request received to find the NearRTRICs in Tracking Area::" + trackingArea);
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         List<NearRTRIC> nearRTRICsList = nearRTRICRepository.getListOfRICsInTrackingArea(trackingArea);
@@ -411,7 +411,7 @@ public class RANSliceConfigService {
      * @param trackingArea
      * @return List<String>
      */
-    public List<String> fetchCellsofTA(String trackingArea) {
+    public List<String> fetchCellsofTA(int trackingArea) {
         logger.debug("Request recieved to fetch the cell details of TA:" + trackingArea);
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         String cells = tACellRepository.findById(trackingArea).isPresent()

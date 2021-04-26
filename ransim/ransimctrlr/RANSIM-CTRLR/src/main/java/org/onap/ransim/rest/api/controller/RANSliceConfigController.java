@@ -271,7 +271,7 @@ public class RANSliceConfigController {
      * @return
      */
     @GetMapping(path = "/nearrtric-list/{trackingArea}")
-    public ResponseEntity<List<NearRTRICModel>> findNearRTRICofCellsFromTA(@PathVariable String trackingArea) {
+    public ResponseEntity<List<NearRTRICModel>> findNearRTRICofCellsFromTA(@PathVariable int trackingArea) {
         logger.info("Request Received");
         try {
             List<String> cellIds = this.findListOfCells(trackingArea).getBody();
@@ -296,7 +296,7 @@ public class RANSliceConfigController {
      * @return
      */
     @GetMapping(path = "/cell-list/{trackingArea}")
-    public ResponseEntity<List<String>> findListOfCells(@PathVariable String trackingArea) {
+    public ResponseEntity<List<String>> findListOfCells(@PathVariable int trackingArea) {
         logger.info("Request Received");
         try {
             if (ranSliceConfigService.fetchCellsofTA(trackingArea).size() > 0) {

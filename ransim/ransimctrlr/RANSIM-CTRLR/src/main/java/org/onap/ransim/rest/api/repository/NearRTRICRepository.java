@@ -32,7 +32,7 @@ import org.springframework.stereotype.Repository;
 public interface NearRTRICRepository extends CrudRepository<NearRTRIC, Integer> {
 
     @Query(nativeQuery = true, value = "select * from nearrtric ric join trackingarea ta where tracking_area=?1")
-    public List<NearRTRIC> getListOfRICsInTrackingArea(String trackingArea);
+    public List<NearRTRIC> getListOfRICsInTrackingArea(int trackingArea);
 
     @Query(nativeQuery = true, value = "select * from nearrtric ric join gnbcucpfunction cucp where cucp.gnbcuname=?1")
     public List<NearRTRIC> findNearRTRICByCUCPName(String cucpNames);

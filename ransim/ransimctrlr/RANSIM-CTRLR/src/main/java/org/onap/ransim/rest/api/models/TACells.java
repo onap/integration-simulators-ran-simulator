@@ -33,15 +33,15 @@ public class TACells implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "TRACKINGAREA")
-    private String trackingArea;
+    private int trackingArea;
     @Column(name = "CELLS")
     private String cellsList;
 
-    public String getTrackingArea() {
+    public int getTrackingArea() {
         return trackingArea;
     }
 
-    public void setTrackingArea(String trackingArea) {
+    public void setTrackingArea(int trackingArea) {
         this.trackingArea = trackingArea;
     }
 

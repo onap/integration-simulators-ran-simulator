@@ -137,7 +137,7 @@ public class TestRANSliceConfigServices {
     public void testSaveNearRTRIC() {
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         String input =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         try {
             nearRTRIC = objectMapper.readValue(input, NearRTRICModel.class);
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class TestRANSliceConfigServices {
     public void testFetchNearRTRICData() {
         int nearRTRICId = 11;
         String response =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         try {
             nearRTRIC = objectMapper.readValue(response, NearRTRICModel.class);
@@ -166,10 +166,10 @@ public class TestRANSliceConfigServices {
 
     @Test
     public void testFindRICsInTA() {
-        String nSSAI = "01-000100";
+        int trackingArea = 101;
         List<NearRTRICModel> ricsList = new ArrayList<>();
         String ricModel =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         try {
             nearRTRIC = objectMapper.readValue(ricModel, NearRTRICModel.class);
@@ -178,8 +178,8 @@ public class TestRANSliceConfigServices {
             e.printStackTrace();
         }
         ricsList.add(nearRTRIC);
-        Mockito.doReturn(ricsList).when(rANSliceConfigService).findRICsInTA(Mockito.anyString());
-        assertEquals(ricsList, rANSliceConfigService.findRICsInTA(nSSAI));
+        Mockito.doReturn(ricsList).when(rANSliceConfigService).findRICsInTA(Mockito.anyInt());
+        assertEquals(ricsList, rANSliceConfigService.findRICsInTA(trackingArea));
     }
 
     @Test
@@ -189,7 +189,7 @@ public class TestRANSliceConfigServices {
         cellIds.add(45785);
         List<NearRTRICModel> ricsList = new ArrayList<>();
         String ricModel =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         try {
             nearRTRIC = objectMapper.readValue(ricModel, NearRTRICModel.class);
@@ -235,11 +235,11 @@ public class TestRANSliceConfigServices {
 
     @Test
     public void testFetchCellsofTA() {
-        String trackingArea = "Kingston";
+        int trackingArea = 202;
         List<String> cellIds = new ArrayList<String>();
         cellIds.add("23456");
         cellIds.add("45785");
-        Mockito.doReturn(cellIds).when(rANSliceConfigService).fetchCellsofTA(Mockito.anyString());
+        Mockito.doReturn(cellIds).when(rANSliceConfigService).fetchCellsofTA(Mockito.anyInt());
         assertEquals(cellIds, rANSliceConfigService.fetchCellsofTA(trackingArea));
     }
 
@@ -264,7 +264,7 @@ public class TestRANSliceConfigServices {
         String ranNFNSSIID = "11";
         List<NearRTRICModel> ricsList = new ArrayList<>();
         String ricModel =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         try {
             nearRTRIC = objectMapper.readValue(ricModel, NearRTRICModel.class);
@@ -282,7 +282,7 @@ public class TestRANSliceConfigServices {
         String sNSSAI = "001-00001";
         List<NearRTRICModel> ricsList = new ArrayList<>();
         String ricModel =
-                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
+                "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":101,\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
         NearRTRICModel nearRTRIC = new NearRTRICModel();
         try {
             nearRTRIC = objectMapper.readValue(ricModel, NearRTRICModel.class);

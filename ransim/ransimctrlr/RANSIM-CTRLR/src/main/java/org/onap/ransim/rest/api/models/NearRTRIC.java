@@ -42,9 +42,9 @@ public class NearRTRIC implements Serializable {
     private Integer nearRTRICId;
     @Column(name = "GNBID")
     private Integer gNBId;
-    @ElementCollection(targetClass = String.class)
+    @ElementCollection//(targetClass = String.class)
     @CollectionTable(name = "TRACKINGAREA", joinColumns = @JoinColumn(name = "nearrtricid"))
-    private List<String> trackingArea;
+    private List<Integer> trackingArea;
     @Column(name = "RESOURCETYPE")
     private String resourceType;
     @OneToMany(mappedBy = "nearRTRIC", cascade = CascadeType.ALL)
@@ -76,11 +76,11 @@ public class NearRTRIC implements Serializable {
         this.gNBId = gNBId;
     }
 
-    public List<String> getTrackingArea() {
+    public List<Integer> getTrackingArea() {
         return trackingArea;
     }
 
-    public void setTrackingArea(List<String> trackingArea) {
+    public void setTrackingArea(List<Integer> trackingArea) {
         this.trackingArea = trackingArea;
     }
 
