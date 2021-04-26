@@ -166,7 +166,7 @@ public class TestRANSliceConfigServices {
 
     @Test
     public void testFindRICsInTA() {
-        String nSSAI = "01-000100";
+        int nSSAI = 1000100;
         List<NearRTRICModel> ricsList = new ArrayList<>();
         String ricModel =
                 "{\"nearRTRICId\":11,\"gNBId\":98763,\"trackingArea\":[\"Kingston\"],\"resourceType\":\"NearRTRIC\",\"ranNFNSSIList\":[\"11\",\"22\"],\"pLMNInfoList\":[{\"pLMNId\":\"310-410\",\"sNSSAI\":{\"sNSSAI\":\"001-003\",\"status\":\"ACTIVE\",\"configData\":{\"dLThptPerSlice\":55,\"uLThptPerSlice\":40}}}]}";
@@ -178,7 +178,7 @@ public class TestRANSliceConfigServices {
             e.printStackTrace();
         }
         ricsList.add(nearRTRIC);
-        Mockito.doReturn(ricsList).when(rANSliceConfigService).findRICsInTA(Mockito.anyString());
+        Mockito.doReturn(ricsList).when(rANSliceConfigService).findRICsInTA(Mockito.anyInt());
         assertEquals(ricsList, rANSliceConfigService.findRICsInTA(nSSAI));
     }
 
@@ -235,11 +235,11 @@ public class TestRANSliceConfigServices {
 
     @Test
     public void testFetchCellsofTA() {
-        String trackingArea = "Kingston";
+        int trackingArea = 234524;
         List<String> cellIds = new ArrayList<String>();
         cellIds.add("23456");
         cellIds.add("45785");
-        Mockito.doReturn(cellIds).when(rANSliceConfigService).fetchCellsofTA(Mockito.anyString());
+        Mockito.doReturn(cellIds).when(rANSliceConfigService).fetchCellsofTA(Mockito.anyInt());
         assertEquals(cellIds, rANSliceConfigService.fetchCellsofTA(trackingArea));
     }
 

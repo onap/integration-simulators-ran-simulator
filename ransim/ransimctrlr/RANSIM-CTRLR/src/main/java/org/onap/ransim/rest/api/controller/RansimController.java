@@ -684,7 +684,7 @@ public class RansimController {
         try {
             long startTime = (System.currentTimeMillis());
             Iterable<TACells> tacellList = ranSliceConfigService.fetchAllTA();
-            HashMap<String, List<String>> taCells = new HashMap<>();
+            HashMap<Integer, List<String>> taCells = new HashMap<>();
             for (TACells ta : tacellList) {
                 String[] cells = ta.getCellsList().split(",");
                 List<String> cellList = new ArrayList<String>(Arrays.asList(cells));

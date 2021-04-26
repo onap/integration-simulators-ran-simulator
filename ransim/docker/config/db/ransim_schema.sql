@@ -57,7 +57,7 @@ create table nearrtric (
 -- -----------------------------------------------------
 create table trackingarea (
   nearrtricid integer not null,
-  tracking_area varchar(255)
+  tracking_area integer
 ) engine = InnoDB;
 -- -----------------------------------------------------
 -- Table `ransim_db`.`rannfnssi`
@@ -179,7 +179,7 @@ create table rrmpolicymember (
 -- Table `ransim_db`.`tacells`
 -- -----------------------------------------------------
 create table tacells (
-  trackingarea varchar(255) not null,
+  trackingarea integer not null,
   cells varchar(255),
   primary key (trackingarea)
 ) engine = InnoDB;
@@ -225,10 +225,10 @@ create table sliceprofile (
 -- -----------------------------------------------------
 -- tacells
 
-INSERT INTO tacells(trackingarea,cells) VALUES('TA1', '15289,15290,15296,15687,15689,15155,15174,15175');
-INSERT INTO tacells(trackingarea,cells) VALUES('TA2', '15176,15825,15826,15425,15426,13999,14000');
-INSERT INTO tacells(trackingarea,cells) VALUES('TA3', '11561,11562,11568,11569,10896,10897,14655,14656');
-INSERT INTO tacells(trackingarea,cells) VALUES('TA4', '13905,13910,15360,15361,15548,15549,14427');
+INSERT INTO tacells(trackingarea,cells) VALUES(101, '15289,15290,15296,15687,15689,15155,15174,15175');
+INSERT INTO tacells(trackingarea,cells) VALUES(202, '15176,15825,15826,15425,15426,13999,14000');
+INSERT INTO tacells(trackingarea,cells) VALUES(303, '11561,11562,11568,11569,10896,10897,14655,14656');
+INSERT INTO tacells(trackingarea,cells) VALUES(404, '13905,13910,15360,15361,15548,15549,14427');
 
 --nearrtric
 INSERT INTO nearrtric (nearrtricid, gnbid, resourcetype) VALUES(11, 98763, 'NearRTRIC');
