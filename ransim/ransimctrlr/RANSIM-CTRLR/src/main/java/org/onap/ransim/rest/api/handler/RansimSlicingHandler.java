@@ -69,7 +69,7 @@ public class RansimSlicingHandler {
     @Autowired
     RANSliceConfigService ranSliceConfigService;
 
-    public List<String> generateIntelligentSlicingPmData(long startTime, HashMap<String, List<String>> taCells) {
+    public List<String> generateIntelligentSlicingPmData(long startTime, HashMap<Integer, List<String>> taCells) {
         List<String> result = new ArrayList<String>();
         try {
             String requestUrl = "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/cucp-list";
@@ -131,13 +131,13 @@ public class RansimSlicingHandler {
                                 configData = pLMNInfoModel.getsNSSAI().getConfigData().getMaxNumberOfConns();
                                 noOfRequestedSessions = 0;
                                 successfulSessions = 0;
-                                for (java.util.Map.Entry<String, List<String>> taCellMap : taCells.entrySet()) {
+                                for (java.util.Map.Entry<Integer, List<String>> taCellMap : taCells.entrySet()) {
                                     for (String cell : taCellMap.getValue()) {
                                         if (Integer.parseInt(cell) == nRCellCUModel.getCellLocalId().intValue()) {
                                             long end = (System.currentTimeMillis());
                                             if (peakEndTime > end) {
-                                                if (taCellMap.getKey().equalsIgnoreCase("TA1")
-                                                        || taCellMap.getKey().equalsIgnoreCase("TA3")) {
+                                                if (taCellMap.getKey()==101
+                                                        || taCellMap.getKey()==303) {
                                                     rNumForTotalReq = 1.4 + (new Random().nextDouble() * (1.0 - 1.4));
                                                 } else {
                                                     rNumForTotalReq = 0.6 + (new Random().nextDouble() * (0.3 - 0.6));

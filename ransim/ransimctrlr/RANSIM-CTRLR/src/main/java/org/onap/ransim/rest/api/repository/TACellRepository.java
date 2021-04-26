@@ -30,6 +30,6 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public interface TACellRepository extends CrudRepository<TACells, String> {
+public interface TACellRepository extends CrudRepository<TACells, Integer> {
 
 }
