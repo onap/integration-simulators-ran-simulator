@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Ahila P <ahila.pandaram@wipro.com>
+Code-Review+2: Morgan Richomme <morgan.richomme@orange.com>
+Submitted-by: Morgan Richomme <morgan.richomme@orange.com>
+Submitted-at: Tue, 27 Apr 2021 14:22:51 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/integration/simulators/ran-simulator/+/120891
+Project: integration/simulators/ran-simulator
+Branch: refs/heads/master
