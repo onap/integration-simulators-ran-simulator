@@ -146,7 +146,6 @@ public class RansimWebSocketServer {
                         log.info("Delete SliceProfile message received");
                         rscServices.handleSliceProfileDeleteFromSdnr(message.getMessage(), session, ipPort);
                     }
-
                 }
             }
         } catch (Exception e) {
