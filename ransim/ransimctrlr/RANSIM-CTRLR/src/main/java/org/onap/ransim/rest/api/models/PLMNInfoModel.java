@@ -28,14 +28,15 @@ public class PLMNInfoModel {
     private int gnbId;
     private int nrCellId;
     private String nearrtricid;
-    private long maxNumberOfConns;
+    private String configParameter;
+    private Integer configValue;
 
     public PLMNInfoModel() {
 
     }
 
     public PLMNInfoModel(String pLMNId, String snssai, String status, String gnbType, int gnbId, int nrCellId,
-            String nearrtricid, long maxNumberOfConns) {
+            String nearrtricid, String configParameter, Integer configValue) {
         super();
         this.pLMNId = pLMNId;
         this.snssai = snssai;
@@ -44,7 +45,8 @@ public class PLMNInfoModel {
         this.gnbId = gnbId;
         this.nrCellId = nrCellId;
         this.nearrtricid = nearrtricid;
-        this.maxNumberOfConns = maxNumberOfConns;
+        this.configParameter = configParameter;
+        this.configValue = configValue;
     }
 
     public String getpLMNId() {
@@ -103,11 +105,26 @@ public class PLMNInfoModel {
         this.nearrtricid = nearrtricid;
     }
 
-    public long getMaxNumberOfConns() {
-        return maxNumberOfConns;
+    public String getConfigParameter() {
+        return configParameter;
     }
 
-    public void setMaxNumberOfConns(long maxNumberOfConns) {
-        this.maxNumberOfConns = maxNumberOfConns;
+    public void setConfigParameter(String configParameter) {
+        this.configParameter = configParameter;
+    }
+
+    public Integer getConfigValue() {
+        return configValue;
+    }
+
+    public void setConfigValue(Integer configValue) {
+        this.configValue = configValue;
+    }
+
+    @Override
+    public String toString() {
+        return "PLMNInfoModel [pLMNId=" + pLMNId + ", snssai=" + snssai + ", status=" + status + ", gnbType=" + gnbType
+                + ", gnbId=" + gnbId + ", nrCellId=" + nrCellId + ", nearrtricid=" + nearrtricid + ", configParameter="
+                + configParameter + ", configValue=" + configValue + "]";
     }
 }
