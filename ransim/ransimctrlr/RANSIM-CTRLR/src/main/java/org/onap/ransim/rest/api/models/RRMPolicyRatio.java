@@ -37,7 +37,7 @@ public class RRMPolicyRatio implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "RRMPOLICYID")
-    private Integer rrmPolicyID;
+    private String rrmPolicyID;
     @Column(name = "RESOURCEID")
     private String resourceID;
     @Column(name = "RESOURCETYPE")
@@ -56,11 +56,11 @@ public class RRMPolicyRatio implements Serializable {
     @Column(name = "RRMPOLICYDEDICATEDRATIO")
     private Integer rRMPolicyDedicatedRatio;
 
-    public Integer getRrmPolicyID() {
+    public String getRrmPolicyID() {
         return rrmPolicyID;
     }
 
-    public void setRrmPolicyID(Integer rrmPolicyID) {
+    public void setRrmPolicyID(String rrmPolicyID) {
         this.rrmPolicyID = rrmPolicyID;
     }
 

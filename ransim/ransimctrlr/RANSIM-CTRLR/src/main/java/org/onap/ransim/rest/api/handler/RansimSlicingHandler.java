@@ -136,8 +136,7 @@ public class RansimSlicingHandler {
                                         if (Integer.parseInt(cell) == nRCellCUModel.getCellLocalId().intValue()) {
                                             long end = (System.currentTimeMillis());
                                             if (peakEndTime > end) {
-                                                if (taCellMap.getKey()==101
-                                                        || taCellMap.getKey()==303) {
+                                                if (taCellMap.getKey() == 101 || taCellMap.getKey() == 303) {
                                                     rNumForTotalReq = 1.4 + (new Random().nextDouble() * (1.0 - 1.4));
                                                 } else {
                                                     rNumForTotalReq = 0.6 + (new Random().nextDouble() * (0.3 - 0.6));

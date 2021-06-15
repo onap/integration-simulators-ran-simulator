@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -104,10 +105,12 @@ public class SlicingPMDataGenerator {
                 List<NRCellDUModel> duCellList = du.getCellDUList();
                 int ricId = du.getNearRTRICId();
                 List<PLMNInfoModel> plmnInfoList = new ArrayList<>();
+                duCellList.stream().filter(cell -> (!Objects.isNull(cell.getpLMNInfoList())));
                 duCellList.forEach(cell -> plmnInfoList.addAll(cell.getpLMNInfoList()));
                 List<NSSAIData> nssaiData = new ArrayList<>();
                 plmnInfoList.forEach(plmnInfo -> nssaiData.add(plmnInfo.getsNSSAI()));
-                nssaiData.stream().filter(nssai -> nssai.getStatus().equalsIgnoreCase("active"))
+                nssaiData.stream().filter(
+                        nssai -> (!(Objects.isNull(nssai.getStatus()))) && nssai.getStatus().equalsIgnoreCase("active"))
                         .forEach(x -> activeNssaiDetails.put(x.getsNSSAI(), x.getConfigData()));
                 produceMeasurementCollectionFile(du, activeNssaiDetails, duCellList, ricId);
                 logger.info("PM data generated for DU : " + du.getgNBDUName() + " Id: " + du.getgNBDUId());

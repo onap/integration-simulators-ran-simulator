@@ -42,7 +42,7 @@ public class NearRTRIC implements Serializable {
     private Integer nearRTRICId;
     @Column(name = "GNBID")
     private Integer gNBId;
-    @ElementCollection//(targetClass = String.class)
+    @ElementCollection // (targetClass = String.class)
     @CollectionTable(name = "TRACKINGAREA", joinColumns = @JoinColumn(name = "nearrtricid"))
     private List<Integer> trackingArea;
     @Column(name = "RESOURCETYPE")

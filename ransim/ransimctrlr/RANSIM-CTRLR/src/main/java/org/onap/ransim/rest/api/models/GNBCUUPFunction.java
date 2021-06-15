@@ -40,7 +40,7 @@ public class GNBCUUPFunction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "GNBCUUPID")
-    private Integer gNBCUUPId;
+    private String gNBCUUPId;
     @Column(name = "GNBID")
     private Integer gNBId;
     @Column(name = "GNBIDLENGTH")
@@ -57,11 +57,11 @@ public class GNBCUUPFunction implements Serializable {
     @JoinColumn(name = "nearrtricid")
     private NearRTRIC nearRTRIC;
 
-    public Integer getgNBCUUPId() {
+    public String getgNBCUUPId() {
         return gNBCUUPId;
     }
 
-    public void setgNBCUUPId(Integer gNBCUUPId) {
+    public void setgNBCUUPId(String gNBCUUPId) {
         this.gNBCUUPId = gNBCUUPId;
     }
 

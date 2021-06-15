@@ -20,6 +20,8 @@
 
 package org.onap.ransim.rest.api.repository;
 
+import java.util.Optional;
+
 import org.onap.ransim.rest.api.models.GNBCUUPFunction;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -27,4 +29,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GNBCUUPRepository extends CrudRepository<GNBCUUPFunction, Integer> {
 
+    public Optional<GNBCUUPFunction> findBygNBCUUPId(String gNBCUUPId);
 }

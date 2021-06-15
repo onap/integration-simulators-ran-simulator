@@ -1172,39 +1172,58 @@ public class RansimControllerServices {
     }
 
     public void handleRTRICConfigFromSdnr(String message, Session session, String ipPort) {
-        log.info("handleReconfigureRTRICFromSDNR: message:" + message + " session:" + session + " ipPort:" + ipPort);
-        ConfigPLMNInfo configPLMNInfo = new Gson().fromJson(message, ConfigPLMNInfo.class);
-        log.info("handleReconfigureRTRICFromSDNR:" + configPLMNInfo.getSNSSAI());
-        List<GNBDUModel> gNBDUModelList = new ArrayList<>();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<List<GNBDUModel>> response = restTemplate.exchange(
-                    "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/du-list"
-                            + configPLMNInfo.getSNSSAI().get(0),
-                    HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<GNBDUModel>>() {});
-            gNBDUModelList = response.getBody();
-        } catch (Exception e) {
-            log.info("Exception:", e);
-        }
-        for (GNBDUModel gNBDUModel : gNBDUModelList) {
-            String serverId = gNBDUModel.getgNBDUId().toString();
-            int duCellCount = gNBDUModel.getCellDUList().size();
-            for (SNSSAI sNSSAI : configPLMNInfo.getSNSSAI()) {
-                for (ConfigData configData : sNSSAI.getConfigData()) {
+        org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
+                new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
+        if (!(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("maxNumberOfConns"))
+                && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("dLThptPerSlice"))
+                && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("uLThptPerSlice"))) {
+            handleIntelligentSlicingDataFromSdnr(message, session, ipPort);
+        } else {
+
+            log.info(
+                    "handleReconfigureRTRICFromSDNR: message:" + message + " session:" + session + " ipPort:" + ipPort);
+
+            List<GNBDUModel> gNBDUModelList = new ArrayList<>();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                ResponseEntity<List<GNBDUModel>> response = restTemplate.exchange(
+                        "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/du-list/"
+                                + plmnInfoModel.getSnssai(),
+                        HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<GNBDUModel>>() {});
+                gNBDUModelList = response.getBody();
+            } catch (Exception e) {
+                log.error("Exception:", e);
+            }
+            for (GNBDUModel gNBDUModel : gNBDUModelList) {
+                plmnInfoModel = new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
+                String serverId = gNBDUModel.getgNBDUId().toString();
+                int duCellCount = gNBDUModel.getCellDUList().size();
+                for (ConfigData configData : plmnInfoModel.getConfigData()) {
                     configData.setConfigValue((configData.getConfigValue()) / duCellCount);
                 }
+                for (org.onap.ransim.rest.web.mapper.NRCellDUModel nrcelldu : gNBDUModel.getCellDUList()) {
+                    plmnInfoModel.setNrCellId(nrcelldu.getCellLocalId());
+                    plmnInfoModel.setGnbType("gnbdu");
+                    plmnInfoModel.setGnbId(gNBDUModel.getgNBDUId().toString());
+                    try {
+                        log.info("serverId" + serverId);
+                        String ipPortKey = serverIdIpPortMapping.get(serverId);
+                        String[] ipPortlist = ipPortKey.split(":");
+                        ObjectMapper obj = new ObjectMapper();
+                        String plmnString = obj.writeValueAsString(plmnInfoModel);
+                        handlePLMNInfoUpdateFromSdnr(plmnString, session, ipPort);
+                        NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin", serverId,
+                                ipPortlist[0], Integer.parseInt(ipPortlist[1]));
+                        netconfClient
+                                .editConfig(netconfClient.sendUpdatedPLMNInfoForClosedLoop(plmnInfoModel, serverId));
+                    } catch (Exception e) {
+                        log.error("Exception occured:", e);
+                    }
+                }
             }
-            String ipPortKey = serverIdIpPortMapping.get(serverId);
-            log.info("sendConfigRTRICMessage: ipPortKey:" + ipPortKey);
-
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(configPLMNInfo);
-            log.info("ConfigRTRICMessage: " + jsonStr);
-            Session duSession = webSocketSessions.get(ipPortKey);
-            RansimWebSocketServer.sendSetReconfigureMessage(jsonStr, duSession);
         }
     }
 
@@ -1225,13 +1244,26 @@ public class RansimControllerServices {
         List<PLMNInfo> pLMNInfoList = null;
         org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
-        if (!(plmnInfoModel.getConfigParameter().equalsIgnoreCase("maxNumberOfConns"))
-                && plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp")) {
+        if (!(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("maxNumberOfConns"))
+                && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("dLThptPerSlice"))
+                && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("uLThptPerSlice"))
+                && (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp"))) {
             handleIntelligentSlicingDataFromSdnr(message, session, ipPort);
         } else {
             PLMNInfo plmnInfo = new PLMNInfo();
             NSSAIConfig nSSAIConfig = new NSSAIConfig();
-            nSSAIConfig.setMaxNumberOfConns(plmnInfoModel.getConfigValue());
+            List<ConfigData> configDataList = plmnInfoModel.getConfigData();
+            for (ConfigData c : configDataList) {
+                if (c.getConfigParameter().equalsIgnoreCase("maxNumberOfConns")) {
+                    nSSAIConfig.setMaxNumberOfConns(c.getConfigValue());
+                }
+                if (c.getConfigParameter().equalsIgnoreCase("dLThptPerSlice")) {
+                    nSSAIConfig.setdLThptPerSlice(c.getConfigValue());
+                }
+                if (c.getConfigParameter().equalsIgnoreCase("uLThptPerSlice")) {
+                    nSSAIConfig.setuLThptPerSlice(c.getConfigValue());
+                }
+            }
             org.onap.ransim.rest.api.models.SNSSAI sNSSAI = new org.onap.ransim.rest.api.models.SNSSAI();
             sNSSAI.setsNSSAI(plmnInfoModel.getSnssai());
             sNSSAI.setStatus(plmnInfoModel.getStatus());
@@ -1242,34 +1274,67 @@ public class RansimControllerServices {
                 if (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbdu")) {
                     org.onap.ransim.rest.api.models.NRCellDU nrCellDu =
                             nRCellDURepository.findById(plmnInfoModel.getNrCellId()).get();
+                    boolean isAdded = false;
                     if (!(Objects.isNull(nrCellDu.getpLMNInfoList()))) {
                         pLMNInfoList = nrCellDu.getpLMNInfoList();
+                        for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                            if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                isAdded = true;
+                                log.info("data updated");
+                            }
+                        }
                     } else {
                         pLMNInfoList = new ArrayList<PLMNInfo>();
                     }
-                    pLMNInfoList.add(plmnInfo);
+                    if (!(isAdded)) {
+                        pLMNInfoList.add(plmnInfo);
+                    }
                     nrCellDu.setpLMNInfoList(pLMNInfoList);
                     nRCellDURepository.save(nrCellDu);
                 } else if (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp")) {
                     org.onap.ransim.rest.api.models.NRCellCU nrCellCu =
                             nRCellCURepository.findById(plmnInfoModel.getNrCellId()).get();
+                    boolean isAdded = false;
+
                     if (!(Objects.isNull(nrCellCu.getpLMNInfoList()))) {
                         pLMNInfoList = nrCellCu.getpLMNInfoList();
+                        for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                            if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                isAdded = true;
+                                log.info("data updated");
+                            }
+                        }
+
                     } else {
                         pLMNInfoList = new ArrayList<PLMNInfo>();
                     }
-                    pLMNInfoList.add(plmnInfo);
+                    if (!(isAdded)) {
+                        pLMNInfoList.add(plmnInfo);
+                    }
                     nrCellCu.setpLMNInfoList(pLMNInfoList);
                     nRCellCURepository.save(nrCellCu);
                 } else {
                     org.onap.ransim.rest.api.models.GNBCUUPFunction gNBCUUPFunction =
-                            gNBCUUPRepository.findById(plmnInfoModel.getGnbId()).get();
+                            gNBCUUPRepository.findBygNBCUUPId(plmnInfoModel.getGnbId()).get();
+                    boolean isAdded = false;
                     if (!(Objects.isNull(gNBCUUPFunction.getpLMNInfoList()))) {
                         pLMNInfoList = gNBCUUPFunction.getpLMNInfoList();
+                        for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                            if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                log.info("data updated");
+                                isAdded = true;
+                            }
+                        }
+
                     } else {
                         pLMNInfoList = new ArrayList<PLMNInfo>();
                     }
-                    pLMNInfoList.add(plmnInfo);
+                    if (!(isAdded)) {
+                        pLMNInfoList.add(plmnInfo);
+                    }
                     gNBCUUPFunction.setpLMNInfoList(pLMNInfoList);
                     gNBCUUPRepository.save(gNBCUUPFunction);
                 }
@@ -1287,7 +1352,7 @@ public class RansimControllerServices {
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
         PLMNInfo plmnInfo = new PLMNInfo();
         NSSAIConfig nSSAIConfig = new NSSAIConfig();
-        nSSAIConfig.setMaxNumberOfConns(plmnInfoModel.getConfigValue());
+        // nSSAIConfig.setMaxNumberOfConns(plmnInfoModel.getConfigValue());
         org.onap.ransim.rest.api.models.SNSSAI sNSSAI = new org.onap.ransim.rest.api.models.SNSSAI();
         sNSSAI.setsNSSAI(plmnInfoModel.getSnssai());
         sNSSAI.setStatus(plmnInfoModel.getStatus());
@@ -1315,8 +1380,6 @@ public class RansimControllerServices {
         org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
         String[] ipPortlist = ipPort.split(":");
-        log.info("ip: " + ipPortlist[0]);
-        log.info("Port: " + ipPortlist[1]);
         List<NetconfServers> netconfServers = (List<NetconfServers>) netconfServersRepo.findAll();
         for (NetconfServers server : netconfServers) {
             if (!(Objects.isNull(server.getNetconfPort()))) {
@@ -1340,8 +1403,8 @@ public class RansimControllerServices {
                             List<NRCellCUModel> nRCellCUModelList = gnb.getCellCUList();
                             for (NRCellCUModel nrcell : nRCellCUModelList) {
                                 if ((int) nrcell.getCellLocalId() == Integer
-                                        .parseInt(plmnInfoModel.getConfigParameter())) {
-                                    plmnInfoModel.setGnbId(gnb.getgNBId());
+                                        .parseInt(plmnInfoModel.getConfigData().get(0).getConfigParameter())) {
+                                    plmnInfoModel.setGnbId(Integer.toString(gnb.getgNBId()));
                                     List<PLMNInfoModel> pLMNInfoModelList = nrcell.getpLMNInfoList();
                                     pLMNInfoModelList.forEach(plmn -> {
                                         if (plmn.getpLMNId().equalsIgnoreCase(plmnInfoModel.getpLMNId())) {
@@ -1355,10 +1418,10 @@ public class RansimControllerServices {
                                     NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin",
                                             netconfServerId, server.getIp(), Integer.parseInt(server.getNetconfPort()));
 
-                                    netconfClient.editConfig(
-                                            netconfClient.sendIntelligentSlicingData(plmnInfoModel, netconfServerId));
+                                    netconfClient.editConfig(netconfClient
+                                            .sendUpdatedPLMNInfoForIntelligentSlicing(plmnInfoModel, netconfServerId));
                                     log.info("Intelligent Slicing Data sent successfully : ");
-                                    plmnInfoModel.setConfigParameter("maxNumberOfConns");
+                                    plmnInfoModel.getConfigData().get(0).setConfigParameter("maxNumberOfConns");
                                     try {
                                         ObjectMapper obj = new ObjectMapper();
                                         String plmnString = obj.writeValueAsString(plmnInfoModel);

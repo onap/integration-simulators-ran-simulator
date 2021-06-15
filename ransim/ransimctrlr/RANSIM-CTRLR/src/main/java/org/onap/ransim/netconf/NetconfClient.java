@@ -28,6 +28,7 @@ import com.tailf.jnc.NetconfSession;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.onap.ransim.rest.api.models.PLMNInfoModel;
@@ -37,6 +38,7 @@ import org.onap.ransim.rest.web.mapper.GNBDUModel;
 import org.onap.ransim.rest.web.mapper.NRCellCUModel;
 import org.onap.ransim.rest.web.mapper.NRCellDUModel;
 import org.onap.ransim.rest.web.mapper.NearRTRICModel;
+import org.onap.ransim.websocket.model.ConfigData;
 
 public class NetconfClient {
 
@@ -212,9 +214,90 @@ public class NetconfClient {
 
     }
 
-    public Element sendIntelligentSlicingData(PLMNInfoModel pLMNInfoModel, String serverId) {
+    public Element sendUpdatedPLMNInfoForClosedLoop(PLMNInfoModel pLMNInfoModel, String serverId) {
         try {
-            log.info("sending Intelligent Slicing netconf data");
+            log.info("sending PLMNInfo data to netconf server");
+            Element ranNetworkElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/ran-network");
+            Element nearRTRICElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NearRTRIC");
+            Element idNearRTRICElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNearRTRIC");
+            idNearRTRICElement.setValue(pLMNInfoModel.getNearrtricid());
+
+            Element gNBDUFunctionElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/GNBDUFunction");
+            Element idGNBDUFunctionElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idGNBDUFunction");
+            idGNBDUFunctionElement.setValue(pLMNInfoModel.getGnbId());
+
+            Element nRCellDUElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellDU");
+            Element idNRCellDUElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellDU");
+            idNRCellDUElement.setValue(pLMNInfoModel.getNrCellId());
+            Element nRCellattributesElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+            Element pLMNInfoListElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/pLMNInfoList");
+            Element mccElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/mcc");
+            Element mncElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/mnc");
+            String[] plmn = pLMNInfoModel.getpLMNId().split("-");
+            mccElement.setValue(plmn[0]);
+            mncElement.setValue(plmn[1]);
+
+            Element sNSSAIListElement =
+                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/sNSSAIList");
+            Element sNssaiElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/sNssai");
+            sNssaiElement.setValue(pLMNInfoModel.getSnssai());
+
+            List<ConfigData> configDataList = pLMNInfoModel.getConfigData();
+            for (ConfigData c : configDataList) {
+                Element configDataElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configData");
+                Element configParameterElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configParameter");
+                configParameterElement.setValue(c.getConfigParameter());
+                Element configValueElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configValue");
+                configValueElement.setValue(c.getConfigValue());
+                configDataElement.markMerge();
+                configDataElement.addChild(configParameterElement);
+                configDataElement.addChild(configValueElement);
+                sNSSAIListElement.addChild(configDataElement);
+            }
+
+            sNSSAIListElement.markMerge();
+            sNSSAIListElement.addChild(sNssaiElement);
+
+            pLMNInfoListElement.addChild(mccElement);
+            pLMNInfoListElement.addChild(mncElement);
+            pLMNInfoListElement.addChild(sNSSAIListElement);
+
+            nRCellattributesElement.addChild(pLMNInfoListElement);
+            nRCellDUElement.addChild(idNRCellDUElement);
+            nRCellDUElement.addChild(nRCellattributesElement);
+
+            gNBDUFunctionElement.addChild(idGNBDUFunctionElement);
+            gNBDUFunctionElement.addChild(nRCellDUElement);
+
+            nearRTRICElement.addChild(idNearRTRICElement);
+            nearRTRICElement.addChild(gNBDUFunctionElement);
+
+            ranNetworkElement.addChild(nearRTRICElement);
+            ranNetworkElement.markMerge();
+            return ranNetworkElement;
+
+        } catch (JNCException e) {
+            log.error("Exception occured during NodeSet creation {}", e);
+            return null;
+        }
+
+    }
+
+    public Element sendUpdatedPLMNInfoForIntelligentSlicing(PLMNInfoModel pLMNInfoModel, String serverId) {
+        try {
+            log.info("sending PLMNInfo data to netconf server");
             Element ranNetworkElement =
                     Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/ran-network");
             Element nearRTRICElement =
@@ -233,7 +316,7 @@ public class NetconfClient {
                     Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellCU");
             Element idNRCellCUElement =
                     Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellCU");
-            idNRCellCUElement.setValue(pLMNInfoModel.getConfigParameter());
+            idNRCellCUElement.setValue(pLMNInfoModel.getNrCellId());
             Element nRCellattributesElement =
                     Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
             Element pLMNInfoListElement =
@@ -241,31 +324,31 @@ public class NetconfClient {
             Element mccElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/mcc");
             Element mncElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/mnc");
             String[] plmn = pLMNInfoModel.getpLMNId().split("-");
-            log.info("plmn list" + plmn);
             mccElement.setValue(plmn[0]);
             mncElement.setValue(plmn[1]);
+
             Element sNSSAIListElement =
                     Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/sNSSAIList");
             Element sNssaiElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/sNssai");
             sNssaiElement.setValue(pLMNInfoModel.getSnssai());
-            Element statusElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/status");
-            statusElement.setValue(pLMNInfoModel.getStatus());
-            Element configDataElement =
-                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configData");
-            Element configParameterElement =
-                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configParameter");
-            configParameterElement.setValue("maxNumberOfConns");
-            Element configValueElement =
-                    Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configValue");
-            configValueElement.setValue(pLMNInfoModel.getConfigValue());
 
-            configDataElement.addChild(configParameterElement);
-            configDataElement.addChild(configValueElement);
+            List<ConfigData> configDataList = pLMNInfoModel.getConfigData();
+            for (ConfigData c : configDataList) {
+                Element configDataElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configData");
+                Element configParameterElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configParameter");
+                configParameterElement.setValue(c.getConfigParameter());
+                Element configValueElement =
+                        Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/configValue");
+                configValueElement.setValue(c.getConfigValue());
+                configDataElement.addChild(configParameterElement);
+                configDataElement.addChild(configValueElement);
+                sNSSAIListElement.addChild(configDataElement);
+            }
 
             sNSSAIListElement.markReplace();
             sNSSAIListElement.addChild(sNssaiElement);
-            sNSSAIListElement.addChild(statusElement);
-            sNSSAIListElement.addChild(configDataElement);
 
             pLMNInfoListElement.addChild(mccElement);
             pLMNInfoListElement.addChild(mncElement);
