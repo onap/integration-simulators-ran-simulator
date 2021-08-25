@@ -30,7 +30,7 @@ public class PLMNInfoModel {
     private String status;
     private String gnbType;
     private String gnbId;
-    private int nrCellId;
+    private Integer nrCellId;
     private String nearrtricid;
     private List<ConfigData> configData;
 
@@ -38,7 +38,7 @@ public class PLMNInfoModel {
 
     }
 
-    public PLMNInfoModel(String pLMNId, String snssai, String status, String gnbType, String gnbId, int nrCellId,
+    public PLMNInfoModel(String pLMNId, String snssai, String status, String gnbType, String gnbId, Integer nrCellId,
             String nearrtricid, List<ConfigData> configData) {
         super();
         this.pLMNId = pLMNId;
@@ -91,11 +91,11 @@ public class PLMNInfoModel {
         this.gnbId = gnbId;
     }
 
-    public int getNrCellId() {
+    public Integer getNrCellId() {
         return nrCellId;
     }
 
-    public void setNrCellId(int nrCellId) {
+    public void setNrCellId(Integer nrCellId) {
         this.nrCellId = nrCellId;
     }
 
