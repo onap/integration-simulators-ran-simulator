@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020 Wipro Limited.
+ * Copyright (C) 2020-2021 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,65 +23,76 @@ package org.onap.ransim.websocket.model;
 import java.util.Map;
 
 public class FaultFields {
-
+    
     private String alarmCondition;
     private String eventSourceType;
     private String specificProblem;
     private String eventSeverity;
+    private String eventCategory;
     private Map<String, String> alarmAdditionalInformation;
-
+    
     public FaultFields() {
         super();
+        // TODO Auto-generated constructor stub
     }
-
-    public FaultFields(String alarmCondition, String eventSourceType, String specificProblem, String eventSeverity,
-            Map<String, String> alarmAdditionalInformation) {
+    
+    public FaultFields(String alarmCondition, String eventSourceType, String specificProblem,
+            String eventSeverity, String eventCategory, Map<String, String> alarmAdditionalInformation) {
         super();
         this.alarmCondition = alarmCondition;
         this.eventSourceType = eventSourceType;
         this.specificProblem = specificProblem;
         this.eventSeverity = eventSeverity;
+        this.eventCategory = eventCategory;
         this.alarmAdditionalInformation = alarmAdditionalInformation;
     }
-
+    
     public String getAlarmCondition() {
         return alarmCondition;
     }
-
+    
     public void setAlarmCondition(String alarmCondition) {
         this.alarmCondition = alarmCondition;
     }
-
+    
     public String getEventSourceType() {
         return eventSourceType;
     }
-
+    
     public void setEventSourceType(String eventSourceType) {
         this.eventSourceType = eventSourceType;
     }
-
+    
     public String getSpecificProblem() {
         return specificProblem;
     }
-
+    
     public void setSpecificProblem(String specificProblem) {
         this.specificProblem = specificProblem;
     }
-
+    
     public String getEventSeverity() {
         return eventSeverity;
     }
-
+    
     public void setEventSeverity(String eventSeverity) {
         this.eventSeverity = eventSeverity;
     }
 
+    public String getEventCategory(){
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+    
     public Map<String, String> getAlarmAdditionalInformation() {
         return alarmAdditionalInformation;
     }
-
+    
     public void setAlarmAdditionalInformation(Map<String, String> alarmAdditionalInformation) {
         this.alarmAdditionalInformation = alarmAdditionalInformation;
     }
-
+    
 }

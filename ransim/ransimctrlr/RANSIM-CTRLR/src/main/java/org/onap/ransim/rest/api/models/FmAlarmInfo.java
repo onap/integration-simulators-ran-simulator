@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020 Wipro Limited.
+ * Copyright (C) 2020-2021 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,52 +20,59 @@
 
 package org.onap.ransim.rest.api.models;
 
-public class FmAlarmInfo {
+import java.util.HashMap;
 
+public class FmAlarmInfo {
+    
     private String problem;
-    private String collisionCount;
-    private String confusionCount;
+    private String collisions;
+    private HashMap<Long, String> confusions;
+
 
     public FmAlarmInfo() {
         super();
     }
-
+    
     /**
      * Constructor with all fields.
-     *
-     * @param problem Collision or Confusion
-     * @param collisionCount No of cells that causes collision.
-     * @param confusionCount No od cells that causes confusion.
+     * 
+     * @param problem
+     *            Collision or Confusion
+     * @param collisions
+     *            Cell ids that causes collision.
+     * @param confusions
+     *            Cell ids that causes confusion.
      */
-    public FmAlarmInfo(String problem, String collisionCount, String confusionCount) {
+    public FmAlarmInfo(String problem, String collisions, HashMap<Long, String> confusions) {
         super();
         this.problem = problem;
-        this.collisionCount = collisionCount;
-        this.confusionCount = confusionCount;
+        this.collisions = collisions;
+        this.confusions = confusions;
     }
-
+    
     public String getProblem() {
         return problem;
     }
-
+    
     public void setProblem(String problem) {
         this.problem = problem;
     }
 
-    public String getCollisionCount() {
-        return collisionCount;
+    public String getCollisions() {
+        return collisions;
     }
 
-    public void setCollisionCount(String collisionCount) {
-        this.collisionCount = collisionCount;
+    public void setCollisions(String collisions) {
+        this.collisions = collisions;
     }
 
-    public String getConfusionCount() {
-        return confusionCount;
+    public HashMap<Long, String> getConfusions(){
+        return confusions;
     }
 
-    public void setConfusionCount(String confusionCount) {
-        this.confusionCount = confusionCount;
+    public void setConfusions(HashMap<Long, String> confusions) {
+        this.confusions = confusions;
     }
 
+    
 }
