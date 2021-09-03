@@ -1379,66 +1379,60 @@ public class RansimControllerServices {
         log.info("handle Intelligent Slicing data From Sdnr : " + message);
         org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
-        String[] ipPortlist = ipPort.split(":");
-        List<NetconfServers> netconfServers = (List<NetconfServers>) netconfServersRepo.findAll();
-        for (NetconfServers server : netconfServers) {
-            if (!(Objects.isNull(server.getNetconfPort()))) {
-                if (server.getNetconfPort().equalsIgnoreCase(ipPortlist[1].trim())) {
-                    String netconfServerId = server.getServerId();
-                    log.info("netconfServerId: " + netconfServerId);
-                    List<GNBCUCPModel> gNBCUCPModelList = new ArrayList<>();
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-                    HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-                    try {
-                        RestTemplate restTemplate = new RestTemplate();
+        plmnInfoModel.getConfigData().get(0).setConfigParameter("maxNumberOfConns");
+        log.info("plmnInfoModel: " + plmnInfoModel.toString());
+        List<GNBCUCPModel> gNBCUCPModelList = new ArrayList<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        try {
+            RestTemplate restTemplate = new RestTemplate();
 
-                        ResponseEntity<List<GNBCUCPModel>> response = restTemplate.exchange(
-                                "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/cucp-list/",
-                                HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<GNBCUCPModel>>() {});
-                        gNBCUCPModelList = response.getBody();
-                        gNBCUCPModelList.forEach(gnb -> {
-                            GNBCUCPModel gNBCUCPModel = gnb;
-                            log.info("gNBCUCPModel: " + gNBCUCPModel.toString());
-                            List<NRCellCUModel> nRCellCUModelList = gnb.getCellCUList();
-                            for (NRCellCUModel nrcell : nRCellCUModelList) {
-                                if ((int) nrcell.getCellLocalId() == Integer
-                                        .parseInt(plmnInfoModel.getConfigData().get(0).getConfigParameter())) {
-                                    plmnInfoModel.setGnbId(Integer.toString(gnb.getgNBId()));
-                                    List<PLMNInfoModel> pLMNInfoModelList = nrcell.getpLMNInfoList();
-                                    pLMNInfoModelList.forEach(plmn -> {
-                                        if (plmn.getpLMNId().equalsIgnoreCase(plmnInfoModel.getpLMNId())) {
-                                            if (plmn.getsNSSAI().getsNSSAI()
-                                                    .equalsIgnoreCase(plmnInfoModel.getSnssai())) {
-                                                plmnInfoModel.setStatus(plmn.getsNSSAI().getStatus());
-                                                log.info("plmn status set");
-                                            }
-                                        }
-                                    });
-                                    NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin",
-                                            netconfServerId, server.getIp(), Integer.parseInt(server.getNetconfPort()));
-
-                                    netconfClient.editConfig(netconfClient
-                                            .sendUpdatedPLMNInfoForIntelligentSlicing(plmnInfoModel, netconfServerId));
-                                    log.info("Intelligent Slicing Data sent successfully : ");
-                                    plmnInfoModel.getConfigData().get(0).setConfigParameter("maxNumberOfConns");
-                                    try {
-                                        ObjectMapper obj = new ObjectMapper();
-                                        String plmnString = obj.writeValueAsString(plmnInfoModel);
-                                        handlePLMNInfoUpdateFromSdnr(plmnString, session, ipPort);
-                                    } catch (Exception e) {
-                                        log.info("Exception while parsing:", e);
+            ResponseEntity<List<GNBCUCPModel>> response = restTemplate.exchange(
+                    "http://" + "localhost" + ":" + "8081" + "/ransim/api/ransim-db/v4/cucp-list/", HttpMethod.GET,
+                    requestEntity, new ParameterizedTypeReference<List<GNBCUCPModel>>() {});
+            gNBCUCPModelList = response.getBody();
+            gNBCUCPModelList.forEach(gnb -> {
+                GNBCUCPModel gNBCUCPModel = gnb;
+                log.info("gNBCUCPModel: " + gNBCUCPModel.toString());
+                List<NRCellCUModel> nRCellCUModelList = gnb.getCellCUList();
+                for (NRCellCUModel nrcell : nRCellCUModelList) {
+                    if (nrcell.getCellLocalId().equals(plmnInfoModel.getNrCellId())) {
+                        plmnInfoModel.setGnbId(gnb.getgNBCUName());
+                        List<PLMNInfoModel> pLMNInfoModelList = nrcell.getpLMNInfoList();
+                        pLMNInfoModelList.forEach(plmn -> {
+                            if (plmn.getpLMNId().equalsIgnoreCase(plmnInfoModel.getpLMNId())) {
+                                if (plmn.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                                    if (Objects.isNull(plmnInfoModel.getStatus())) {
+                                        plmnInfoModel.setStatus(plmn.getsNSSAI().getStatus());
+                                        log.info("plmn status set");
                                     }
-
-                                    break;
                                 }
                             }
                         });
-                    } catch (Exception e) {
-                        log.info("Exception:", e);
+                        String serverId = plmnInfoModel.getGnbId();
+                        String ipPortKey = serverIdIpPortMapping.get(serverId);
+                        String[] ipPortlist = ipPortKey.split(":");
+                        NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin", serverId,
+                                ipPortlist[0], Integer.parseInt(ipPortlist[1]));
+
+                        netconfClient.editConfig(
+                                netconfClient.sendUpdatedPLMNInfoForIntelligentSlicing(plmnInfoModel, serverId));
+                        log.info("Intelligent Slicing Data sent successfully : ");
+                        try {
+                            ObjectMapper obj = new ObjectMapper();
+                            String plmnString = obj.writeValueAsString(plmnInfoModel);
+                            handlePLMNInfoUpdateFromSdnr(plmnString, session, ipPort);
+                        } catch (Exception e) {
+                            log.info("Exception while parsing:", e);
+                        }
+
+                        break;
                     }
                 }
-            }
+            });
+        } catch (Exception e) {
+            log.info("Exception:", e);
         }
     }
 
