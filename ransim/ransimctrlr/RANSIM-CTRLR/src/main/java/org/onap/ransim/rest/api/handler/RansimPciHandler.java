@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020 Wipro Limited.
+ * Copyright (C) 2020-2021 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,33 +95,38 @@ public class RansimPciHandler {
             boolean collisionDetected = false;
             boolean confusionDetected = false;
             List<Long> nbrPcis = new ArrayList<Long>();
-            List<Long> ConfusionPcis = new ArrayList<Long>();
-            int collisionCount = 0;
-            int confusionCount = 0;
-            CellDetails currentCell = ransimRepo.getCellDetail(cellNodeId);
+            //List<Long> ConfusionPcis = new ArrayList<Long>();
+            String collisions = "";
+            HashMap<Long, String> confusions = new HashMap<Long, String>();
+
+	    CellDetails currentCell = ransimRepo.getCellDetail(cellNodeId);
             log.info("Setting confusion/collision for Cell :" + cellNodeId);
 
             GetNeighborList cellNbrDetails = generateNeighborList(cellNodeId);
 
             for (CellDetails firstLevelNbr : cellNbrDetails.getCellsWithHo()) {
-                if (nbrPcis.contains((Long) firstLevelNbr.getPhysicalCellId())) {
+		  if (nbrPcis.contains((Long) firstLevelNbr.getPhysicalCellId())) {
                     confusionDetected = true;
-                    if (ConfusionPcis.contains(firstLevelNbr.getPhysicalCellId())) {
-                        confusionCount++;
+                    if(confusions.containsKey((Long) firstLevelNbr.getPhysicalCellId())) {
+                        confusions.put((Long) firstLevelNbr.getPhysicalCellId(),
+                                        confusions.get((Long) firstLevelNbr.getPhysicalCellId())+","+firstLevelNbr.getNodeId());
                     } else {
-                        ConfusionPcis.add(firstLevelNbr.getPhysicalCellId());
-                        confusionCount = confusionCount + 2;
+                         confusions.put((Long) firstLevelNbr.getPhysicalCellId(),firstLevelNbr.getNodeId());
                     }
 
-                } else {
-                    nbrPcis.add((Long) firstLevelNbr.getPhysicalCellId());
-                }
 
-                if (currentCell.getPhysicalCellId() == firstLevelNbr.getPhysicalCellId()) {
-                    collisionDetected = true;
-                    collisionCount++;
-                }
+                  } else {
+                     nbrPcis.add((Long) firstLevelNbr.getPhysicalCellId());
+                  }
+
+                  if (currentCell.getPhysicalCellId() == firstLevelNbr.getPhysicalCellId()) {
+                      collisionDetected = true;
+                      collisions += collisions.isEmpty()?firstLevelNbr.getNodeId():","+firstLevelNbr.getNodeId();
+                  }
             }
+
+	    result.setCollisions(collisions);
+            result.setConfusions(confusions);
 
             currentCell.setPciCollisionDetected(collisionDetected);
             currentCell.setPciConfusionDetected(confusionDetected);
@@ -146,9 +151,6 @@ public class RansimPciHandler {
                 currentCell.setColor("#BFBFBF"); // GREY - No Issues
                 result.setProblem("No Issues");
             }
-
-            result.setCollisionCount("" + collisionCount);
-            result.setConfusionCount("" + confusionCount);
 
             ransimRepo.mergeCellDetails(currentCell);
 
@@ -731,54 +733,60 @@ public class RansimPciHandler {
      *        Node Id of the cell
      * @param issue
      *        Contains the collision/confusion details of the cess
-     * @return returns EventFm object, with all the necessary parameters.
+     * @return returns List of EventFm objects, with all the necessary parameters.
      */
-    public static EventFm setEventFm(String networkId, String ncServer, String cellId, FmAlarmInfo issue) {
+    public static List<EventFm> setEventFm(String networkId, String ncServer, String cellId, FmAlarmInfo issue) {
 
         log.info("Inside generate FmData");
+	List<EventFm> eventList = new ArrayList<EventFm>();
         EventFm event = new EventFm();
 
         try {
-
-            CommonEventHeaderFm commonEventHeader = new CommonEventHeaderFm();
+	
+	    CommonEventHeaderFm commonEventHeader = new CommonEventHeaderFm();
             FaultFields faultFields = new FaultFields();
-
-            commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
-            commonEventHeader.setSourceName(cellId);
-            commonEventHeader.setReportingEntityName(ncServer);
-
             String uuid = globalFmCellIdUuidMap.get(cellId);
             if (uuid == null) {
                 uuid = getUuid();
                 globalFmCellIdUuidMap.put(cellId, uuid);
             }
             commonEventHeader.setSourceUuid(uuid);
+            faultFields.setAlarmCondition("RanPciCollisionConfusionOccurred");
+            faultFields.setEventSeverity("CRITICAL");
+            faultFields.setEventSourceType("other");
+            Map<String, String> alarmAdditionalInformation = new HashMap<String, String>();
+            alarmAdditionalInformation.put("networkId", networkId);
+            faultFields.setAlarmAdditionalInformation(alarmAdditionalInformation);
 
-            if (issue.getProblem().equals("Collision") || issue.getProblem().equals("Confusion")
-                    || issue.getProblem().equals("CollisionAndConfusion")) {
-                faultFields.setAlarmCondition("RanPciCollisionConfusionOccurred");
-                faultFields.setEventSeverity("CRITICAL");
-                faultFields.setEventSourceType("other");
-                faultFields.setSpecificProblem(issue.getProblem());
-
-                Map<String, String> alarmAdditionalInformation = new HashMap<String, String>();
-                alarmAdditionalInformation.put("networkId", networkId);
-                alarmAdditionalInformation.put("collisions", issue.getCollisionCount());
-                alarmAdditionalInformation.put("confusions", issue.getConfusionCount());
-
-                faultFields.setAlarmAdditionalInformation(alarmAdditionalInformation);
-
+            if (!issue.getCollisions().isEmpty()) {
+                commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
+                commonEventHeader.setSourceName(cellId);
+                commonEventHeader.setReportingEntityName(ncServer);
+                faultFields.setSpecificProblem(issue.getCollisions());
+                faultFields.setEventCategory("PCICollision");
+                commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
+                event.setCommonEventHeader(commonEventHeader);
+                event.setFaultFields(faultFields);
+                eventList.add(event);
             }
-            commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
 
-            event.setCommonEventHeader(commonEventHeader);
-            event.setFaultFields(faultFields);
+            for (Map.Entry<Long, String> set : issue.getConfusions().entrySet()) {
+                commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
+                commonEventHeader.setSourceName(cellId);
+                commonEventHeader.setReportingEntityName(ncServer);
+                faultFields.setSpecificProblem(set.getValue());
+                faultFields.setEventCategory("PCIConfusion");
+                commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
+                event.setCommonEventHeader(commonEventHeader);
+                event.setFaultFields(faultFields);
+                eventList.add(event);
+            }
 
         } catch (Exception e) {
             log.info("Exception: ", e);
         }
 
-        return event;
+        return eventList;
 
     }
 
@@ -806,8 +814,8 @@ public class RansimPciHandler {
             if (op1.getProblem().equals("CollisionAndConfusion") || op1.getProblem().equals("Collision")
                     || op1.getProblem().equals("Confusion")) {
                 log.info("op1: " + op1);
-                EventFm lci = setEventFm(cell.getNetworkId(), cell.getServerId(), cell.getNodeId(), op1);
-                listCellIssue.add(lci);
+                List<EventFm> lci = setEventFm(cell.getNetworkId(), cell.getServerId(), cell.getNodeId(), op1);
+                listCellIssue.addAll(lci);
                 ncs.add(cell.getServerId());
                 log.info("Generating Fm data for: " + cell.getNodeId());
             }
@@ -820,9 +828,9 @@ public class RansimPciHandler {
             if (source.equals("GUI")) {
                 if (op2.getProblem().equals("CollisionAndConfusion") || op2.getProblem().equals("Collision")
                         || op2.getProblem().equals("Confusion")) {
-                    EventFm lci = setEventFm(nbrCell.getNetworkId(), nbrCell.getServerId(), nbrCell.getNodeId(), op2);
+                    List<EventFm> lci = setEventFm(nbrCell.getNetworkId(), nbrCell.getServerId(), nbrCell.getNodeId(), op2);
                     log.info("FmData added:" + nbrCell.getNodeId());
-                    listCellIssue.add(lci);
+                    listCellIssue.addAll(lci);
                     ncs.add(nbrCell.getServerId());
                     log.info("Generating Fm data for: " + nbrCell.getNodeId());
                 }

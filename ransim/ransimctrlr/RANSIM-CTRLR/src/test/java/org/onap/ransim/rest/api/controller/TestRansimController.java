@@ -55,6 +55,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.google.gson.Gson;
+
 /**
  * @author ubuntu16
  *
@@ -187,11 +189,9 @@ public class TestRansimController {
         RansimControllerServices rscontroller = Mockito.mock(RansimControllerServices.class);
         Map<String, String> alarmAdditionalInformation = new HashMap<String, String>();
         alarmAdditionalInformation.put("networkId", "abc");
-        alarmAdditionalInformation.put("collisions", "1");
-        alarmAdditionalInformation.put("confusions", "0");
         CommonEventHeaderFm commonEventHeader = new CommonEventHeaderFm("Chn00", "", "nc1", 0, 0);
         FaultFields faultFields = new FaultFields("RanPciCollisionConfusionOccurred", "other", "Collision", "CRITICAL",
-                alarmAdditionalInformation);
+                "PCICollision", alarmAdditionalInformation);
         EventFm checkObj = new EventFm(commonEventHeader, faultFields);
 
         new MockUp<RansimControllerServices>() {
@@ -210,7 +210,11 @@ public class TestRansimController {
         String networkId = "abc";
         String ncServer = "nc1";
         String cellId = "Chn00";
-        FmAlarmInfo issue = new FmAlarmInfo("Collision", "1", "0");
+	String collisions = "";
+        HashMap<Long,String> confusions = new HashMap<Long,String>();
+        collisions += "Chn00"+","+"Chn00";
+        confusions.put(Long.valueOf(0),"Chn00");confusions.put(Long.valueOf(1),"Chn00");
+        FmAlarmInfo issue = new FmAlarmInfo("Collision", collisions, confusions);
         /*
          * EventFm eventObj = rscontroller.setEventFm(networkId, ncServer, cellId,
          * issue);
