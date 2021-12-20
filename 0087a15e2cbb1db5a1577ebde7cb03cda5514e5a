@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27afc18f_0bbee1b8",
+        "filename": "ransim/docker/ransim-docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2021-12-20T07:26:40Z",
+      "side": 1,
+      "message": "Please use ONAP integration base image: nexus3.onap.org:10001/onap/integration-java11:9.0.0",
+      "revId": "0087a15e2cbb1db5a1577ebde7cb03cda5514e5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
