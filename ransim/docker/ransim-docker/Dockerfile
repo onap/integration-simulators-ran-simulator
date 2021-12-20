@@ -24,7 +24,6 @@ RUN useradd --create-home --shell /bin/bash policy
 RUN \
     apt-get install -y apt-transport-https && \
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
-add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.4/ubuntu bionic main' && \
 apt-get clean && \
 apt-get update && \
 apt-get install -y mariadb-client
