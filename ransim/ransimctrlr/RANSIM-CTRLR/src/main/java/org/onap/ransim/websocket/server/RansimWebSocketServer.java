@@ -132,7 +132,7 @@ public class RansimWebSocketServer {
                         rscServices.handleRRMPolicyRatioUpdateFromSdnr(message.getMessage(), session, ipPort);
                     } else if (message.getType().equals(MessageTypes.HC_TO_RC_PLMN)) {
                         log.info("Add PLMNInfo message received");
-                        rscServices.handlePLMNInfoUpdateFromSdnr(message.getMessage(), session, ipPort);
+                        rscServices.handleRTRICConfigFromSdnr(message.getMessage(), session, ipPort);
                     } else if (message.getType().equals(MessageTypes.HC_TO_RC_SLICE_PROFILE)) {
                         log.info("Add SliceProfile message received");
                         rscServices.handleSliceProfileUpdateFromSdnr(message.getMessage(), session, ipPort);
