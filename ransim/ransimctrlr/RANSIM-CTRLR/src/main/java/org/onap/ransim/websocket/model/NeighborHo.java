@@ -22,16 +22,16 @@ package org.onap.ransim.websocket.model;
 
 public class NeighborHo {
 
-    private String nodeId;
+    private String idNRCellRelation;
     private long pciId;
-    private boolean blacklisted;
+    private boolean isHOAllowed;
 
-    public String getNodeId() {
-        return nodeId;
+    public String getIdNRCellRelation() {
+        return idNRCellRelation;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setIdNRCellRelation(String idNRCellRelation) {
+        this.idNRCellRelation = idNRCellRelation;
     }
 
     public long getPciId() {
@@ -42,12 +42,12 @@ public class NeighborHo {
         this.pciId = pciId;
     }
 
-    public boolean isBlacklisted() {
-        return blacklisted;
+    public boolean getIsHOAllowed() {
+        return isHOAllowed;
     }
 
-    public void setBlacklisted(boolean blacklisted) {
-        this.blacklisted = blacklisted;
+    public void setIsHOAllowed(boolean isHOAllowed) {
+        this.isHOAllowed = isHOAllowed;
     }
 
 }
