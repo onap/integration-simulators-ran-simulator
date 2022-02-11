@@ -1110,12 +1110,12 @@ public class RansimControllerServices {
                 for (NeighborDetails cellDetails : nbrsDet) {
                     Neighbor nbr = new Neighbor();
                     CellDetails nbrCell = ransimRepo.getCellDetail(cellDetails.getNeigbor().getNeighborCell());
-                    nbr.setNodeId(nbrCell.getNodeId());
-                    nbr.setPhysicalCellId(nbrCell.getPhysicalCellId());
-                    nbr.setPnfName(nbrCell.getServerId());
+                    nbr.setIdNRCellRelation(nbrCell.getNodeId());
+                    nbr.setNRTCI(nbrCell.getPhysicalCellId());
+                    nbr.setIdGNBCUCPFunction(nbrCell.getServerId());
                     nbr.setServerId(nbrCell.getServerId());
                     nbr.setPlmnId(nbrCell.getNetworkId());
-                    nbr.setBlacklisted(cellDetails.isBlacklisted());
+                    nbr.setIsHOAllowed(cellDetails.isBlacklisted());
                     nbrList.add(nbr);
                 }
                 cell.setNeighborList(nbrList);
@@ -1162,13 +1162,13 @@ public class RansimControllerServices {
     public void handleModifyPciFromSdnr(String message, Session session, String ipPort) {
         log.info("handleModifyPciFromSDNR: message:" + message + " session:" + session + " ipPort:" + ipPort);
         ModifyPci modifyPci = new Gson().fromJson(message, ModifyPci.class);
-        log.info("handleModifyPciFromSDNR: modifyPci:" + modifyPci.getCellId() + "; pci: " + modifyPci.getPciId());
+        log.info("handleModifyPciFromSDNR: modifyPci:" + modifyPci.getIdNRCellDU() + "; pci: " + modifyPci.getNRPCI());
         String source = "Netconf";
-        CellDetails cd = ransimRepo.getCellDetail(modifyPci.getCellId());
+        CellDetails cd = ransimRepo.getCellDetail(modifyPci.getIdNRCellDU());
         long pci = cd.getPhysicalCellId();
-        cd.setPhysicalCellId(modifyPci.getPciId());
+        cd.setPhysicalCellId(modifyPci.getNRPCI());
         ransimRepo.mergeCellDetails(cd);
-        rsPciHdlr.updatePciOperationsTable(modifyPci.getCellId(), source, pci, modifyPci.getPciId());
+        rsPciHdlr.updatePciOperationsTable(modifyPci.getIdNRCellDU(), source, pci, modifyPci.getNRPCI());
     }
 
     public void handleRTRICConfigFromSdnr(String message, Session session, String ipPort) {
@@ -1447,36 +1447,36 @@ public class RansimControllerServices {
     public void handleModifyNeighborFromSdnr(String message, Session session, String ipPort) {
         log.info("handleModifyAnrFromSDNR: message:" + message + " session:" + session + " ipPort:" + ipPort);
         ModifyNeighbor modifyNeighbor = new Gson().fromJson(message, ModifyNeighbor.class);
-        log.info("handleModifyAnrFromSDNR: modifyPci:" + modifyNeighbor.getCellId());
+        log.info("handleModifyAnrFromSDNR: modifyPci:" + modifyNeighbor.getIdNRCellCU());
         List<NeighborDetails> neighborList = new ArrayList<NeighborDetails>();
         List<String> cellList = new ArrayList<String>();
-        cellList.add(modifyNeighbor.getCellId());
+        cellList.add(modifyNeighbor.getIdNRCellCU());
         String nbrsAdd = "";
         String nbrsDel = "";
         String source = "Netconf";
 
         for (int i = 0; i < modifyNeighbor.getNeighborList().size(); i++) {
-            if (modifyNeighbor.getNeighborList().get(i).isBlacklisted()) {
+            if (!modifyNeighbor.getNeighborList().get(i).getIsHOAllowed()) {
                 NeighborDetails nd = new NeighborDetails(
-                        new NeihborId(modifyNeighbor.getCellId(), modifyNeighbor.getNeighborList().get(i).getNodeId()),
+                        new NeihborId(modifyNeighbor.getIdNRCellCU(), modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation()),
                         true);
                 ransimRepo.mergeNeighborDetails(nd);
-                cellList.add(modifyNeighbor.getNeighborList().get(i).getNodeId());
+                cellList.add(modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation());
                 if (nbrsAdd.equals("")) {
-                    nbrsDel = modifyNeighbor.getNeighborList().get(i).getNodeId();
+                    nbrsDel = modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation();
                 } else {
-                    nbrsDel += "," + modifyNeighbor.getNeighborList().get(i).getNodeId();
+                    nbrsDel += "," + modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation();
                 }
             } else {
                 NeighborDetails nd = new NeighborDetails(
-                        new NeihborId(modifyNeighbor.getCellId(), modifyNeighbor.getNeighborList().get(i).getNodeId()),
+                        new NeihborId(modifyNeighbor.getIdNRCellCU(), modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation()),
                         false);
                 ransimRepo.mergeNeighborDetails(nd);
-                cellList.add(modifyNeighbor.getNeighborList().get(i).getNodeId());
+                cellList.add(modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation());
                 if (nbrsDel.equals("")) {
-                    nbrsAdd = modifyNeighbor.getNeighborList().get(i).getNodeId();
+                    nbrsAdd = modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation();
                 } else {
-                    nbrsAdd += "," + modifyNeighbor.getNeighborList().get(i).getNodeId();
+                    nbrsAdd += "," + modifyNeighbor.getNeighborList().get(i).getIdNRCellRelation();
                 }
             }
 
@@ -1488,7 +1488,7 @@ public class RansimControllerServices {
 
         log.info("neighbor list: " + neighborList);
 
-        rsPciHdlr.updateNbrsOperationsTable(modifyNeighbor.getCellId(), source, nbrsAdd, nbrsDel);
+        rsPciHdlr.updateNbrsOperationsTable(modifyNeighbor.getIdNRCellCU(), source, nbrsAdd, nbrsDel);
     }
 
     /**
@@ -1510,9 +1510,9 @@ public class RansimControllerServices {
                 Neighbor nbr = new Neighbor();
                 CellDetails nbrCell = ransimRepo.getCellDetail(nbCell.getNeigbor().getNeighborCell());
 
-                nbr.setNodeId(nbrCell.getNodeId());
-                nbr.setPhysicalCellId(nbrCell.getPhysicalCellId());
-                nbr.setPnfName(nbrCell.getNodeName());
+                nbr.setIdNRCellRelation(nbrCell.getNodeId());
+                nbr.setNRTCI(nbrCell.getPhysicalCellId());
+                nbr.setIdGNBCUCPFunction(nbrCell.getNodeName());
                 nbr.setServerId(nbrCell.getServerId());
                 nbr.setPlmnId(nbrCell.getNetworkId());
                 nbrList.add(nbr);

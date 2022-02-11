@@ -23,11 +23,11 @@ package org.onap.ransim.websocket.model;
 public class Neighbor {
 
     private String plmnId;
-    private String nodeId;
-    private long physicalCellId;
+    private String idNRCellRelation;
+    private long nRTCI;
     private String serverId;
-    private String pnfName;
-    private boolean blacklisted;
+    private String idGNBCUCPFunction;
+    private boolean isHOAllowed;
 
     public String getPlmnId() {
         return plmnId;
@@ -37,20 +37,20 @@ public class Neighbor {
         this.plmnId = plmnId;
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getIdNRCellRelation() {
+        return idNRCellRelation;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setIdNRCellRelation(String idNRCellRelation) {
+        this.idNRCellRelation = idNRCellRelation;
     }
 
-    public long getPhysicalCellId() {
-        return physicalCellId;
+    public long getNRTCI() {
+        return nRTCI;
     }
 
-    public void setPhysicalCellId(long physicalCellId) {
-        this.physicalCellId = physicalCellId;
+    public void setNRTCI(long nRTCI) {
+        this.nRTCI = nRTCI;
     }
 
     public String getServerId() {
@@ -61,29 +61,29 @@ public class Neighbor {
         this.serverId = serverId;
     }
 
-    public String getPnfName() {
-        return pnfName;
+    public String getIdGNBCUCPFunction() {
+        return idGNBCUCPFunction;
     }
 
-    public void setPnfName(String pnfName) {
-        this.pnfName = pnfName;
+    public void setIdGNBCUCPFunction(String idGNBCUCPFunction) {
+        this.idGNBCUCPFunction = idGNBCUCPFunction;
     }
 
     public Neighbor() {
         // TODO Auto-generated constructor stub
     }
 
-    public boolean isBlacklisted() {
-        return blacklisted;
+    public boolean getIsHOAllowed() {
+        return isHOAllowed;
     }
 
-    public void setBlacklisted(boolean blacklisted) {
-        this.blacklisted = blacklisted;
+    public void setIsHOAllowed(boolean blacklisted) {
+        this.isHOAllowed = isHOAllowed;
     }
 
     @Override
     public String toString() {
-        return "Neighbor [nodeId=" + nodeId + ", physicalCellId=" + physicalCellId + ", serverId=" + serverId
-                + ", pnfName=" + pnfName + "]";
+        return "Neighbor [idNRCellRelation=" + idNRCellRelation + ", nRTCI=" + nRTCI + ", serverId=" + serverId
+                + ", idGNBCUCPFunction=" + idGNBCUCPFunction + "]";
     }
 }

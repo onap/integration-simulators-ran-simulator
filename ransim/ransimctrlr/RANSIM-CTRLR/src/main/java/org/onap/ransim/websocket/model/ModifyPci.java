@@ -24,33 +24,33 @@ import java.util.List;
 
 public class ModifyPci {
 
-    private String pnfName;
+    private String idGNBDUFunction;
 
-    private long pciId;
+    private long nRPCI;
 
-    private String cellId;
+    private String idNRCellDU;
 
     private List<Neighbor> neighborList;
 
-    public long getPciId() {
-        return pciId;
+    public long getNRPCI() {
+        return nRPCI;
     }
 
-    public void setPciId(long pciId) {
-        this.pciId = pciId;
+    public void setNRPCI(long nRPCI) {
+        this.nRPCI = nRPCI;
     }
 
-    public String getCellId() {
-        return cellId;
+    public String getIdNRCellDU() {
+        return idNRCellDU;
     }
 
-    public void setCellId(String cellId) {
-        this.cellId = cellId;
+    public void setIdNRCellDU(String idNRCellDU) {
+        this.idNRCellDU = idNRCellDU;
     }
 
     @Override
     public String toString() {
-        return "ModifyPci [PnfName = " + pnfName + ", PciId = " + pciId + ", cellId = " + cellId + "neighborList:"
+        return "ModifyPci [idGNBDUFunction = " + idGNBDUFunction + ", nRPCI = " + nRPCI + ", idNRCellDU = " + idNRCellDU + "neighborList:"
                 + neighborList + "]";
     }
 
@@ -60,25 +60,25 @@ public class ModifyPci {
     /**
      * Modify Pci value from sdnr.
      *
-     * @param pnfName server id name
-     * @param pciId pci number
-     * @param cellId node id for the cell
+     * @param idGNBDUFunction server id name
+     * @param nRPCI pci number
+     * @param idNRCellDU node id for the cell
      * @param neighborList neighbor list for the cell
      */
-    public ModifyPci(String pnfName, long pciId, String cellId, List<Neighbor> neighborList) {
+    public ModifyPci(String idGNBDUFunction, long nRPCI, String idNRCellDU, List<Neighbor> neighborList) {
         super();
-        this.pnfName = pnfName;
-        this.pciId = pciId;
-        this.cellId = cellId;
+        this.idGNBDUFunction = idGNBDUFunction;
+        this.nRPCI = nRPCI;
+        this.idNRCellDU = idNRCellDU;
         this.neighborList = neighborList;
     }
 
-    public String getPnfName() {
-        return pnfName;
+    public String getIdGNBDUFunction() {
+        return idGNBDUFunction;
     }
 
-    public void setPnfName(String pnfName) {
-        this.pnfName = pnfName;
+    public void setIdGNBDUFunction(String idGNBDUFunction) {
+        this.idGNBDUFunction = idGNBDUFunction;
     }
 
     public List<Neighbor> getNeighborList() {
@@ -95,10 +95,10 @@ public class ModifyPci {
      * @return returns true if the parameter are set correctly
      */
     public boolean isAllSet() {
-        if (pnfName == null || pnfName.trim().equals("")) {
+        if (idGNBDUFunction == null || idGNBDUFunction.trim().equals("")) {
             return false;
         }
-        if (cellId == null || cellId.trim().equals("")) {
+        if (idNRCellDU == null || idNRCellDU.trim().equals("")) {
             return false;
         }
         return true;
