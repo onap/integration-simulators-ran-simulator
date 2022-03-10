@@ -44,10 +44,12 @@ import org.onap.ransim.rest.api.models.RANSliceInfo;
 import org.onap.ransim.rest.api.models.RRMPolicyRatio;
 import org.onap.ransim.rest.api.models.SliceProfile;
 import org.onap.ransim.rest.api.models.TACells;
+import org.onap.ransim.rest.api.models.*;
 import org.onap.ransim.rest.api.repository.GNBCUCPRepository;
 import org.onap.ransim.rest.api.repository.GNBCUUPRepository;
 import org.onap.ransim.rest.api.repository.GNBDURepository;
 import org.onap.ransim.rest.api.repository.NRCellCURepository;
+import org.onap.ransim.rest.api.repository.NRCellRelationRepository;
 import org.onap.ransim.rest.api.repository.NearRTRICRepository;
 import org.onap.ransim.rest.api.repository.RANInventoryRepository;
 import org.onap.ransim.rest.api.repository.RRMPolicyRepository;
@@ -56,6 +58,7 @@ import org.onap.ransim.rest.web.mapper.GNBCUCPModel;
 import org.onap.ransim.rest.web.mapper.GNBCUUPModel;
 import org.onap.ransim.rest.web.mapper.GNBDUModel;
 import org.onap.ransim.rest.web.mapper.NRCellCUModel;
+import org.onap.ransim.rest.web.mapper.*;
 import org.onap.ransim.rest.web.mapper.NRCellDUModel;
 import org.onap.ransim.rest.web.mapper.NearRTRICModel;
 import org.onap.ransim.rest.web.mapper.RANSliceInfoModel;
@@ -77,6 +80,9 @@ public class RANSliceConfigService {
 
     @Autowired
     private GNBDURepository gNBDURepository;
+    
+    @Autowired
+    private NRCellRelationRepository nRCellRelationRepository;
 
     @Autowired
     private NearRTRICRepository nearRTRICRepository;
@@ -157,6 +163,7 @@ public class RANSliceConfigService {
             logger.debug("Error occured during saveGNBCUCP" + e.getMessage());
             return null;
         }
+	logger.info("saved gNBCUCPmodel is : " + gNBCUCPModel);
         return gNBCUCPModel;
     }
 
@@ -652,9 +659,23 @@ public class RANSliceConfigService {
         logger.debug("Request received to fetch all NearRTRICModel");
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         List<NearRTRIC> rtricList = (List<NearRTRIC>) nearRTRICRepository.findAll();
+	logger.info ("NearRTRIC model is from findall is : " + rtricList);
         List<NearRTRICModel> rtricmodels = rtricList.stream()
                 .map(rtricEntity -> modelMapper.map(rtricEntity, NearRTRICModel.class)).collect(Collectors.toList());
+	logger.info ("NearRTRIC model after mapping is : " + rtricmodels);
         return rtricmodels;
+    }
+
+    public List<NRCellRelationModel> findAllNRCellRelation() {
+	logger.debug("Request received to fetch all NRCellRelationModel");
+	modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+	List<NRCellRelation> relationList = (List<NRCellRelation>) nRCellRelationRepository.findAll();
+	logger.info ("NRCellRelation model is from findall is : " + relationList);
+	List<NRCellRelationModel> nRCellRelationmodels = relationList.stream()
+		.map(relationEntity -> modelMapper.map(relationEntity, NRCellRelationModel.class)).collect(Collectors.toList());
+	logger.info ("NRCellRelation model after mapping is : " + nRCellRelationmodels);
+	return nRCellRelationmodels;
     }
 
 }

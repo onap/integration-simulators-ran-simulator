@@ -24,6 +24,7 @@ public class CommonEventHeaderPm {
 
     private String sourceName;
     private String sourceUuid;
+    private String reportingEntityName;
     private long startEpochMicrosec;
     private long lastEpochMicrosec;
 
@@ -58,5 +59,15 @@ public class CommonEventHeaderPm {
     public void setLastEpochMicrosec(long lastEpochMicrosec) {
         this.lastEpochMicrosec = lastEpochMicrosec;
     }
+    public void setReportingEntityName(String reportingEntityName) { this.reportingEntityName = reportingEntityName; }
+
+    public String getReportingEntityName(){ return reportingEntityName; }
+
+    @Override
+	public String toString() {
+		return "CommonEventHeaderPm [sourceName=" + sourceName + ", sourceUuid=" + sourceUuid + ", reportingEntityName="
+				+ reportingEntityName + ", startEpochMicrosec=" + startEpochMicrosec + ", lastEpochMicrosec="
+				+ lastEpochMicrosec + "]";
+	}
 
 }

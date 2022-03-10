@@ -1,0 +1,1518 @@
+[
+    {
+        "gNBCUName": "cucpserver1",
+        "gNBId": 98763,
+        "gNBIdLength": 32,
+        "pLMNId": "310-410",
+        "nFType": "CUCP",
+        "nearRTRICId": 11,
+        "cellCUList": [
+            {
+                "cellLocalId": 15289,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15290,
+                        "attributes": {
+                            "nRTCI": 15290,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15296,
+                        "attributes": {
+                            "nRTCI": 15296,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15687,
+                        "attributes": {
+                            "nRTCI": 15687,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15290,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15296,
+                        "attributes": {
+                            "nRTCI": 15296,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15289,
+                        "attributes": {
+                            "nRTCI": 15289,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15687,
+                        "attributes": {
+                            "nRTCI": 15687,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15296,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15290,
+                        "attributes": {
+                            "nRTCI": 15290,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15289,
+                        "attributes": {
+                            "nRTCI": 15289,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15687,
+                        "attributes": {
+                            "nRTCI": 15287,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15687,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15290,
+                        "attributes": {
+                            "nRTCI": 15290,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15296,
+                        "attributes": {
+                            "nRTCI": 15296,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15289,
+                        "attributes": {
+                            "nRTCI": 15289,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15689,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15825,
+                        "attributes": {
+                            "nRTCI": 15825,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15826,
+                        "attributes": {
+                            "nRTCI": 15826,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13999,
+                        "attributes": {
+                            "nRTCI": 13999,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15155,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15174,
+                        "attributes": {
+                            "nRTCI": 15174,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15175,
+                        "attributes": {
+                            "nRTCI": 15175,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15176,
+                        "attributes": {
+                            "nRTCI": 15176,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15174,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15155,
+                        "attributes": {
+                            "nRTCI": 15155,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15175,
+                        "attributes": {
+                            "nRTCI": 15175,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15176,
+                        "attributes": {
+                            "nRTCI": 15176,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15175,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15155,
+                        "attributes": {
+                            "nRTCI": 15155,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15174,
+                        "attributes": {
+                            "nRTCI": 15174,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15176,
+                        "attributes": {
+                            "nRTCI": 15176,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15176,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15174,
+                        "attributes": {
+                            "nRTCI": 15174,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15155,
+                        "attributes": {
+                            "nRTCI": 15155,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15175,
+                        "attributes": {
+                            "nRTCI": 15175,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15825,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15826,
+                        "attributes": {
+                            "nRTCI": 15826,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15689,
+                        "attributes": {
+                            "nRTCI": 15689,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13999,
+                        "attributes": {
+                            "nRTCI": 13999,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15826,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15825,
+                        "attributes": {
+                            "nRTCI": 15825,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15689,
+                        "attributes": {
+                            "nRTCI": 15689,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13999,
+                        "attributes": {
+                            "nRTCI": 13999,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15425,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15426,
+                        "attributes": {
+                            "nRTCI": 15426,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14000,
+                        "attributes": {
+                            "nRTCI": 14000,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15426,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15425,
+                        "attributes": {
+                            "nRTCI": 15425,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14000,
+                        "attributes": {
+                            "nRTCI": 14000,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 13999,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15825,
+                        "attributes": {
+                            "nRTCI": 15825,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15689,
+                        "attributes": {
+                            "nRTCI": 15689,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15826,
+                        "attributes": {
+                            "nRTCI": 15826,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 14000,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15425,
+                        "attributes": {
+                            "nRTCI": 15425,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15426,
+                        "attributes": {
+                            "nRTCI": 15426,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "gNBCUName": "cucpserver2",
+        "gNBId": 98763,
+        "gNBIdLength": 32,
+        "pLMNId": "310-410",
+        "nFType": "CUCP",
+        "nearRTRICId": 22,
+        "cellCUList": [
+            {
+                "cellLocalId": 11561,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 11562,
+                        "attributes": {
+                            "nRTCI": 11562,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11568,
+                        "attributes": {
+                            "nRTCI": 11568,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11569,
+                        "attributes": {
+                            "nRTCI": 11569,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 11562,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 11561,
+                        "attributes": {
+                            "nRTCI": 11561,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11568,
+                        "attributes": {
+                            "nRTCI": 11568,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11569,
+                        "attributes": {
+                            "nRTCI": 11569,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 11568,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 11561,
+                        "attributes": {
+                            "nRTCI": 11561,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11562,
+                        "attributes": {
+                            "nRTCI": 11562,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11569,
+                        "attributes": {
+                            "nRTCI": 11569,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 11569,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 11561,
+                        "attributes": {
+                            "nRTCI": 11561,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11562,
+                        "attributes": {
+                            "nRTCI": 11562,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 11568,
+                        "attributes": {
+                            "nRTCI": 11568,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 10896,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 10897,
+                        "attributes": {
+                            "nRTCI": 10897,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14655,
+                        "attributes": {
+                            "nRTCI": 14655,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14656,
+                        "attributes": {
+                            "nRTCI": 14656,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 10897,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 10896,
+                        "attributes": {
+                            "nRTCI": 10896,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14655,
+                        "attributes": {
+                            "nRTCI": 14655,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14656,
+                        "attributes": {
+                            "nRTCI": 14656,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 14655,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 14656,
+                        "attributes": {
+                            "nRTCI": 14656,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 10897,
+                        "attributes": {
+                            "nRTCI": 10897,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 10896,
+                        "attributes": {
+                            "nRTCI": 10896,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 14656,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 10896,
+                        "attributes": {
+                            "nRTCI": 10896,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 10897,
+                        "attributes": {
+                            "nRTCI": 10897,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14655,
+                        "attributes": {
+                            "nRTCI": 14655,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 13905,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 13910,
+                        "attributes": {
+                            "nRTCI": 13910,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15360,
+                        "attributes": {
+                            "nRTCI": 15360,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15361,
+                        "attributes": {
+                            "nRTCI": 15361,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 13910,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15360,
+                        "attributes": {
+                            "nRTCI": 15360,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15361,
+                        "attributes": {
+                            "nRTCI": 15361,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13905,
+                        "attributes": {
+                            "nRTCI": 13905,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15360,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15361,
+                        "attributes": {
+                            "nRTCI": 15361,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13905,
+                        "attributes": {
+                            "nRTCI": 13905,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13910,
+                        "attributes": {
+                            "nRTCI": 13910,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15361,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15360,
+                        "attributes": {
+                            "nRTCI": 15360,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13905,
+                        "attributes": {
+                            "nRTCI": 13905,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 13910,
+                        "attributes": {
+                            "nRTCI": 13910,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15548,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15549,
+                        "attributes": {
+                            "nRTCI": 15549,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14427,
+                        "attributes": {
+                            "nRTCI": 14427,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 15549,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15548,
+                        "attributes": {
+                            "nRTCI": 15548,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 14427,
+                        "attributes": {
+                            "nRTCI": 14427,
+                            "isHOAllowed": "true"
+                        }
+                    }
+                ],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "cellLocalId": 14427,
+                "nRCellRelationList": [
+                    {
+                        "idNRCellRelation": 15548,
+                        "attributes": {
+                            "nRTCI": 15548,
+                            "isHOAllowed": "true"
+                        }
+                    },
+                    {
+                        "idNRCellRelation": 15549,
+                        "attributes": {
+                            "nRTCI": 15549,
+                            "isHOAllowed": "true"
+                        }
+                    },
+		    {
+			"idNRCellRelation": 15425,
+			"attributes": {
+			    "nRTCI": 15425,
+			    "isHOAllowed": "true"
+			}
+		    },
+		    {
+                        "idNRCellRelation": 15296,
+			"attributes": {
+			    "nRTCI": 15296,
+			    "isHOAllowed": "true"
+			}
+		    },
+		    {
+		        "idNRCellRelation": 15155,
+		        "attributes": {
+			    "nRTCI": 15155,
+			    "isHOAllowed": "true"
+	                }
+		    },
+		    {
+		        "idNRCellRelation": 13999,
+		        "attributes": {
+			    "nRTCI": 13999,
+			    "isHOAllowed": "true"
+		        }
+		    },
+		    {
+	                "idNRCellRelation": 14000,
+		        "attributes": {
+			    "nRTCI": 14000,
+			    "isHOAllowed": "true"
+	                }
+		    },
+		    {
+			"idNRCellRelation": 15825,
+			"attributes": {
+			    "nRTCI": 15825,
+			    "isHOAllowed": "true"
+                        }
+		    },
+		    {
+		        "idNRCellRelation": 15548,
+		        "attributes": {
+			    "nRTCI": 15548,
+			    "isHOAllowed": "true"
+                        }
+		    },
+		    {
+		        "idNRCellRelation": 13905,
+		        "attributes": {
+			    "nRTCI": 13905,
+			    "isHOAllowed": "true"
+	                }
+		    },
+		    {
+			"idNRCellRelation": 15361,
+			"attributes": {
+			    "nRTCI": 15361,
+			    "isHOAllowed": "true"
+		        }
+		    },
+		    {
+		        "idNRCellRelation": 15174,
+		        "attributes": {
+			    "nRTCI": 15174,
+			    "isHOAllowed": "true"
+	                }
+		    },
+		    {
+			"idNRCellRelation": 15175,
+			"attributes": {
+			    "nRTCI": 15175,
+			    "isHOAllowed": "true"
+		        }
+		    },
+		    {
+		        "idNRCellRelation": 15176,
+		        "attributes": {
+			    "nRTCI": 15176,
+			    "isHOAllowed": "true"
+		        }
+		    },
+		    {
+			"idNRCellRelation": 15426,
+			"attributes": {
+			    "nRTCI": 15426,
+			    "isHOAllowed": "true"
+		        }
+		    },
+		    {
+		        "idNRCellRelation": 15360,
+		        "attributes": {
+			    "nRTCI": 15360,
+			    "isHOAllowed": "true"
+			}
+		    }
+		],
+                "pLMNInfoList": [
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0010-1110",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 6000
+                            }
+                        }
+                    },
+                    {
+                        "pLMNId": "310-410",
+                        "sNSSAI": {
+                            "sNSSAI": "0011-0010",
+                            "status": "ACTIVE",
+                            "configData": {
+                                "maxNumberOfConns": 4500
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

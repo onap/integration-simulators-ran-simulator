@@ -57,6 +57,7 @@ import org.onap.ransim.rest.api.models.NbrDump;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NeihborId;
 import org.onap.ransim.rest.api.models.NetconfServers;
+import org.onap.ransim.rest.api.models.NRCellCU;
 import org.onap.ransim.rest.api.models.PLMNInfo;
 import org.onap.ransim.rest.api.models.RRMPolicyMember;
 import org.onap.ransim.rest.api.models.RRMPolicyRatio;
@@ -72,6 +73,8 @@ import org.onap.ransim.rest.client.RestClient;
 import org.onap.ransim.rest.web.mapper.GNBCUCPModel;
 import org.onap.ransim.rest.web.mapper.GNBCUUPModel;
 import org.onap.ransim.rest.web.mapper.GNBDUModel;
+import org.onap.ransim.rest.web.mapper.NRRelationData;
+import org.onap.ransim.rest.web.mapper.NRCellRelationModel;
 import org.onap.ransim.rest.web.mapper.NRCellCUModel;
 import org.onap.ransim.rest.web.mapper.NRCellDUModel;
 import org.onap.ransim.rest.web.mapper.NSSAIData;
@@ -82,6 +85,7 @@ import org.onap.ransim.utilities.RansimUtilities;
 import org.onap.ransim.websocket.model.*;
 import org.onap.ransim.websocket.model.ConfigData;
 import org.onap.ransim.websocket.model.ConfigPLMNInfo;
+import org.onap.ransim.websocket.model.GNBCUCPFunction;
 import org.onap.ransim.websocket.model.ModifyNeighbor;
 import org.onap.ransim.websocket.model.ModifyPci;
 import org.onap.ransim.websocket.model.Neighbor;
@@ -447,8 +451,9 @@ public class RansimControllerServices {
     }
 
     public void loadGNBFunctionProperties() {
-        try {
-            sdnrServerIp = System.getenv("SDNR_IP");
+	try {
+            
+	    sdnrServerIp = System.getenv("SDNR_IP");
             sdnrServerPort = Integer.parseInt(System.getenv("SDNR_PORT"));
             sdnrServerUserid = System.getenv("SDNR_USER");
             sdnrServerPassword = System.getenv("SDNR_PASSWORD");
@@ -458,11 +463,10 @@ public class RansimControllerServices {
                 List<String> gNBList = new ArrayList<>();
                 for (GNBCUCPModel gNBCUCPModel : rtricModel.getgNBCUCPList()) {
                     gNBList.add(gNBCUCPModel.getgNBCUName());
-                    setRanNetconfServers(gNBCUCPModel.getgNBCUName());
                     for (NRCellCUModel nRCellCUModel : gNBCUCPModel.getCellCUList()) {
-                        if (nRCellCUModel.getpLMNInfoList().isEmpty()) {
+		        if (nRCellCUModel.getpLMNInfoList().isEmpty()) {
                             org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
-                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/gNBCUConfig.json")) {
+                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/ran-data.json")) {
                                 // Read JSON file
                                 Object obj = jsonParser.parse(reader);
                                 JSONArray List = (JSONArray) obj;
@@ -481,6 +485,24 @@ public class RansimControllerServices {
                                     for (int j = 0; j < cellList.size(); j++) {
                                         JSONObject cell = (JSONObject) cellList.get(j);
                                         Long cellLocalId = (Long) cell.get("cellLocalId");
+					String nRCellRelVar = (String) cell.get("nRCellRelationList").toString();
+					Object nRCellVarObj = jsonParser.parse(nRCellRelVar);
+					JSONArray nRCellRelList = (JSONArray) nRCellVarObj;
+					List<NRCellRelationModel> nrCellRelationModelList = new ArrayList<NRCellRelationModel>();
+					for (int k = 0; k < nRCellRelList.size(); k++) {
+						JSONObject nrcellrel = (JSONObject) nRCellRelList.get(k);
+						Long idNRCellRelation = (Long) nrcellrel.get("idNRCellRelation");
+						JSONObject attributes = (JSONObject) nrcellrel.get("attributes");
+						Long nRTCI = (Long) attributes.get("nRTCI");
+						String isHOAllowed = (String) attributes.get("isHOAllowed");
+						NRRelationData nrRelationDataObj = new NRRelationData();
+						nrRelationDataObj.setNRTCI(nRTCI.intValue());
+						nrRelationDataObj.setIsHOAllowed(Boolean.valueOf(isHOAllowed));
+						NRCellRelationModel nrCellRelationModel = new NRCellRelationModel();
+						nrCellRelationModel.setIdNRCellRelation(idNRCellRelation.intValue());
+						nrCellRelationModel.setNRRelationData(nrRelationDataObj);
+						nrCellRelationModelList.add(nrCellRelationModel);
+                                        }
                                         String plmVar = (String) cell.get("pLMNInfoList").toString();
                                         Object pmlVarObj = jsonParser.parse(plmVar);
                                         JSONArray pmlList = (JSONArray) pmlVarObj;
@@ -506,8 +528,30 @@ public class RansimControllerServices {
                                         }
                                         NRCellCUModel nrCellCUModel = new NRCellCUModel();
                                         nrCellCUModel.setCellLocalId(cellLocalId.intValue());
+					nrCellCUModel.setNRCellRelation(nrCellRelationModelList);
                                         nrCellCUModel.setpLMNInfoList(plmnInfoModelList);
+					List<String> attachedNoeds;
+					if (serverIdIpNodeMapping.isEmpty()) {
+						attachedNoeds = new ArrayList<String>();
+						attachedNoeds.add(Integer.toString(nrCellCUModel.getCellLocalId()));
+						serverIdIpNodeMapping.put(gNBCUCPModel.getgNBCUName(), attachedNoeds);
+						if (attachedNoeds.size() > numberOfCellsPerNcServer) {
+							log.info("Attaching Cell:");
+						}
+					} else {
+						attachedNoeds = serverIdIpNodeMapping.get(gNBCUCPModel.getgNBCUName());
+						attachedNoeds.add(Integer.toString(nrCellCUModel.getCellLocalId()));
+						serverIdIpNodeMapping.put(gNBCUCPModel.getgNBCUName(), attachedNoeds);
+						if (attachedNoeds.size() > numberOfCellsPerNcServer) {
+							log.info("Attaching Cell:");
+						}
+					}
+					log.info("Attaching Cell:" + nrCellCUModel.getCellLocalId() + " to "
+							+ gNBCUCPModel.getgNBCUName());
+					setRanCUCPNetconfServers(nrCellCUModel.getCellLocalId());
+					dumpSessionDetails();
                                         nRCellCUModelList.add(nrCellCUModel);
+					log.info("NRCELLCU LIST is : " + nRCellCUModelList);
                                     }
                                     GNBCUCPModel gNBModel = new GNBCUCPModel();
                                     gNBModel.setgNBCUName(gNBCUName);
@@ -518,6 +562,7 @@ public class RansimControllerServices {
                                     gNBModel.setNearRTRICId(nearRTRICId.intValue());
                                     gNBModel.setCellCUList(nRCellCUModelList);
                                     ranSliceConfigService.saveGNBCUCP(gNBModel);
+				    log.info("gnBCUCP model is: " + gNBModel);
                                 }
                             } catch (Exception e) {
                                 log.error("Properties file error", e);
@@ -533,29 +578,60 @@ public class RansimControllerServices {
                     gNBList.add(gNBDUModel.getgNBDUId().toString());
                     setRanNetconfServers(gNBDUModel.getgNBDUId().toString());
                 }
+		log.info(" gNBList in loadGNB is : " + gNBList);
                 unassignedrtRicIds.add(rtricModel.getNearRTRICId().toString());
                 ricIdFunctionMapping.put(rtricModel.getNearRTRICId().toString(), gNBList);
                 setRanNetconfServers(rtricModel.getNearRTRICId().toString());
-            }
-        } catch (Exception e) {
-            log.error("Properties file error", e);
-        }
+            
+	    }
+	} catch (Exception e) {
+	      log.error("Properties file error", e);
+	}
     }
 
     public void setRanNetconfServers(String serverId) {
-        try {
+	    try {		    
+		    NetconfServers server = ransimRepo.getNetconfServer(serverId);
+		    if (server == null) {
+			    server = new NetconfServers();
+			    server.setServerId(serverId);
+		    }
+		    ransimRepo.mergeNetconfServers(server);
+	
+	    } catch (Exception eu) {
+		    log.error("setRanNetconfServers Function Error", eu);
 
-            NetconfServers server = ransimRepo.getNetconfServer(serverId);
-            if (server == null) {
-                server = new NetconfServers();
-                server.setServerId(serverId);
-            }
-            ransimRepo.mergeNetconfServers(server);
+	
+	    }
 
-        } catch (Exception eu) {
-            log.error("setNetconfServers Function Error", eu);
+    }
 
-        }
+    
+    public void setRanCUCPNetconfServers(Integer cellLocalId) {
+	
+	    NRCellCU currentCell = ransimRepo.getNRCellCUDetail(cellLocalId);
+	    Set<NRCellCU> newList = new HashSet<NRCellCU>();
+
+	    try {
+		    if (currentCell != null) {
+			    NetconfServers server = ransimRepo.getNetconfServer(currentCell.getgNBCUCPFunction().getgNBCUName());
+			    if (server == null) {
+				    server = new NetconfServers();
+				    server.setServerId(currentCell.getgNBCUCPFunction().getgNBCUName());
+			    } else {
+				    newList.addAll(server.getCellList());
+
+			    }
+			    newList.add(currentCell);
+			    server.setCellList(newList);
+			    log.info("setNetconfServer CUCP: cellLocalId: " + cellLocalId + ",  ip: " + server.getIp() + ", portNum: " + server.getNetconfPort()
+					    + ", serverId:" + currentCell.getgNBCUCPFunction().getgNBCUName());
+
+			    ransimRepo.mergeNetconfServers(server);
+		    }
+	    } catch (Exception eu) {
+		    log.error("setRanCUCPNetconfServers Function Error", eu);
+	    }
     }
 
     /**
@@ -981,6 +1057,7 @@ public class RansimControllerServices {
             }
 
             for (NearRTRICModel rtRicModel : rtricModelList) {
+		log.info(" rtric model in sendRanInintialConfig is : " + rtricModelList);    
                 if (rtRicModel.getNearRTRICId().toString().equals(serverId)) {
                     getInitalConfigTree(rtRicModel, serverId);
                     NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin", server.getServerId(),
@@ -1023,6 +1100,7 @@ public class RansimControllerServices {
         attributes.setLocationName("Palmdale");
         attributes.setgNBId(rtRicModel.getgNBId().toString());
         nearRTRIC.setAttributes(attributes);
+        log.info("RTRIC model is : " + rtRicModel);
 
         List<GNBCUUPFunction> gNBCUUPFunctionList = new ArrayList<>();
         for (GNBCUUPModel gNBCUUPModel : rtRicModel.getgNBCUUPList()) {
@@ -1059,6 +1137,39 @@ public class RansimControllerServices {
                 gNBDUFunctionList.add(gNBDUFunction);
             }
         }
+	/* List<GNBCUCPFunction> gNBCUCPFunctionList = new ArrayList<>();
+	for (GNBCUCPModel gnbcucpModel : rtRicModel.getgNBCUCPList()){
+	    if (gnbcucpModel.getgNBId().toString().equals(serverId)
+		    || rtRicModel.getNearRTRICId().toString().equals(serverId)) {
+        GNBCUCPFunction gNBCUCPFunction = new GNBCUCPFunction();
+	Attributes cUCPattributes = new Attributes();
+	cUCPattributes.setgNBId(gnbcucpModel.getgNBId().toString());
+	gNBCUCPFunction.setAttributes(cUCPattributes);
+	gNBCUCPFunction.setIdGNBCUCPFunction(gnbcucpModel.getgNBCUName());
+	List<NRCellCU> nRCellCUList = new ArrayList<>();
+	for (NRCellCUModel nRCellCUModel : gnbcucpModel.getCellCUList()) {
+		NRCellCU nRCellCU = new NRCellCU();
+		 log.info("gnbcucpModel from DB:"+gnbcucpModel);
+		nRCellCU.setIdNRCellCU(nRCellCUModel.getCellLocalId().toString());
+		List<NRCellRelation> nRCellRelationList = new ArrayList<NRCellRelation>();
+		for(NRCellRelationModel nrCellRelationModel : nRCellCUModel.getNRCellRelationList())
+		{
+			NRCellRelation nRCellRelation = new NRCellRelation();
+			nRCellRelation.setIdNRCellRelation(nrCellRelationModel.getIdNRCellRelation());
+			AttributesNRRelation attributesNRRelation = new AttributesNRRelation();
+			attributesNRRelation.setNRTCI(nrCellRelationModel.getNRRelationData().getNRTCI());
+			attributesNRRelation.setIsHoAllowed(nrCellRelationModel.getNRRelationData().getIsHOAllowed());
+			nRCellRelation.setAttributes(attributesNRRelation);
+			nRCellRelationList.add(nRCellRelation);
+			nRCellCU.setNRCellRelation(nRCellRelationList);
+		}
+		nRCellCUList.add(nRCellCU);
+              }
+	      gNBCUCPFunction.setnRCellCU(nRCellCUList);
+	      gNBCUCPFunctionList.add(gNBCUCPFunction);
+	   }
+	} 
+	nearRTRIC.setgNBCUCPFunction(gNBCUCPFunctionList); */
         nearRTRIC.setgNBDUFunction(gNBDUFunctionList);
         nearRTRIC.setgNBCUUPFunction(gNBCUUPFunctionList);
         nearRTRICList.add(nearRTRIC);
