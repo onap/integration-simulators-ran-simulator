@@ -25,27 +25,58 @@ import com.tailf.jnc.DeviceUser;
 import com.tailf.jnc.Element;
 import com.tailf.jnc.JNCException;
 import com.tailf.jnc.NetconfSession;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.PostConstruct;
+import javax.websocket.Session;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.List;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import org.apache.log4j.Logger;
 import org.onap.ransim.rest.api.models.PLMNInfoModel;
+import org.onap.ransim.rest.web.mapper.NRRelationData;
 import org.onap.ransim.rest.web.mapper.GNBCUCPModel;
 import org.onap.ransim.rest.web.mapper.GNBCUUPModel;
 import org.onap.ransim.rest.web.mapper.GNBDUModel;
 import org.onap.ransim.rest.web.mapper.NRCellCUModel;
 import org.onap.ransim.rest.web.mapper.NRCellDUModel;
+import org.onap.ransim.rest.web.mapper.NRCellRelationModel;
 import org.onap.ransim.rest.web.mapper.NearRTRICModel;
 import org.onap.ransim.websocket.model.ConfigData;
+import org.onap.ransim.rest.api.services.RANSliceConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class NetconfClient {
 
     static Logger log = Logger.getLogger(NetconfClient.class.getName());
+    static List<NRCellRelationModel> relationModelList = Collections.synchronizedList(new ArrayList<>());
 
     private String emsUserName;
     private Device device;
+
+    @Autowired
+    RANSliceConfigService ranSliceConfigService;
 
     public NetconfClient(Device device) {
         this.device = device;
@@ -74,7 +105,69 @@ public class NetconfClient {
             portElement.setValue("8080");
             sapElement.addChild(hostElement);
             sapElement.addChild(portElement);
-
+            NearRTRICModel nRICmodel = new NearRTRICModel();
+	    org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
+	    try (FileReader reader = new FileReader("/tmp/ransim-install/config/ran-data.json")) {
+		    // Read JSON file
+		    Object obj = jsonParser.parse(reader);
+		    JSONArray List = (JSONArray) obj;
+		    List<GNBCUCPModel> savedGNBModelList = new ArrayList<GNBCUCPModel>();
+                    for (int i = 0; i < List.size(); i++) {
+			    JSONObject gNB = (JSONObject) List.get(i);
+			    String gNBCUName = (String) gNB.get("gNBCUName");
+			    Long gNBId = (Long) gNB.get("gNBId");
+			    Long gNBIdLength = (Long) gNB.get("gNBIdLength");
+			    String pLMNId = (String) gNB.get("pLMNId");
+			    String nFType = (String) gNB.get("nFType");
+			    Long nearRTRICId = (Long) gNB.get("nearRTRICId");
+			    String cellListVar = (String) gNB.get("cellCUList").toString();
+			    Object cellListObj = jsonParser.parse(cellListVar);
+			    JSONArray cellList = (JSONArray) cellListObj;
+			    List<NRCellCUModel> nRCellCUModelList = new ArrayList<NRCellCUModel>();
+			    for (int j = 0; j < cellList.size(); j++) {
+				    JSONObject cell = (JSONObject) cellList.get(j);
+				    Long cellLocalId = (Long) cell.get("cellLocalId");
+				    String nRCellRelVar = (String) cell.get("nRCellRelationList").toString();
+				    Object nRCellVarObj = jsonParser.parse(nRCellRelVar);
+				    JSONArray nRCellRelList = (JSONArray) nRCellVarObj;
+				    List<NRCellRelationModel> nrCellRelationModelList = new ArrayList<NRCellRelationModel>();
+				    for (int k = 0; k < nRCellRelList.size(); k++) {
+					    JSONObject nrcellrel = (JSONObject) nRCellRelList.get(k);
+					    Long idNRCellRelation = (Long) nrcellrel.get("idNRCellRelation");
+					    JSONObject attributes = (JSONObject) nrcellrel.get("attributes");
+					    Long nRTCI = (Long) attributes.get("nRTCI");
+					    String isHOAllowed = (String) attributes.get("isHOAllowed");
+					    NRRelationData nrRelationDataObj = new NRRelationData();
+					    nrRelationDataObj.setNRTCI(nRTCI.intValue());
+					    nrRelationDataObj.setIsHOAllowed(Boolean.valueOf(isHOAllowed));
+					    NRCellRelationModel nrCellRelationModel = new NRCellRelationModel();
+					    nrCellRelationModel.setIdNRCellRelation(idNRCellRelation.intValue());
+					    nrCellRelationModel.setNRRelationData(nrRelationDataObj);
+					    nrCellRelationModelList.add(nrCellRelationModel);
+				    }
+                                    NRCellCUModel nrCellCUModel = new NRCellCUModel();
+				    nrCellCUModel.setCellLocalId(cellLocalId.intValue());
+				    nrCellCUModel.setNRCellRelation(nrCellRelationModelList);
+				    nRCellCUModelList.add(nrCellCUModel);
+				    log.info(" saved nrcellcu in netconfclent is : " + nrCellCUModel);
+			    }
+		            GNBCUCPModel SavedgNBCUCPModel = new GNBCUCPModel();	    
+			    SavedgNBCUCPModel.setgNBCUName(gNBCUName);
+			    SavedgNBCUCPModel.setgNBId(gNBId.intValue());
+			    SavedgNBCUCPModel.setgNBIdLength(gNBIdLength.intValue());
+			    SavedgNBCUCPModel.setpLMNId(pLMNId);
+			    SavedgNBCUCPModel.setnFType(nFType);
+			    SavedgNBCUCPModel.setNearRTRICId(nearRTRICId.intValue());
+			    SavedgNBCUCPModel.setCellCUList(nRCellCUModelList);
+			    savedGNBModelList.add(SavedgNBCUCPModel);
+			    log.info(" saved gnbcucp in netconfclent is : " + SavedgNBCUCPModel);
+		    }
+		    nRICmodel.setgNBCUCPList(savedGNBModelList);
+		    nRICmodel.setNearRTRICId(Integer.parseInt(serverId));
+	    }
+	    catch (Exception e) {
+		    log.error("Properties file error", e);
+	    }
             for (GNBCUUPModel gNBCUUPModel : rtRicModel.getgNBCUUPList()) {
                 if (gNBCUUPModel.getgNBCUUPId().toString().equals(serverId)
                         || rtRicModel.getNearRTRICId().toString().equals(serverId)) {
@@ -95,7 +188,7 @@ public class NetconfClient {
                     nearRTRICElement.addChild(gNBCUUPFunctionElement);
                 }
             }
-            for (GNBCUCPModel gNBCUCPModel : rtRicModel.getgNBCUCPList()) {
+            for (GNBCUCPModel gNBCUCPModel : nRICmodel.getgNBCUCPList()) {
                 if (gNBCUCPModel.getgNBCUName().equals(serverId)
                         || rtRicModel.getNearRTRICId().toString().equals(serverId)) {
                     Element gNBCUCPFunctionElement =
@@ -119,20 +212,41 @@ public class NetconfClient {
                     attributesElement.addChild(gNBIdLengthElement);
                     attributesElement.addChild(sapElement);
                     for (NRCellCUModel nRCellCUModel : gNBCUCPModel.getCellCUList()) {
-                        Element nRCellCUElement =
-                                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellCU");
-                        Element idNRCellCUElement =
-                                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellCU");
-                        idNRCellCUElement.setValue(nRCellCUModel.getCellLocalId());
-                        Element nRCellattributesElement =
-                                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
-                        Element cellLocalIdElement =
-                                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/cellLocalId");
-                        cellLocalIdElement.setValue(nRCellCUModel.getCellLocalId());
-                        nRCellattributesElement.addChild(cellLocalIdElement);
-                        nRCellattributesElement.addChild(sapElement);
-                        nRCellCUElement.addChild(idNRCellCUElement);
-                        nRCellCUElement.addChild(nRCellattributesElement);
+			Element nRCellCUElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellCU");
+			Element idNRCellCUElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellCU");
+			idNRCellCUElement.setValue(nRCellCUModel.getCellLocalId());
+			Element nRCellattributesElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+			Element cellLocalIdElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/cellLocalId");
+			cellLocalIdElement.setValue(nRCellCUModel.getCellLocalId());
+			nRCellattributesElement.addChild(cellLocalIdElement);
+			nRCellattributesElement.addChild(sapElement);
+			nRCellCUElement.addChild(idNRCellCUElement);
+			nRCellCUElement.addChild(nRCellattributesElement);
+			for (NRCellRelationModel nRCellRelationModel : nRCellCUModel.getNRCellRelationList()) {
+				Element nRCellRelationElement =
+					Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellRelation");
+				Element idNRCellRelationElement =
+					Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellRelation");
+				idNRCellRelationElement.setValue(nRCellRelationModel.getIdNRCellRelation());
+				Element nRCellRelationattributesElement =
+					Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+				Element nRTCIElement =
+					Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/nRTCI");
+				nRTCIElement.setValue(nRCellRelationModel.getNRRelationData().getNRTCI());
+				Element isHOAllowedElement =
+					Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/isHOAllowed");
+				isHOAllowedElement.setValue(nRCellRelationModel.getNRRelationData().getIsHOAllowed());
+				nRCellRelationattributesElement.addChild(nRTCIElement);
+				nRCellRelationattributesElement.addChild(isHOAllowedElement);
+				nRCellRelationattributesElement.addChild(sapElement);
+				nRCellRelationElement.addChild(idNRCellRelationElement);
+				nRCellRelationElement.addChild(nRCellRelationattributesElement);
+				nRCellCUElement.addChild(nRCellRelationElement);
+			}      
                         gNBCUCPFunctionElement.addChild(nRCellCUElement);
                     }
                     gNBCUCPFunctionElement.addChild(idGNBCUCPFunctionElement);

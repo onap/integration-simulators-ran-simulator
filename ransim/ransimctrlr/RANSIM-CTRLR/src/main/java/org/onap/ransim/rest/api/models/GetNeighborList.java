@@ -25,6 +25,8 @@ import java.util.List;
 public class GetNeighborList {
 
     private String nodeId;
+    private List<NRCellCU> CellsWithNoHo;
+    private List<NRCellCU> CellsWithHo;
     private List<CellDetails> cellsWithNoHo;
     private List<CellDetails> cellsWithHo;
 
@@ -70,4 +72,19 @@ public class GetNeighborList {
         this.cellsWithHo = cellsWithHo;
     }
 
+    public List<NRCellCU> getCUCellsWithNoHo() {
+        return CellsWithNoHo;
+    }
+
+    public void setCUCellsWithNoHo(List<NRCellCU> CellsWithNoHo) {
+        this.CellsWithNoHo = CellsWithNoHo;
+    }
+
+    public List<NRCellCU> getCUCellsWithHo() {
+        return CellsWithHo;
+    }
+
+    public void setCUCellsWithHo(List<NRCellCU> CellsWithHo) {
+        this.CellsWithHo = CellsWithHo;
+    }
 }

@@ -66,7 +66,7 @@ public class RansimWebSocketServer {
     public void onOpen(Session session, @PathParam("IpPort") String ipPort) {
         try {
             String useCaseType = RansimControllerServices.useCaseType;
-            switch (useCaseType) {
+            /*switch (useCaseType) {
                 case "sonUsecase":
                     log.info("RansimWebSocketServer : Assign serverId wrt SlicingUsecase");
                     String serverId = rscServices.addWebSocketSessions(ipPort, session);
@@ -78,27 +78,24 @@ public class RansimWebSocketServer {
                                 "RansimWebSocketServer: No assigned ServerId found - No intial configuration sent to New Agent "
                                         + ipPort);
                     }
-                    break;
-                case "ranSlicingUsecase":
-                    log.info("RansimWebSocketServer : Assign serverId wrt RANSlicingUsecase");
-                    String ranServerId = rscServices.addRanWebSocketSessions(ipPort, session);
-                    if (ranServerId != null) {
-                        log.info("New websocket session added for " + ranServerId);
-                        rscServices.sendRanInitialConfigForNewAgent(ipPort, ranServerId);
-                    } else {
-                        log.info(
-                                "RansimWebSocketServer: No assigned ServerId found - No intial configuration sent to New Agent "
-                                        + ipPort);
-                    }
-                    break;
-                default:
-                    log.info("RansimWebSocketServer: No assigned ServerId found");
-            }
-        } catch (Exception e) {
-            log.info("Exception in onOpen:", e);
+                    break;*/
+            if(useCaseType == "sonUsecase" || useCaseType == "ranSlicingUsecase") {
+    		    log.info("RansimWebSocketServer : Assign serverId wrt RANSlicingUsecase");
+      		    String ranServerId = rscServices.addRanWebSocketSessions(ipPort, session);
+   		    if (ranServerId != null) {
+   			    log.info("New websocket session added for " + ranServerId);
+    			    rscServices.sendRanInitialConfigForNewAgent(ipPort, ranServerId);
+       		    } 
+		    else {
+			    log.info("RansimWebSocketServer: No assigned ServerId found - No intial configuration sent to New Agent" + ipPort);
+                 }
+             }
+             else
+		    log.info("RansimWebSocketServer: No assigned ServerId found");
+	} catch (Exception e) {
+ 		log.info("Exception in onOpen:", e);
         }
-    }
-
+     }	
     /**
      * Handles the message sent from the agent.
      *
