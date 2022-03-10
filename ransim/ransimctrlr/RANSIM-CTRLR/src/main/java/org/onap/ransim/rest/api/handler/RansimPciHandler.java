@@ -44,6 +44,8 @@ import org.onap.ransim.rest.api.models.FmAlarmInfo;
 import org.onap.ransim.rest.api.models.GetNeighborList;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NetconfServers;
+import org.onap.ransim.rest.api.models.NRCellCU;
+import org.onap.ransim.rest.api.models.NRCellRelation;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.models.PmDataDump;
 import org.onap.ransim.rest.api.models.PmParameters;
@@ -171,41 +173,41 @@ public class RansimPciHandler {
      * @return Returns GetNeighborList object
      */
     public GetNeighborList generateNeighborList(String nodeId) {
+	
+	try {
+		log.info("inside generateNeighborList for: " + nodeId);
+		NRCellCU neighborList = ransimRepo.getCellRelation(Integer.valueOf(nodeId));
+		GetNeighborList result = new GetNeighborList();
+		neighborList.display();
 
-        try {
-            log.info("inside generateNeighborList for: " + nodeId);
-            CellNeighbor neighborList = ransimRepo.getCellNeighbor(nodeId);
-            GetNeighborList result = new GetNeighborList();
-            neighborList.display();
-            List<CellDetails> cellsWithNoHO = new ArrayList<CellDetails>();
-            List<CellDetails> cellsWithHO = new ArrayList<CellDetails>();
+		List<NRCellCU> cellsWithNoHO = new ArrayList<>();
+		List<NRCellCU> cellsWithHO = new ArrayList<>();
 
-            List<NeighborDetails> nbrList = new ArrayList<>();
-            if (neighborList != null) {
-                nbrList.addAll(neighborList.getNeighborList());
-            }
+		List<NRCellRelation> nbrList = new ArrayList<>();
+		if (neighborList != null) {
+			nbrList.addAll(neighborList.getNrCellRelationsList());
+			log.info("neighborList.getNrCellRelationsList() is : " + nbrList);
+		}
 
-            for (int i = 0; i < nbrList.size(); i++) {
-
-                CellDetails nbr = ransimRepo.getCellDetail(nbrList.get(i).getNeigbor().getNeighborCell());
-
-                if (nbrList.get(i).isBlacklisted()) {
-                    cellsWithNoHO.add(nbr);
-                } else {
-                    cellsWithHO.add(nbr);
-                }
-
-            }
-
-            result.setNodeId(nodeId);
-            result.setCellsWithHo(cellsWithHO);
-            result.setCellsWithNoHo(cellsWithNoHO);
-            return result;
-
-        } catch (Exception eu) {
-            log.info("/getNeighborList", eu);
-            return null;
-        }
+		for (int i = 0; i < nbrList.size(); i++) {
+			NRCellCU nbr = ransimRepo.getNRCellCUDetail(nbrList.get(i).getIdNRCellRelation());
+			if (nbrList.get(i).getisHOAllowed()) {
+				cellsWithHO.add(nbr);
+				log.info("cellswithHO is : " + cellsWithHO);
+			} else {
+				cellsWithNoHO.add(nbr);
+				log.info("cellswithNoHO is : " + cellsWithNoHO);
+			}
+		}
+		result.setNodeId(nodeId);
+		result.setCUCellsWithHo(cellsWithHO);
+		result.setCUCellsWithNoHo(cellsWithNoHO);
+		log.info(" Generate neighbour result is : " + result);
+		return result;
+	} catch (Exception eu) {
+		log.info("/getCUNeighborList", eu);
+		return null;
+	}
     }
 
     public void checkCollisionAfterModify() {
@@ -535,6 +537,8 @@ public class RansimPciHandler {
     @Transactional
     public List<String> generatePmData(String nodeIdBad, String nodeIdPoor) {
 
+	log.info(" nodeIdBad in generatePmData is" + nodeIdBad);
+	log.info(" nodeIdPoor in generatePmData is" + nodeIdPoor);
         List<String> result = new ArrayList<>();
 
         String parameter1 = "";
@@ -555,13 +559,21 @@ public class RansimPciHandler {
             try {
                 log.info("next : " + next);
                 parameter1 = pmParameters.get(next).getParameter1();
+		log.info("parameter1 is : " + parameter1);
                 successValue1 = pmParameters.get(next).getSuccessValue1();
+		log.info("successValue1 is : " + successValue1);
                 badValue1 = pmParameters.get(next).getBadValue1();
+		log.info("badValue1 is : " + badValue1);
                 poorValue1 = pmParameters.get(next).getPoorValue1();
+		log.info("poorValue1 is : " + poorValue1);
                 parameter2 = pmParameters.get(next).getParameter2();
+		log.info("parameter2 is : " + parameter2);
                 successValue2 = pmParameters.get(next).getSuccessValue2();
+		log.info("successValue2 is : " + successValue2);
                 badValue2 = pmParameters.get(next).getBadValue2();
+		log.info("badValue2 is : " + badValue2);
                 poorValue2 = pmParameters.get(next).getPoorValue2();
+		log.info("poorValue2 is : " + poorValue2);
                 next++;
             } catch (Exception e) {
                 log.info("Exception: ", e);
@@ -578,149 +590,141 @@ public class RansimPciHandler {
                 cellIdsBad = nodeIdBad.split(",");
                 for (int a = 0; a < cellIdsBad.length; a++) {
                     nodeIdsBad.add(cellIdsBad[a].trim());
+		    log.info("nodeIds bad is : " + nodeIdsBad);
+		    
                 }
             }
             if (nodeIdPoor != null) {
                 cellIdsPoor = nodeIdPoor.split(",");
                 for (int a = 0; a < cellIdsPoor.length; a++) {
                     nodeIdsPoor.add(cellIdsPoor[a].trim());
+		    log.info("nodeIds poor is : " + nodeIdsPoor);
                 }
             }
 
             for (int i = 0; i < cnl.size(); i++) {
 
-                long startTime = System.currentTimeMillis();
-                List<CellDetails> cellList = new ArrayList<CellDetails>(cnl.get(i).getCells());
-                List<EventPm> data = new ArrayList<EventPm>();
+                 long startTime = System.currentTimeMillis();
+		 List<NRCellCU> cellList = new ArrayList<NRCellCU>(cnl.get(i).getCellList());
+                 log.info(" CellList in generatePmData is : " + cellList);
+		 List<EventPm> data = new ArrayList<EventPm>();
+		 for (int j = 0; j < cellList.size(); j++) {
 
-                for (int j = 0; j < cellList.size(); j++) {
+			 long startTimeCell = System.currentTimeMillis();
+			 String nodeId = cellList.get(j).getCellLocalId().toString();
+			 log.info(" nodeId in cellList in generatePmData is : " + nodeId);
+			 String reportingEntityName = cellList.get(j).getgNBCUCPFunction().getgNBCUName();
+			 EventPm event = new EventPm();
+			 CommonEventHeaderPm commonEventHeader = new CommonEventHeaderPm();
+			 commonEventHeader.setSourceName(nodeId);
+			 commonEventHeader.setReportingEntityName(reportingEntityName);
+			 commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
+			 String uuid = globalPmCellIdUuidMap.get(nodeId);
+			 if (uuid == null) {
+				 uuid = getUuid();
+				 globalPmCellIdUuidMap.put(nodeId, uuid);
+			 }
+			 commonEventHeader.setSourceUuid(uuid);
+			 Measurement measurement = new Measurement();
+			 measurement.setMeasurementInterval(180);
+			 
+			 GetNeighborList cellNbrList = generateNeighborList(nodeId);
+			 log.info("Get CellCU neighbourList with HO is : " + cellNbrList.getCUCellsWithHo());
 
-                    long startTimeCell = System.currentTimeMillis();
-                    String nodeId = cellList.get(j).getNodeId();
-                    EventPm event = new EventPm();
-                    CommonEventHeaderPm commonEventHeader = new CommonEventHeaderPm();
-                    commonEventHeader.setSourceName(nodeId);
-                    commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
-                    String uuid = globalPmCellIdUuidMap.get(nodeId);
-                    if (uuid == null) {
-                        uuid = getUuid();
-                        globalPmCellIdUuidMap.put(nodeId, uuid);
-                    }
-                    commonEventHeader.setSourceUuid(uuid);
+			 long startTimeCheckBadPoor = System.currentTimeMillis();
+			 boolean checkBad = false;
+			 boolean checkPoor = false;
+			 int countBad = 0;
+			 int countPoor = 0;
+			 log.info( "nodeIdsBad in for loop is" + nodeIdsBad);
+			 log.info( "nodeIdsPoor in for loop is" + nodeIdsPoor);
+			 
+			 if (nodeIdsBad.contains(nodeId)) {
+				 log.info( " inside nodeIdsBad if condition " + nodeId);
+				 checkBad = true;
+				 countBad = (int) (cellNbrList.getCUCellsWithHo().size() * 0.2);
+				 log.info( " check bad is : " + checkBad);
+				 log.info( " count bad is : " + countBad);
+			 }
+			 
+			 if (nodeIdsPoor.contains(nodeId)) {
+				 log.info( " inside nodeIdsPoor if condition " + nodeId);
+				 checkPoor = true;
+				 countPoor = (int) (cellNbrList.getCUCellsWithHo().size() * 0.2);
+				 log.info( " check poor is : " + checkPoor);
+				 log.info( " count bad is : " + countPoor);
+			 }
 
-                    Measurement measurement = new Measurement();
-                    measurement.setMeasurementInterval(180);
-
-                    GetNeighborList cellNbrList = generateNeighborList(nodeId);
-
-                    long startTimeCheckBadPoor = System.currentTimeMillis();
-
-                    boolean checkBad = false;
-                    boolean checkPoor = false;
-                    int countBad = 0;
-                    int countPoor = 0;
-
-                    if (nodeIdsBad.contains(nodeId)) {
-                        checkBad = true;
-                        countBad = (int) (cellNbrList.getCellsWithHo().size() * 0.2);
-                    }
-                    if (nodeIdsPoor.contains(nodeId)) {
-                        checkPoor = true;
-                        countPoor = (int) (cellNbrList.getCellsWithHo().size() * 0.2);
-                    }
-
-                    long endTimeCheckBadPoor = System.currentTimeMillis();
-                    log.debug("Time taken CheckBadPoor : " + (endTimeCheckBadPoor - startTimeCheckBadPoor));
-                    List<AdditionalMeasurements> additionalMeasurements = new ArrayList<AdditionalMeasurements>();
-                    if (checkPoor || checkBad) {
-
-                        Collections.sort(cellNbrList.getCellsWithHo());
-
-                        for (int k = 0; k < cellNbrList.getCellsWithHo().size(); k++) {
-                            AdditionalMeasurements addMsmnt = new AdditionalMeasurements();
-                            addMsmnt.setName(cellNbrList.getCellsWithHo().get(k).getNodeId());
-                            Map<String, String> hashMap = new HashMap<String, String>();
-                            hashMap.put("networkId", cellNbrList.getCellsWithHo().get(k).getNetworkId());
-
-                            hashMap.put(parameter1, successValue1);
-
-                            if (checkBad == true) {
-
-                                if (countBad > 0) {
-                                    log.info("countBad: " + countBad);
-                                    hashMap.put(parameter2, badValue2);
-                                    countBad--;
-                                } else {
-                                    hashMap.put(parameter2, successValue2);
-                                }
-
-                            } else if (checkPoor == true) {
-                                if (countPoor > 0) {
-                                    log.info("countBad: " + countPoor);
-                                    hashMap.put(parameter2, poorValue2);
-                                    countPoor--;
-                                } else {
-                                    hashMap.put(parameter2, successValue2);
-                                }
-
-                            }
-
-                            addMsmnt.setHashMap(hashMap);
-
-                            additionalMeasurements.add(addMsmnt);
-
-                        }
-                    } else {
-                        for (int k = 0; k < cellNbrList.getCellsWithHo().size(); k++) {
-                            AdditionalMeasurements addMsmnt = new AdditionalMeasurements();
-                            addMsmnt.setName(cellNbrList.getCellsWithHo().get(k).getNodeId());
-                            Map<String, String> hashMap = new HashMap<String, String>();
-
-                            hashMap.put("networkId", cellNbrList.getCellsWithHo().get(k).getNetworkId());
-
-                            hashMap.put(parameter1, successValue1);
-
-                            hashMap.put(parameter2, successValue2);
-
-                            addMsmnt.setHashMap(hashMap);
-                            additionalMeasurements.add(addMsmnt);
-                        }
-                    }
-
-                    commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
-                    measurement.setAdditionalMeasurements(additionalMeasurements);
-
-                    event.setCommonEventHeader(commonEventHeader);
-                    event.setMeasurement(measurement);
-
-                    data.add(event);
-                    long endTimeCell = System.currentTimeMillis();
-                    log.debug("Time taken to Process Cell list : " + (endTimeCell - startTimeCell));
-                }
-
-                long endTime = System.currentTimeMillis();
-                log.info("Time taken for generating PM data for " + cnl.get(i).getServerId() + " : "
-                        + (endTime - startTime));
-                PmMessage msg = new PmMessage();
-
-                if (data.size() > 0) {
-                    msg.setEventPmList(data);
-                    Gson gson = new Gson();
-                    String jsonStr = gson.toJson(msg);
-                    sendPmdata(cnl.get(i).getServerId(), jsonStr);
-
-                    result.add(jsonStr);
-                }
-
-            }
-        } catch (Exception e) {
-            log.info("Exception in string builder", e);
-        }
-
-        return result;
+			 long endTimeCheckBadPoor = System.currentTimeMillis();
+			 log.debug("Time taken CheckBadPoor : " + (endTimeCheckBadPoor - startTimeCheckBadPoor));
+			 List<AdditionalMeasurements> additionalMeasurements = new ArrayList<AdditionalMeasurements>();
+			 if (checkPoor || checkBad) {
+				 Collections.sort(cellNbrList.getCUCellsWithHo());
+				 for (int k = 0; k < cellNbrList.getCUCellsWithHo().size(); k++) {
+					 AdditionalMeasurements addMsmnt = new AdditionalMeasurements();
+					 addMsmnt.setName(cellNbrList.getCUCellsWithHo().get(k).getCellLocalId().toString());
+					 Map<String, String> hashMap = new HashMap<String, String>();
+					 hashMap.put("networkId", "RAN001");
+					 hashMap.put(parameter1, successValue1);
+					 if (checkBad == true) {
+						 if (countBad > 0) {
+							 log.info("countBad: " + countBad);
+							 hashMap.put(parameter2, badValue2);
+							 countBad--;
+						 } else {
+							 hashMap.put(parameter2, successValue2);
+						 }
+					 } else if (checkPoor == true) {
+						 if (countPoor > 0) {
+							 log.info("countPoor: " + countPoor);
+							 hashMap.put(parameter2, poorValue2);
+							 countPoor--;
+						 } else {
+							 hashMap.put(parameter2, successValue2);
+						 }
+					 }
+					 addMsmnt.setHashMap(hashMap);
+					 additionalMeasurements.add(addMsmnt);
+				 }
+			 } else {
+				 for (int k = 0; k < cellNbrList.getCUCellsWithHo().size(); k++) {
+					 AdditionalMeasurements addMsmnt = new AdditionalMeasurements();
+					 addMsmnt.setName(cellNbrList.getCUCellsWithHo().get(k).getCellLocalId().toString());
+					 Map<String, String> hashMap = new HashMap<String, String>();
+					 hashMap.put("networkId", "RAN001");
+					 hashMap.put(parameter1, successValue1);
+					 hashMap.put(parameter2, successValue2);
+					 addMsmnt.setHashMap(hashMap);
+					 additionalMeasurements.add(addMsmnt);
+				 }
+			 }
+			 commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
+			 measurement.setAdditionalMeasurements(additionalMeasurements);
+			 event.setCommonEventHeader(commonEventHeader);
+			 event.setMeasurement(measurement);
+			 data.add(event);
+			 long endTimeCell = System.currentTimeMillis();
+			 log.debug("Time taken to Process Cell list : " + (endTimeCell - startTimeCell));
+		 }
+		 long endTime = System.currentTimeMillis();
+		 log.info("Time taken for generating PM data for " + cnl.get(i).getServerId() + " : "
+				 + (endTime - startTime));
+		 PmMessage msg = new PmMessage();
+		 if (data.size() > 0) {
+			 msg.setEventPmList(data);
+			 Gson gson = new Gson();
+			 String jsonStr = gson.toJson(msg);
+			 sendPmdata(cnl.get(i).getServerId(), jsonStr);
+			 result.add(jsonStr);
+		 }
+	    }
+	} catch (Exception e) {
+		log.info("Exception in string builder", e);
+	}
+	return result;
     }
-
-    /**
+		  
+    /**	  
      * Sets the value for all fields in the FM data for individual cell.
      *
      * @param networkId

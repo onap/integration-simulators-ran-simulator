@@ -29,9 +29,11 @@ import org.onap.ransim.rest.api.models.CellDetails;
 import org.onap.ransim.rest.api.models.CellNeighbor;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NetconfServers;
+import org.onap.ransim.rest.api.models.NRCellCU;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.repository.CellDetailsRepo;
 import org.onap.ransim.rest.api.repository.CellNeighborRepo;
+import org.onap.ransim.rest.api.repository.NRCellCURepository;
 import org.onap.ransim.rest.api.repository.NeighborDetailsRepo;
 import org.onap.ransim.rest.api.repository.NetconfServersRepo;
 import org.onap.ransim.rest.api.repository.OperationLogRepo;
@@ -45,6 +47,9 @@ public class RansimRepositoryService {
 
     @Autowired
     CellDetailsRepo cellDetailsRepo;
+
+    @Autowired
+    NRCellCURepository nRCellCURepo;
 
     @Autowired
     NetconfServersRepo netconfServersRepo;
@@ -71,6 +76,36 @@ public class RansimRepositoryService {
             cellDetails = cd.get();
         }
         return cellDetails;
+    }
+
+     /**
+      * Method to retrieve cellCU details
+      * 
+      * @param cellLocalId
+      * @return
+      */
+    public NRCellCU getNRCellCUDetail(Integer cellLocalId) {
+        Optional<NRCellCU> cd = nRCellCURepo.findById(cellLocalId);
+	NRCellCU nrCellCU = null;
+	if (cd.isPresent()) {
+		nrCellCU = cd.get();
+	}
+	return nrCellCU;
+    }
+
+     /**
+      * Method to retrieve cellCU neighbors
+      *
+      * @param cellLocalId
+      * @return
+      */
+    public NRCellCU getCellRelation(Integer cellLocalId) {
+        Optional<NRCellCU> cellNeighborDetails = nRCellCURepo.findById(cellLocalId);
+	NRCellCU cellRelation = null;
+	if (cellNeighborDetails.isPresent()) {
+		cellRelation = cellNeighborDetails.get();
+	}
+	return cellRelation;
     }
 
     /**
