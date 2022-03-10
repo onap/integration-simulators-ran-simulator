@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020-2021 Wipro Limited.
+ * Copyright (C) 2020-2022 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@
 package org.onap.ransim.rest.api.models;
 
 import java.io.Serializable;
+import org.apache.log4j.Logger;
 import java.util.List;
+import java.util.ArrayList;
+import org.onap.ransim.rest.api.controller.RansimController;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -37,7 +40,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "NRCELLCU")
-public class NRCellCU implements Serializable {
+public class NRCellCU implements Serializable, Comparable<NRCellCU> {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "CELLLOCALID")
@@ -47,6 +50,9 @@ public class NRCellCU implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PLMNINFO", joinColumns = @JoinColumn(name = "nrcellcu_celllocalid"))
     private List<PLMNInfo> pLMNInfoList;
+    @Column(name = "NRCELLRELATIONLIST")
+    @OneToMany(mappedBy = "cellLocalId", cascade = CascadeType.ALL)
+    private List<NRCellRelation> nrCellRelationsList;
     @ManyToOne
     @JoinColumn(name = "gnbcuname")
     private GNBCUCPFunction gNBCUCPFunction;
@@ -57,6 +63,11 @@ public class NRCellCU implements Serializable {
 
     public void setCellLocalId(Integer cellLocalId) {
         this.cellLocalId = cellLocalId;
+    }
+    public List<NRCellRelation> getNrCellRelationsList() { return nrCellRelationsList; }
+    
+    public void setNrCellRelationsList(List<NRCellRelation> nrCellRelationsList) {
+	this.nrCellRelationsList = nrCellRelationsList;
     }
 
     public List<PLMNInfo> getpLMNInfoList() {
@@ -81,6 +92,22 @@ public class NRCellCU implements Serializable {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
+    }
+
+    static Logger log = Logger.getLogger(RansimController.class.getName());
+
+    public void display() {
+
+        List<NRCellRelation> iterator = new ArrayList<>(nrCellRelationsList);
+	for (int ii = 0; ii < iterator.size(); ii++) {
+		log.info("neighbors NeighborList: " + iterator.get(ii).getCellLocalId()+ " "
+				+ iterator.get(ii).getIdNRCellRelation() + " " + iterator.get(ii).getisHOAllowed());
+	}
+    }
+
+    @Override
+    public int compareTo(NRCellCU cd) {
+        return this.getCellLocalId().compareTo(cd.getCellLocalId());
     }
 
 }

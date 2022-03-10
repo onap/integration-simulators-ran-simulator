@@ -38,6 +38,9 @@ public class NearRTRIC {
     @JsonProperty("GNBCUUPFunction")
     private List<GNBCUUPFunction> gNBCUUPFunction;
 
+    @JsonProperty("GNBCUCPFunction")
+    private List<GNBCUCPFunction> gNBCUCPFunction;
+
     public String getIdNearRTRIC() {
         return idNearRTRIC;
     }
@@ -71,6 +74,10 @@ public class NearRTRIC {
     }
 
     public NearRTRIC() {
-
     }
+    
+    public void setgNBCUCPFunction(List<GNBCUCPFunction> gNBCUCPFunctionList) { this.gNBCUCPFunction = gNBCUCPFunction;  }
+
+    public List<GNBCUCPFunction> getgNBCUCPFunction(){ return gNBCUCPFunction;}
+    
 }
