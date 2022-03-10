@@ -345,6 +345,46 @@ public class RansimController {
         }
     }
 
+
+    @ApiOperation("Retrieves the neighbor list details for the cell with the mentioned cellId")
+    @RequestMapping(value = "/GetCUNeighborList", method = RequestMethod.POST)
+    @ApiResponses(
+            value = {@ApiResponse(code = 200, message = "Successful"),
+	             @ApiResponse(code = 500, message = "Cannot Insert the given parameters")})
+    public ResponseEntity<String> getCUNeighborList(@RequestBody GetNeighborListReq req) throws Exception {
+
+	    log.debug("Inside getNeighborList...");
+	    try {
+		    String jsonStr = "";
+		    GetNeighborList message = rsPciHdlr.generateNeighborList(req.getNodeId());
+		    if (message != null) {
+			    log.info("message.getNodeId(): " + message.getNodeId());
+			    Gson gson = new Gson();
+			    jsonStr = gson.toJson(message);
+		    }
+		    return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+	    } catch (Exception eu) {
+		    log.info("/getCUNeighborList", eu);
+		    return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+    }
+
+     @ApiOperation("Sets the netconfserver for the cellId")
+     @RequestMapping(value = "/SetCUCPNetconfServer", method = RequestMethod.POST)
+     @ApiResponses(
+                    value = {@ApiResponse(code = 200, message = "Successful"),
+			    @ApiResponse(code = 500, message = "Cannot Insert the given parameters")})
+     public ResponseEntity<String> setNetconfServer(@RequestBody Integer cellLocalId) throws Exception {
+	     log.debug("Inside setNetconfServer...");
+	     try {
+		     rscServices.setRanCUCPNetconfServers(cellLocalId);
+		     return new ResponseEntity<>("Server set. ", HttpStatus.OK);								
+	     } catch (Exception eu) {
+		     log.info("/SetCUCPNetconfServer", eu);
+		     return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
+	     }
+     }
+
     /**
      * The function retrieves the neighbor list for the cell with the mentioned
      * nodeId.

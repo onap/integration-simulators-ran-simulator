@@ -21,7 +21,8 @@
 package org.onap.ransim.rest.api.models;
 
 import java.util.Set;
-
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,6 +44,10 @@ public class NetconfServers {
 
     @OneToMany(targetEntity = CellDetails.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<CellDetails> cells;
+
+    @OneToMany(targetEntity = NRCellCU.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<NRCellCU> cellCUList;
+   
 
     public NetconfServers() {
 
@@ -96,4 +101,11 @@ public class NetconfServers {
         this.cells = cells;
     }
 
+    public Set<NRCellCU> getCellList() {
+        return cellCUList;
+    }
+
+    public void setCellList(Set<NRCellCU> cellCUList) {
+        this.cellCUList = cellCUList;
+    }
 }
