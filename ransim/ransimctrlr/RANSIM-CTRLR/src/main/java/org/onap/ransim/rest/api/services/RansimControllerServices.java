@@ -72,6 +72,8 @@ import org.onap.ransim.rest.client.RestClient;
 import org.onap.ransim.rest.web.mapper.GNBCUCPModel;
 import org.onap.ransim.rest.web.mapper.GNBCUUPModel;
 import org.onap.ransim.rest.web.mapper.GNBDUModel;
+import org.onap.ransim.rest.web.mapper.NRRelationData;
+import org.onap.ransim.rest.web.mapper.NRCellRelationModel;
 import org.onap.ransim.rest.web.mapper.NRCellCUModel;
 import org.onap.ransim.rest.web.mapper.NRCellDUModel;
 import org.onap.ransim.rest.web.mapper.NSSAIData;
@@ -82,6 +84,7 @@ import org.onap.ransim.utilities.RansimUtilities;
 import org.onap.ransim.websocket.model.*;
 import org.onap.ransim.websocket.model.ConfigData;
 import org.onap.ransim.websocket.model.ConfigPLMNInfo;
+import org.onap.ransim.websocket.model.GNBCUCPFunction;
 import org.onap.ransim.websocket.model.ModifyNeighbor;
 import org.onap.ransim.websocket.model.ModifyPci;
 import org.onap.ransim.websocket.model.Neighbor;
@@ -1059,6 +1062,38 @@ public class RansimControllerServices {
                 gNBDUFunctionList.add(gNBDUFunction);
             }
         }
+	List<GNBCUCPFunction> gNBCUCPFunctionList = new ArrayList<>();
+	for (GNBCUCPModel gnbcucpModel : rtRicModel.getgNBCUCPList()){
+	    if (gnbcucpModel.getgNBId().toString().equals(serverId)
+		    || rtRicModel.getNearRTRICId().toString().equals(serverId)) {
+        GNBCUCPFunction gNBCUCPFunction = new GNBCUCPFunction();
+	Attributes cUCPattributes = new Attributes();
+	cUCPattributes.setgNBId(gnbcucpModel.getgNBId().toString());
+	gNBCUCPFunction.setAttributes(cUCPattributes);
+	gNBCUCPFunction.setIdGNBCUCPFunction(gnbcucpModel.getgNBCUName());
+	List<NRCellCU> nRCellCUList = new ArrayList<>();
+	for (NRCellCUModel nRCellCUModel : gnbcucpModel.getCellCUList()) {
+		NRCellCU nRCellCU = new NRCellCU();
+		nRCellCU.setIdNRCellCU(nRCellCUModel.getCellLocalId().toString());
+		List<NRCellRelation> nRCellRelationList = new ArrayList<NRCellRelation>();
+		for(NRCellRelationModel nrCellRelationModel : nRCellCUModel.getNRCellRelationList())
+		{
+			NRCellRelation nRCellRelation = new NRCellRelation();
+			nRCellRelation.setIdNRCellRelation(nrCellRelationModel.getIdNRCellRelation());
+			AttributesNRRelation attributesNRRelation = new AttributesNRRelation();
+			attributesNRRelation.setNRTCI(nrCellRelationModel.getNRRelationData().getNRTCI());
+			attributesNRRelation.setIsHoAllowed(nrCellRelationModel.getNRRelationData().getIsHOAllowed());
+			nRCellRelation.setAttributes(attributesNRRelation);
+			nRCellRelationList.add(nRCellRelation);
+			nRCellCU.setNRCellRelation(nRCellRelationList);
+		}
+		nRCellCUList.add(nRCellCU);
+              }
+	      gNBCUCPFunction.setnRCellCU(nRCellCUList);
+	      gNBCUCPFunctionList.add(gNBCUCPFunction);
+	   }
+	}
+	nearRTRIC.setgNBCUCPFunction(gNBCUCPFunctionList);
         nearRTRIC.setgNBDUFunction(gNBDUFunctionList);
         nearRTRIC.setgNBCUUPFunction(gNBCUUPFunctionList);
         nearRTRICList.add(nearRTRIC);

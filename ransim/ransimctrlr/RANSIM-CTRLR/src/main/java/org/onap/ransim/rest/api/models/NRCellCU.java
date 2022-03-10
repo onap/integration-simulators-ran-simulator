@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020-2021 Wipro Limited.
+ * Copyright (C) 2020-2022 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ public class NRCellCU implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PLMNINFO", joinColumns = @JoinColumn(name = "nrcellcu_celllocalid"))
     private List<PLMNInfo> pLMNInfoList;
+    @Column(name = "NRCELLRELATIONLIST")
+    @OneToMany(mappedBy = "NRCELLCU", cascade = CascadeType.ALL)
+    private List<NRCellRelation> nrCellRelationsList;
     @ManyToOne
     @JoinColumn(name = "gnbcuname")
     private GNBCUCPFunction gNBCUCPFunction;
@@ -57,6 +60,11 @@ public class NRCellCU implements Serializable {
 
     public void setCellLocalId(Integer cellLocalId) {
         this.cellLocalId = cellLocalId;
+    }
+    public List<NRCellRelation> getNrCellRelationsList() { return nrCellRelationsList; }
+    
+    public void setNrCellRelationsList(List<NRCellRelation> nrCellRelationsList) {
+	this.nrCellRelationsList = nrCellRelationsList;
     }
 
     public List<PLMNInfo> getpLMNInfoList() {
@@ -82,5 +90,4 @@ public class NRCellCU implements Serializable {
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
     }
-
 }
