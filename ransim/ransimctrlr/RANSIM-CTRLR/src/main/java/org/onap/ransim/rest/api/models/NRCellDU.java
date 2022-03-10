@@ -48,6 +48,12 @@ public class NRCellDU implements Serializable {
     private String administrativeState;
     @Column(name = "CELLSTATE")
     private String cellState;
+    @Column(name = "LATITUDE")
+    private double latitude;
+    @Column(name = "LONGITUDE")
+    private double longitude;
+    @Column(name = "NETWORKID")
+    private String networkId;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PLMNINFO", joinColumns = @JoinColumn(name = "nrcelldu_celllocalid"))
     private List<PLMNInfo> pLMNInfoList;
@@ -63,6 +69,30 @@ public class NRCellDU implements Serializable {
     @Column(name = "prb")
     private Integer prbs;
 
+    public double getLatitude() {
+	return latitude;
+    }
+    
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(String networkId) {
+        this.networkId = networkId;
+    }    
+    
     public Integer getCellLocalId() {
         return cellLocalId;
     }
