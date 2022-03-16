@@ -24,24 +24,24 @@ import java.util.List;
 
 public class ModifyNeighbor {
 
-    private String pnfName;
-    private String cellId;
+    private String idGNBCUCPFunction;
+    private String idNRCellCU;
     private List<NeighborHo> neighborList;
 
-    public String getPnfName() {
-        return pnfName;
+    public String getIdGNBCUCPFunction() {
+        return idGNBCUCPFunction;
     }
 
-    public void setPnfName(String pnfName) {
-        this.pnfName = pnfName;
+    public void setIdGNBCUCPFunction(String idGNBCUCPFunction) {
+        this.idGNBCUCPFunction = idGNBCUCPFunction;
     }
 
-    public String getCellId() {
-        return cellId;
+    public String getIdNRCellCU() {
+        return idNRCellCU;
     }
 
-    public void setCellId(String cellId) {
-        this.cellId = cellId;
+    public void setIdNRCellCU(String idNRCellCU) {
+        this.idNRCellCU = idNRCellCU;
     }
 
     public List<NeighborHo> getNeighborList() {
