@@ -143,7 +143,7 @@ create table nrcelldu (
 -- Table `ransim_db`.`nrcellrelation`
 -- -----------------------------------------------------
 create table nrcellrelation (
-  sno integer not null,
+  sno integer not null auto_increment,
   idnrcellrelation integer not null,
   nrtci integer,
   ishoallowed BOOLEAN,
@@ -341,7 +341,7 @@ INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(14427,'RRC Conne
 
 --nrcellrelation
 
-INSERT INTO nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) VALUES(0,15290,15290,true,15289);
+INSERT INTO nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) VALUES(98,15290,15290,true,15289);
 INSERT INTO nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) VALUES(1,15296,15296,true,15289);
 INSERT INTO nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) VALUES(2,15687,15687,true,15289);
 INSERT INTO nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) VALUES(3,15687,15687,true,15290);

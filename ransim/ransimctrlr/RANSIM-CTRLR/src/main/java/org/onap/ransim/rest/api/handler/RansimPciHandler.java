@@ -178,15 +178,13 @@ public class RansimPciHandler {
 		log.info("inside generateNeighborList for: " + nodeId);
 		NRCellCU neighborList = ransimRepo.getCellRelation(Integer.valueOf(nodeId));
 		GetNeighborList result = new GetNeighborList();
-		neighborList.display();
 
 		List<NRCellCU> cellsWithNoHO = new ArrayList<>();
 		List<NRCellCU> cellsWithHO = new ArrayList<>();
 
 		List<NRCellRelation> nbrList = new ArrayList<>();
 		if (neighborList != null) {
-			nbrList.addAll(neighborList.getNrCellRelationsList());
-			log.info("neighborList.getNrCellRelationsList() is : " + nbrList);
+			nbrList.addAll(ransimRepo.getNRCellRelationList(neighborList));
 		}
 
 		for (int i = 0; i < nbrList.size(); i++) {

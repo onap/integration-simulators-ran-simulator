@@ -20,11 +20,18 @@
 
  package org.onap.ransim.rest.api.repository;
 
+ import java.util.Optional;
+ import java.util.List;
+
  import org.onap.ransim.rest.api.models.NRCellRelation;
+ import org.onap.ransim.rest.api.models.NRCellCU;
  import org.springframework.data.repository.CrudRepository;
  import org.springframework.stereotype.Repository;
 
  @Repository
  public interface NRCellRelationRepository extends CrudRepository<NRCellRelation, Integer>{
- }
 
+	 public Optional<NRCellRelation> findByIdNRCellRelationAndCellLocalId(Integer idNRCellRelation, NRCellCU cellLocalId);
+
+	 public List<NRCellRelation> findByCellLocalId(NRCellCU cellLocalId);
+ }

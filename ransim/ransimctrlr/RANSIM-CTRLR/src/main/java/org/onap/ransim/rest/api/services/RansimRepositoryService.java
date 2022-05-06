@@ -30,10 +30,14 @@ import org.onap.ransim.rest.api.models.CellNeighbor;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NetconfServers;
 import org.onap.ransim.rest.api.models.NRCellCU;
+import org.onap.ransim.rest.api.models.NRCellDU;
+import org.onap.ransim.rest.api.models.NRCellRelation;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.repository.CellDetailsRepo;
 import org.onap.ransim.rest.api.repository.CellNeighborRepo;
 import org.onap.ransim.rest.api.repository.NRCellCURepository;
+import org.onap.ransim.rest.api.repository.NRCellDURepository;
+import org.onap.ransim.rest.api.repository.NRCellRelationRepository;
 import org.onap.ransim.rest.api.repository.NeighborDetailsRepo;
 import org.onap.ransim.rest.api.repository.NetconfServersRepo;
 import org.onap.ransim.rest.api.repository.OperationLogRepo;
@@ -50,6 +54,12 @@ public class RansimRepositoryService {
 
     @Autowired
     NRCellCURepository nRCellCURepo;
+
+    @Autowired
+    NRCellDURepository nRCellDURepo;
+
+    @Autowired
+    NRCellRelationRepository nRCellRelRepo;
 
     @Autowired
     NetconfServersRepo netconfServersRepo;
@@ -79,6 +89,21 @@ public class RansimRepositoryService {
     }
 
      /**
+      * Method to retrieve cellDU details
+      *
+      * @param cellLocalId
+      * @return
+      */
+    public NRCellDU getNRCellDUDetail(Integer cellLocalId) {
+        Optional<NRCellDU> cd = nRCellDURepo.findById(cellLocalId);
+        NRCellDU nrCellDU = null;
+        if (cd.isPresent()) {
+                nrCellDU = cd.get();
+        }
+        return nrCellDU;
+    }
+
+     /**
       * Method to retrieve cellCU details
       * 
       * @param cellLocalId
@@ -93,189 +118,234 @@ public class RansimRepositoryService {
 	return nrCellCU;
     }
 
-     /**
-      * Method to retrieve cellCU neighbors
+    /**
+      * Method to retrieve cellCU details
+      *
+      * @param idNRCellRelation 
+      * @param cellLocalId
+      * @return
+      */
+    public NRCellRelation getNRCellRelation(Integer idNRCellRelation, NRCellCU cellLocalId) {
+        Optional<NRCellRelation> rel = nRCellRelRepo.findByIdNRCellRelationAndCellLocalId(idNRCellRelation,cellLocalId);
+	NRCellRelation nRCellRel = null;
+        if (rel.isPresent()) {
+		nRCellRel = rel.get();
+	}
+	return nRCellRel;
+    }
+
+    /**
+      * Method to retrieve cellCU details
       *
       * @param cellLocalId
       * @return
       */
-    public NRCellCU getCellRelation(Integer cellLocalId) {
-        Optional<NRCellCU> cellNeighborDetails = nRCellCURepo.findById(cellLocalId);
-	NRCellCU cellRelation = null;
-	if (cellNeighborDetails.isPresent()) {
-		cellRelation = cellNeighborDetails.get();
-	}
-	return cellRelation;
+    public List<NRCellRelation> getNRCellRelationList(NRCellCU cellLocalId) {
+        List<NRCellRelation> rel = nRCellRelRepo.findByCellLocalId(cellLocalId);
+        return rel;
     }
 
-    /**
-     * Method to retrieve netconf server details
-     * 
-     * @param serverId
-     * @return
-     */
-    public NetconfServers getNetconfServer(String serverId) {
-        Optional<NetconfServers> serverDetails = netconfServersRepo.findById(serverId);
-        NetconfServers server = null;
-        if (serverDetails.isPresent()) {
-            server = serverDetails.get();
-        }
-        return server;
-    }
+	     /**
+	      * Method to retrieve cellCU neighbors
+	      *
+	      * @param cellLocalId
+	      * @return
+	      */
+	    public NRCellCU getCellRelation(Integer cellLocalId) {
+		Optional<NRCellCU> cellNeighborDetails = nRCellCURepo.findById(cellLocalId);
+		NRCellCU cellRelation = null;
+		if (cellNeighborDetails.isPresent()) {
+			cellRelation = cellNeighborDetails.get();
+		}
+		return cellRelation;
+	    }
 
-    /**
-     * Method to retrieve cell neighbors
-     * 
-     * @param nodeId
-     * @return
-     */
-    public CellNeighbor getCellNeighbor(String nodeId) {
-        Optional<CellNeighbor> cellNeighborDetails = cellNeighborRepo.findById(nodeId);
-        CellNeighbor cellNeighbor = null;
-        if (cellNeighborDetails.isPresent()) {
-            cellNeighbor = cellNeighborDetails.get();
-        }
-        return cellNeighbor;
-    }
+	    /**
+	     * Method to retrieve netconf server details
+	     * 
+	     * @param serverId
+	     * @return
+	     */
+	    public NetconfServers getNetconfServer(String serverId) {
+		Optional<NetconfServers> serverDetails = netconfServersRepo.findById(serverId);
+		NetconfServers server = null;
+		if (serverDetails.isPresent()) {
+		    server = serverDetails.get();
+		}
+		return server;
+	    }
 
-    /**
-     * Method to retrieve all cell details
-     * 
-     * @return
-     */
-    public List<CellDetails> getCellDetailsList() {
-        Iterable<CellDetails> cellsList = cellDetailsRepo.findAll();
-        if (cellsList != null) {
-            return (List<CellDetails>) cellsList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve cell neighbors
+	     * 
+	     * @param nodeId
+	     * @return
+	     */
+	    public CellNeighbor getCellNeighbor(String nodeId) {
+		Optional<CellNeighbor> cellNeighborDetails = cellNeighborRepo.findById(nodeId);
+		CellNeighbor cellNeighbor = null;
+		if (cellNeighborDetails.isPresent()) {
+		    cellNeighbor = cellNeighborDetails.get();
+		}
+		return cellNeighbor;
+	    }
 
-    /**
-     * Method to retrieve cells with no server ids
-     * 
-     * @return
-     */
-    public List<CellDetails> getCellsWithNoServerIds() {
-        List<CellDetails> cellsList = cellDetailsRepo.findCellsWithNoServerId();
-        if (cellsList != null) {
-            return cellsList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve all cell details
+	     * 
+	     * @return
+	     */
+	    public List<CellDetails> getCellDetailsList() {
+		Iterable<CellDetails> cellsList = cellDetailsRepo.findAll();
+		if (cellsList != null) {
+		    return (List<CellDetails>) cellsList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-    /**
-     * Method to retrieve cell with collision or confusion
-     * 
-     * @return
-     */
-    public List<CellDetails> getCellsWithCollisionOrConfusion() {
-        List<CellDetails> cellsList = cellDetailsRepo.getCellsWithCollisionOrConfusion();
-        if (cellsList != null) {
-            return cellsList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve cells with no server ids
+	     * 
+	     * @return
+	     */
+	    public List<CellDetails> getCellsWithNoServerIds() {
+		List<CellDetails> cellsList = cellDetailsRepo.findCellsWithNoServerId();
+		if (cellsList != null) {
+		    return cellsList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-    /**
-     * Method to retrieve operation log
-     * 
-     * @return
-     */
-    public List<OperationLog> getOperationLogList() {
-        Iterable<OperationLog> opLogList = operationLogRepo.findAll();
-        if (opLogList != null) {
-            return (List<OperationLog>) opLogList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve cell with collision or confusion
+	     * 
+	     * @return
+	     */
+	    public List<CellDetails> getCellsWithCollisionOrConfusion() {
+		List<CellDetails> cellsList = cellDetailsRepo.getCellsWithCollisionOrConfusion();
+		if (cellsList != null) {
+		    return cellsList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-    /**
-     * Method to retrieve all netconf servers
-     * 
-     * @return
-     */
-    public List<NetconfServers> getNetconfServersList() {
-        Iterable<NetconfServers> serversList = netconfServersRepo.findAll();
-        if (serversList != null) {
-            return (List<NetconfServers>) serversList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve operation log
+	     * 
+	     * @return
+	     */
+	    public List<OperationLog> getOperationLogList() {
+		Iterable<OperationLog> opLogList = operationLogRepo.findAll();
+		if (opLogList != null) {
+		    return (List<OperationLog>) opLogList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-    /**
-     * Method to retrieve all cell neighbors
-     * 
-     * @return
-     */
-    public List<CellNeighbor> getCellNeighborList() {
-        Iterable<CellNeighbor> cellNeighborList = cellNeighborRepo.findAll();
-        if (cellNeighborList != null) {
-            return (List<CellNeighbor>) cellNeighborList;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	    /**
+	     * Method to retrieve all netconf servers
+	     * 
+	     * @return
+	     */
+	    public List<NetconfServers> getNetconfServersList() {
+		Iterable<NetconfServers> serversList = netconfServersRepo.findAll();
+		if (serversList != null) {
+		    return (List<NetconfServers>) serversList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-    /**
-     * Method to delete specific cells
-     * 
-     * @param deleteCelldetail
-     */
-    public void deleteCellDetails(CellDetails deleteCelldetail) {
+	    /**
+	     * Method to retrieve all cell neighbors
+	     * 
+	     * @return
+	     */
+	    public List<CellNeighbor> getCellNeighborList() {
+		Iterable<CellNeighbor> cellNeighborList = cellNeighborRepo.findAll();
+		if (cellNeighborList != null) {
+		    return (List<CellNeighbor>) cellNeighborList;
+		} else {
+		    return new ArrayList<>();
+		}
+	    }
 
-        if (deleteCelldetail.getServerId() != null) {
-            NetconfServers ns = getNetconfServer(deleteCelldetail.getServerId());
-            if (ns != null) {
-                ns.getCells().remove(deleteCelldetail);
-                netconfServersRepo.save(ns);
-            }
-        }
-        cellDetailsRepo.deleteById(deleteCelldetail.getNodeId());
-    }
+	    /**
+	     * Method to delete specific cells
+	     * 
+	     * @param deleteCelldetail
+	     */
+	    public void deleteCellDetails(CellDetails deleteCelldetail) {
 
-    /**
-     * Method to delete cell neighbors
-     * 
-     * @param deleteCellNeighbor
-     */
-    public void deleteCellNeighbor(CellNeighbor deleteCellNeighbor) {
-        cellNeighborRepo.deleteById(deleteCellNeighbor.getNodeId());
-    }
+		if (deleteCelldetail.getServerId() != null) {
+		    NetconfServers ns = getNetconfServer(deleteCelldetail.getServerId());
+		    if (ns != null) {
+			ns.getCells().remove(deleteCelldetail);
+			netconfServersRepo.save(ns);
+		    }
+		}
+		cellDetailsRepo.deleteById(deleteCelldetail.getNodeId());
+	    }
 
-    /**
-     * Method to delete all netconf servers
-     */
-    public void deleteNetconfServers() {
-        netconfServersRepo.deleteAll();
-    }
+	    /**
+	     * Method to delete cell neighbors
+	     * 
+	     * @param deleteCellNeighbor
+	     */
+	    public void deleteCellNeighbor(CellNeighbor deleteCellNeighbor) {
+		cellNeighborRepo.deleteById(deleteCellNeighbor.getNodeId());
+	    }
 
-    /**
-     * Method to delete all cell neighbors
-     */
-    public void deleteCellNeighbors() {
-        cellNeighborRepo.deleteAll();
-    }
+	    /**
+	     * Method to delete all netconf servers
+	     */
+	    public void deleteNetconfServers() {
+		netconfServersRepo.deleteAll();
+	    }
 
-    /**
-     * Method to delete all cells
-     */
-    public void deleteAllCellDetails() {
-        cellDetailsRepo.deleteAll();
+	    /**
+	     * Method to delete all cell neighbors
+	     */
+	    public void deleteCellNeighbors() {
+		cellNeighborRepo.deleteAll();
+	    }
+
+	    /**
+	     * Method to delete all cells
+	     */
+	    public void deleteAllCellDetails() {
+		cellDetailsRepo.deleteAll();
+	    }
+
+	    /**
+	     * Method to save cells
+	     * 
+	     * @param cellDetail
+	     */
+	    public void mergeCellDetails(CellDetails cellDetail) {
+		cellDetailsRepo.save(cellDetail);
+	    }
+
+	    /**
+	     * Method to save cells
+	     *
+	     * @param nRCellRelation
+	     */
+	    public void mergeNRCellRel(NRCellRelation nRCellRel) {
+        nRCellRelRepo.save(nRCellRel);
     }
 
     /**
      * Method to save cells
-     * 
-     * @param cellDetail
+     *
+     * @param nRCellDU
      */
-    public void mergeCellDetails(CellDetails cellDetail) {
-        cellDetailsRepo.save(cellDetail);
+    public void mergeNRCellDU(NRCellDU nRCellDU) {
+        nRCellDURepo.save(nRCellDU);
     }
 
     /**

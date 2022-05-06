@@ -24,17 +24,9 @@ import java.util.List;
 
 public class ModifyNeighbor {
 
-    private String idGNBCUCPFunction;
     private String idNRCellCU;
-    private List<NeighborHo> neighborList;
-
-    public String getIdGNBCUCPFunction() {
-        return idGNBCUCPFunction;
-    }
-
-    public void setIdGNBCUCPFunction(String idGNBCUCPFunction) {
-        this.idGNBCUCPFunction = idGNBCUCPFunction;
-    }
+    private String idNRCellRelation;
+    private AttributesNRRelation attributes;
 
     public String getIdNRCellCU() {
         return idNRCellCU;
@@ -44,12 +36,16 @@ public class ModifyNeighbor {
         this.idNRCellCU = idNRCellCU;
     }
 
-    public List<NeighborHo> getNeighborList() {
-        return neighborList;
+    public String getIdNRCellRelation(){ return idNRCellRelation; }
+
+    public void setIdNRCellRelation(String idNRCellRelation){ this.idNRCellRelation = idNRCellRelation; }
+
+    public AttributesNRRelation getAttributes() {
+            return attributes;
     }
 
-    public void setNeighborList(List<NeighborHo> neighborList) {
-        this.neighborList = neighborList;
+    public void setAttributes(AttributesNRRelation attributes) {
+            this.attributes = attributes;
     }
 
 }
