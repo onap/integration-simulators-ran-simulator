@@ -29,6 +29,7 @@
 	 private Integer nRTCI;
          private boolean isHOAllowed;
 
+	 @JsonProperty("nRTCI")
 	 public Integer getNRTCI() {
 		 return nRTCI;
 	 }
@@ -37,6 +38,7 @@
 		 this.nRTCI = nRTCI;
 	 }
 
+	 @JsonProperty("isHOAllowed")
 	 public boolean getIsHOAllowed() {
 		 return isHOAllowed;
 	 }

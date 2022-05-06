@@ -27,7 +27,7 @@ public class NRCellDU {
 
     private String idNRCellDU;
 
-    private Attributes attributes;
+    private DUAttributes attributes;
 
     public String getIdNRCellDU() {
         return idNRCellDU;
@@ -37,15 +37,15 @@ public class NRCellDU {
         this.idNRCellDU = idNRCellDU;
     }
 
-    public Attributes getAttributes() {
+    public DUAttributes getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Attributes attributes) {
+    public void setAttributes(DUAttributes attributes) {
         this.attributes = attributes;
     }
 
-    public NRCellDU(Attributes attributes) {
+    public NRCellDU(DUAttributes attributes) {
         super();
         this.attributes = attributes;
     }
