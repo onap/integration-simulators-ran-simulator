@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * Ran Simulator Controller
  * ================================================================================
- * Copyright (C) 2020-2021 Wipro Limited.
+ * Copyright (C) 2020-2022 Wipro Limited.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ public class NRCellCUModel {
     private Integer cellLocalId;
     private List<PLMNInfoModel> pLMNInfoList;
     private String resourceType;
+    private List<NRCellRelationModel> nRCellRelationList;
 
     public Integer getCellLocalId() {
         return cellLocalId;
@@ -51,9 +52,17 @@ public class NRCellCUModel {
         this.resourceType = resourceType;
     }
 
+     public List<NRCellRelationModel> getNRCellRelationList() {
+	 return nRCellRelationList;
+     }
+
+     public void setNRCellRelation(List<NRCellRelationModel> nRCellRelationList) {
+         this.nRCellRelationList = nRCellRelationList;
+     }
+
     @Override
     public String toString() {
-        return "NRCellCUModel [cellLocalId=" + cellLocalId + ", pLMNInfoList=" + pLMNInfoList + ", resourceType="
+        return "NRCellCUModel [cellLocalId=" + cellLocalId + ", pLMNInfoList=" + pLMNInfoList + ", nRCellRelationList=" + nRCellRelationList + ", resourceType="
                 + resourceType + "]";
     }
 }
