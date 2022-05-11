@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Michal Jagiello <michal.jagiello@t-mobile.pl>
+Submitted-by: Michal Jagiello <michal.jagiello@t-mobile.pl>
+Submitted-at: Wed, 11 May 2022 09:57:36 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/integration/simulators/ran-simulator/+/129158
+Project: integration/simulators/ran-simulator
+Branch: refs/heads/master
