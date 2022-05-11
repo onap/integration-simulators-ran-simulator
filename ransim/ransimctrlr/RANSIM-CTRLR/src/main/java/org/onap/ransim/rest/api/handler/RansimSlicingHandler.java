@@ -171,9 +171,10 @@ public class RansimSlicingHandler {
                         }
 
                     }
-
-                    MeasValue measValue = new MeasValue(nRCellCUModel.getCellLocalId(), resultList, false);
-                    measValueList.add(measValue);
+                    if (!resultList.isEmpty()) {
+                        MeasValue measValue = new MeasValue(nRCellCUModel.getCellLocalId(), resultList, false);
+                        measValueList.add(measValue);
+                    }
                 }
 
                 ManagedElement managedElement = new ManagedElement("r0.1", gNBName);

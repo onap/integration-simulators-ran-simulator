@@ -1362,7 +1362,8 @@ public class RansimControllerServices {
         List<PLMNInfo> pLMNInfoList = null;
         org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
-        if (!(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("maxNumberOfConns"))
+        if (plmnInfoModel.getConfigData().size() > 0
+                && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("maxNumberOfConns"))
                 && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("dLThptPerSlice"))
                 && !(plmnInfoModel.getConfigData().get(0).getConfigParameter().equalsIgnoreCase("uLThptPerSlice"))
                 && (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp"))) {
@@ -1397,9 +1398,22 @@ public class RansimControllerServices {
                         pLMNInfoList = nrCellDu.getpLMNInfoList();
                         for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
                             if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
-                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                if (Objects.nonNull(plmnInfoModel.getStatus())) {
+                                    plmninfo.getsNSSAI().setStatus(plmnInfoModel.getStatus());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getdLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setdLThptPerSlice(nSSAIConfig.getdLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getuLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setuLThptPerSlice(nSSAIConfig.getuLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getMaxNumberOfConns())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setMaxNumberOfConns(nSSAIConfig.getMaxNumberOfConns());
+                                }
                                 isAdded = true;
-                                log.info("data updated");
                             }
                         }
                     } else {
@@ -1408,6 +1422,7 @@ public class RansimControllerServices {
                     if (!(isAdded)) {
                         pLMNInfoList.add(plmnInfo);
                     }
+
                     nrCellDu.setpLMNInfoList(pLMNInfoList);
                     nRCellDURepository.save(nrCellDu);
                 } else if (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp")) {
@@ -1419,7 +1434,21 @@ public class RansimControllerServices {
                         pLMNInfoList = nrCellCu.getpLMNInfoList();
                         for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
                             if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
-                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                if (Objects.nonNull(plmnInfoModel.getStatus())) {
+                                    plmninfo.getsNSSAI().setStatus(plmnInfoModel.getStatus());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getdLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setdLThptPerSlice(nSSAIConfig.getdLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getuLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setuLThptPerSlice(nSSAIConfig.getuLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getMaxNumberOfConns())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setMaxNumberOfConns(nSSAIConfig.getMaxNumberOfConns());
+                                }
                                 isAdded = true;
                                 log.info("data updated");
                             }
@@ -1441,7 +1470,21 @@ public class RansimControllerServices {
                         pLMNInfoList = gNBCUUPFunction.getpLMNInfoList();
                         for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
                             if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
-                                plmninfo.getsNSSAI().setConfigData(sNSSAI.getConfigData());
+                                if (Objects.nonNull(plmnInfoModel.getStatus())) {
+                                    plmninfo.getsNSSAI().setStatus(plmnInfoModel.getStatus());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getdLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setdLThptPerSlice(nSSAIConfig.getdLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getuLThptPerSlice())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setuLThptPerSlice(nSSAIConfig.getuLThptPerSlice());
+                                }
+                                if (Objects.nonNull(nSSAIConfig.getMaxNumberOfConns())) {
+                                    plmninfo.getsNSSAI().getConfigData()
+                                            .setMaxNumberOfConns(nSSAIConfig.getMaxNumberOfConns());
+                                }
                                 log.info("data updated");
                                 isAdded = true;
                             }
@@ -1466,18 +1509,67 @@ public class RansimControllerServices {
 
     public void handlePLMNInfoDeleteFromSdnr(String message, Session session, String ipPort) {
         log.info("handle PLMNInfo Delete: " + message);
+        List<PLMNInfo> pLMNInfoList = null;
         org.onap.ransim.rest.api.models.PLMNInfoModel plmnInfoModel =
                 new Gson().fromJson(message, org.onap.ransim.rest.api.models.PLMNInfoModel.class);
         PLMNInfo plmnInfo = new PLMNInfo();
         NSSAIConfig nSSAIConfig = new NSSAIConfig();
-        // nSSAIConfig.setMaxNumberOfConns(plmnInfoModel.getConfigValue());
         org.onap.ransim.rest.api.models.SNSSAI sNSSAI = new org.onap.ransim.rest.api.models.SNSSAI();
         sNSSAI.setsNSSAI(plmnInfoModel.getSnssai());
         sNSSAI.setStatus(plmnInfoModel.getStatus());
         sNSSAI.setConfigData(nSSAIConfig);
         plmnInfo.setpLMNId(plmnInfoModel.getpLMNId());
         plmnInfo.setsNSSAI(sNSSAI);
-        // pLMNInfoRepo.delete(plmnInfo);
+        try {
+            if (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbdu")) {
+                org.onap.ransim.rest.api.models.NRCellDU nrCellDu =
+                        nRCellDURepository.findById(plmnInfoModel.getNrCellId()).get();
+                if (!(Objects.isNull(nrCellDu.getpLMNInfoList()))) {
+                    pLMNInfoList = nrCellDu.getpLMNInfoList();
+                    for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                        if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                            pLMNInfoList.remove(plmninfo);
+                            nrCellDu.setpLMNInfoList(pLMNInfoList);
+                            nRCellDURepository.save(nrCellDu);
+                        }
+                    }
+                }
+
+            } else if (plmnInfoModel.getGnbType().equalsIgnoreCase("gnbcucp")) {
+                org.onap.ransim.rest.api.models.NRCellCU nrCellCu =
+                        nRCellCURepository.findById(plmnInfoModel.getNrCellId()).get();
+                if (!(Objects.isNull(nrCellCu.getpLMNInfoList()))) {
+                    pLMNInfoList = nrCellCu.getpLMNInfoList();
+                    for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                        if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                            pLMNInfoList.remove(plmninfo);
+                            nrCellCu.setpLMNInfoList(pLMNInfoList);
+                            nRCellCURepository.save(nrCellCu);
+                        }
+                    }
+
+                }
+
+            } else {
+                org.onap.ransim.rest.api.models.GNBCUUPFunction gNBCUUPFunction =
+                        gNBCUUPRepository.findBygNBCUUPId(plmnInfoModel.getGnbId()).get();
+                if (!(Objects.isNull(gNBCUUPFunction.getpLMNInfoList()))) {
+                    pLMNInfoList = gNBCUUPFunction.getpLMNInfoList();
+                    for (org.onap.ransim.rest.api.models.PLMNInfo plmninfo : pLMNInfoList) {
+                        if (plmninfo.getsNSSAI().getsNSSAI().equalsIgnoreCase(plmnInfoModel.getSnssai())) {
+                            pLMNInfoList.remove(plmninfo);
+                            gNBCUUPFunction.setpLMNInfoList(pLMNInfoList);
+                            gNBCUUPRepository.save(gNBCUUPFunction);
+                        }
+                    }
+
+                }
+            }
+        } catch (NullPointerException nullPointerException) {
+            log.error("Record does not exist");
+        } catch (Exception e) {
+            log.error("Unexpected error while fetching data from database: " + e);
+        }
     }
 
     public void handleSliceProfileUpdateFromSdnr(String message, Session session, String ipPort) {

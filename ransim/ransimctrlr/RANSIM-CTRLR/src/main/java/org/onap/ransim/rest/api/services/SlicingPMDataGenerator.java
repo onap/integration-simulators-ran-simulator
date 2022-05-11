@@ -105,7 +105,8 @@ public class SlicingPMDataGenerator {
                 List<NRCellDUModel> duCellList = du.getCellDUList();
                 int ricId = du.getNearRTRICId();
                 List<PLMNInfoModel> plmnInfoList = new ArrayList<>();
-                duCellList.stream().filter(cell -> (!Objects.isNull(cell.getpLMNInfoList())));
+                duCellList.stream()
+                        .filter(cell -> (!Objects.isNull(cell.getpLMNInfoList()) && !cell.getpLMNInfoList().isEmpty()));
                 duCellList.forEach(cell -> plmnInfoList.addAll(cell.getpLMNInfoList()));
                 List<NSSAIData> nssaiData = new ArrayList<>();
                 plmnInfoList.forEach(plmnInfo -> nssaiData.add(plmnInfo.getsNSSAI()));
