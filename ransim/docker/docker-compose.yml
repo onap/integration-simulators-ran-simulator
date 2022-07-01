@@ -17,6 +17,11 @@ services:
       - './config/db:/docker-entrypoint-initdb.d'
     ports:
       - '43306:3306'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "5"
   ransim:
     image: 'onap/ransim:1.0.0-SNAPSHOT'
     container_name: ransim
@@ -32,3 +37,8 @@ services:
     volumes:
       - './config/ransim:/tmp/ransim-install/config'
       - './config/ransim/jssecacerts:/tmp/cert/jssecacerts'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "5"
