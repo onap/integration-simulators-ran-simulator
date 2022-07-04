@@ -463,10 +463,11 @@ public class RansimControllerServices {
                 List<String> gNBList = new ArrayList<>();
                 for (GNBCUCPModel gNBCUCPModel : rtricModel.getgNBCUCPList()) {
                     gNBList.add(gNBCUCPModel.getgNBCUName());
+		    setRanNetconfServers(gNBCUCPModel.getgNBCUName());
                     for (NRCellCUModel nRCellCUModel : gNBCUCPModel.getCellCUList()) {
 		        if (nRCellCUModel.getpLMNInfoList().isEmpty()) {
                             org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
-                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/ran-data.json")) {
+                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/ransimdata.json")) {
                                 // Read JSON file
                                 Object obj = jsonParser.parse(reader);
                                 JSONArray List = (JSONArray) obj;
