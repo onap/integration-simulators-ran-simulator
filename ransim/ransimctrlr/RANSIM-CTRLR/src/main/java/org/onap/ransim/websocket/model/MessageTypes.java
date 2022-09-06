@@ -36,4 +36,6 @@ public class MessageTypes {
     public final static String HC_TO_RC_RRM_POLICY_DEL = "HC_TO_RC_RRM_POLICY_DEL";
     public final static String HC_TO_RC_PLMN_DEL = "HC_TO_RC_PLMN_DEL";
     public final static String HC_TO_RC_SLICE_PROFILE_DEL = "HC_TO_RC_SLICE_PROFILE_DEL";
+    public final static String APP_TO_RC_CONNECTION = "INITIAL_CONFIRMATION";
+    public final static String APP_TO_RC_KAFKA_MSG = "KAFKA_MSG";
 }

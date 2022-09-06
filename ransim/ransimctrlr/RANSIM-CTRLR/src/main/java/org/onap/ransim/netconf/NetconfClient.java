@@ -55,6 +55,7 @@ import org.json.simple.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.onap.ransim.rest.api.models.PLMNInfoModel;
+import org.onap.ransim.rest.api.models.GNBCUCPFunction;
 import org.onap.ransim.rest.web.mapper.NRRelationData;
 import org.onap.ransim.rest.web.mapper.GNBCUCPModel;
 import org.onap.ransim.rest.web.mapper.GNBCUUPModel;
@@ -65,6 +66,8 @@ import org.onap.ransim.rest.web.mapper.NRCellRelationModel;
 import org.onap.ransim.rest.web.mapper.NearRTRICModel;
 import org.onap.ransim.websocket.model.ConfigData;
 import org.onap.ransim.rest.api.services.RANSliceConfigService;
+import org.onap.ransim.websocket.model.LTECell;
+import org.onap.ransim.websocket.model.PayloadOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class NetconfClient {
@@ -514,4 +517,106 @@ public class NetconfClient {
             log.error("Exception occured during edit config {}", e);
         }
     }
+
+
+
+	private Element updateNeighbourListCUCP(PayloadOutput neighbourListinUse, String serverId) {
+		// TODO Auto-generated method stub
+		
+		
+		try {
+		log.info("update Neighbourlist data to netconf server");
+        Element ranNetworkElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/ran-network");
+        Element nearRTRICElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NearRTRIC");
+        Element idNearRTRICElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNearRTRIC");
+        idNearRTRICElement.setValue(neighbourListinUse.getConfigurations().get(0).getData().getRicId());
+        Element gNBCUCPFunctionElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/GNBCUCPFunction");
+        Element idGNBCUCPFunctionElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idGNBCUCPFunction");
+        idGNBCUCPFunctionElement.setValue(neighbourListinUse.getConfigurations().get(0).getData().getFAPService().getIdNRCellCU());
+
+        Element sapElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/sAP");
+        Element hostElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/host");
+        hostElement.setValue("localhost");
+        Element portElement = Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/port");
+        portElement.setValue("8080");
+        sapElement.addChild(hostElement);
+        sapElement.addChild(portElement);
+        
+        Element attributesElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+        Element gNBCUNameElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/gNBCUName");
+        gNBCUNameElement.setValue(neighbourListinUse.getConfigurations().get(0).getData().getFAPService().getIdNRCellCU());
+        Element gnBIdElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/gNBId");
+        gnBIdElement.setValue(32);
+        Element gNBIdLengthElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/gNBIdLength");
+        gNBIdLengthElement.setValue(98763);
+        attributesElement.addChild(gNBCUNameElement);
+        attributesElement.addChild(gnBIdElement);
+        attributesElement.addChild(gNBIdLengthElement);
+        attributesElement.addChild(sapElement);
+        
+        
+        Element nRCellCUElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellCU");
+        Element idNRCellCUElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellCU");
+        
+        String localcellID=neighbourListinUse.getConfigurations().get(0).getData().getFAPService().getCellConfig().getLte().getRan().getCommon().getCellIdentity();
+        idNRCellCUElement.setValue(localcellID);
+        Element nRCellattributesElement =
+                Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+        Element cellLocalIdElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/cellLocalId");
+			cellLocalIdElement.setValue(localcellID);
+			nRCellattributesElement.addChild(cellLocalIdElement);
+			nRCellattributesElement.addChild(sapElement);
+        nRCellCUElement.addChild(idNRCellCUElement);
+        nRCellCUElement.addChild(nRCellattributesElement);
+        List<LTECell> LTECellList=neighbourListinUse.getConfigurations().get(0).getData().getFAPService().getCellConfig().getLte().getRan().getNeighborListInUse().getLTECell();
+        for (LTECell nRCellRelationModel : LTECellList) {
+			Element nRCellRelationElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NRCellRelation");
+			Element idNRCellRelationElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNRCellRelation");
+			idNRCellRelationElement.setValue(nRCellRelationModel.getIdNRCellRelation());
+			Element nRCellRelationattributesElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/attributes");
+			Element nRTCIElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/nRTCI");
+			nRTCIElement.setValue(nRCellRelationModel.getIdNRCellRelation());
+			Element isHOAllowedElement =
+				Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/isHOAllowed");
+			isHOAllowedElement.setValue(nRCellRelationModel.getIsHOAllowed());
+			nRCellRelationattributesElement.addChild(nRTCIElement);
+			nRCellRelationattributesElement.addChild(isHOAllowedElement);
+			nRCellRelationattributesElement.addChild(sapElement);
+			nRCellRelationElement.addChild(idNRCellRelationElement);
+			nRCellRelationElement.addChild(nRCellRelationattributesElement);
+			nRCellCUElement.addChild(nRCellRelationElement);
+		} 
+        
+        
+        gNBCUCPFunctionElement.addChild(idGNBCUCPFunctionElement);
+        gNBCUCPFunctionElement.addChild(nRCellCUElement);
+
+        nearRTRICElement.addChild(idNearRTRICElement);
+        nearRTRICElement.addChild(gNBCUCPFunctionElement);
+
+        ranNetworkElement.addChild(nearRTRICElement);
+        ranNetworkElement.markMerge();
+        return ranNetworkElement;
+
+    } catch (JNCException e) {
+        log.error("Exception occured during NodeSet creation {}", e);
+        return null;
+    }
+	}
 }
