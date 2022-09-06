@@ -33,8 +33,14 @@ import org.onap.ransim.rest.api.models.NRCellCU;
 import org.onap.ransim.rest.api.models.NRCellDU;
 import org.onap.ransim.rest.api.models.NRCellRelation;
 import org.onap.ransim.rest.api.models.OperationLog;
+import org.onap.ransim.rest.api.models.GNBCUCPFunction;
+import org.onap.ransim.rest.api.models.GNBCUUPFunction;
+import org.onap.ransim.rest.api.models.GNBDUFunction;
 import org.onap.ransim.rest.api.repository.CellDetailsRepo;
 import org.onap.ransim.rest.api.repository.CellNeighborRepo;
+import org.onap.ransim.rest.api.repository.GNBCUCPRepository;
+import org.onap.ransim.rest.api.repository.GNBCUUPRepository;
+import org.onap.ransim.rest.api.repository.GNBDURepository;
 import org.onap.ransim.rest.api.repository.NRCellCURepository;
 import org.onap.ransim.rest.api.repository.NRCellDURepository;
 import org.onap.ransim.rest.api.repository.NRCellRelationRepository;
@@ -72,6 +78,15 @@ public class RansimRepositoryService {
 
     @Autowired
     OperationLogRepo operationLogRepo;
+    
+    @Autowired
+    GNBCUCPRepository gnbcucpfuncRepo;
+    
+    @Autowired
+    GNBCUUPRepository gnbcuupfuncRepo;
+    
+    @Autowired
+    GNBDURepository gnbdufuncRepo;
 
     /**
      * Method to retrieve cell details
@@ -383,4 +398,42 @@ public class RansimRepositoryService {
     public void mergeOperationLog(OperationLog opLog) {
         operationLogRepo.save(opLog);
     }
+
+	public Integer getNeartricfromCUCPmodel(String serverId) {
+		// TODO Auto-generated method stub
+		Optional<GNBCUCPFunction> cucp = gnbcucpfuncRepo.findById(serverId);
+		GNBCUCPFunction cucpdetails = null;
+        if (cucp.isPresent()) {
+        	cucpdetails = cucp.get();
+        	return cucpdetails.getNearRTRIC().getNearRTRICId();
+        }else
+		return null;
+		
+	}
+
+	public Integer getNeartricfromCUUPmodel(String serverId) {
+		// TODO Auto-generated method stub
+		Optional<GNBCUUPFunction> cuup = gnbcuupfuncRepo.findById(Integer.getInteger(serverId));
+		GNBCUUPFunction cuupdetails = null;
+        if (cuup.isPresent()) {
+        	cuupdetails = cuup.get();
+        	return cuupdetails.getNearRTRIC().getNearRTRICId();
+        }else
+		return null;
+	}
+
+	public Integer getNeartricfromDUmodel(String serverId) {
+		// TODO Auto-generated method stub
+		
+		
+		Optional<GNBDUFunction> du = gnbdufuncRepo.findById(Integer.getInteger(serverId));
+		GNBDUFunction dudetails = null;
+        if (du.isPresent()) {
+        	dudetails = du.get();
+        	return dudetails.getNearRTRIC().getNearRTRICId();
+        }else
+		return null;
+	}
+
+	
 }
