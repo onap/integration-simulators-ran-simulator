@@ -104,6 +104,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
 @Service
 public class RansimControllerServices {
 
@@ -466,7 +471,7 @@ public class RansimControllerServices {
                     for (NRCellCUModel nRCellCUModel : gNBCUCPModel.getCellCUList()) {
 		        if (nRCellCUModel.getpLMNInfoList().isEmpty()) {
                             org.json.simple.parser.JSONParser jsonParser = new org.json.simple.parser.JSONParser();
-                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/ran-data.json")) {
+                            try (FileReader reader = new FileReader("/tmp/ransim-install/config/ransimdata.json")) {
                                 // Read JSON file
                                 Object obj = jsonParser.parse(reader);
                                 JSONArray List = (JSONArray) obj;
@@ -1806,6 +1811,123 @@ public class RansimControllerServices {
         }
     }
 
+	public synchronized void addWebSocketSessionsForRanApp(String ipPort, Session session) {
+		// TODO Auto-generated method stub
+		if (webSocketSessions.containsKey(ipPort)) {
+            log.info("addWebSocketSessions: Client session " + session.getId() + " for " + ipPort
+                    + " already exist. Removing old session.");
+            webSocketSessions.remove(ipPort);
+        }
+
+        log.info("addWebSocketSessions: Adding Client session " + session.getId() + " for " + ipPort);
+        webSocketSessions.put(ipPort, session);
+	}
+
+	
+	
+	public ResponsetoRanapp sendPayloadtoHC(String message,String ipPort, Session session) {
+		// TODO Auto-generated method stub
+		addWebSocketSessionsForRanApp(ipPort, session);
+		ResponsetoRanapp response=new ResponsetoRanapp();
+		try {
+			
+			PayloadOutput neighbourListinUse=new ObjectMapper().readValue(message, PayloadOutput.class);
+			log.info("neighbourListinUse payload: "+ neighbourListinUse);
+			NetconfServers server=findserverIdfromPayload(neighbourListinUse);
+			if( server != null) {
+				NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin", server.getServerId(),
+                        server.getIp(), Integer.parseInt(server.getNetconfPort()));
+				log.info("Initializing Netconf client session for "+ server.getIp() +":"+server.getNetconfPort());
+				 Integer nearrtric=nearrtricfindNearrtricIdfromserverId(server.getServerId());
+				netconfClient.editConfig(
+                        netconfClient.updateNeighbourListCUCP(neighbourListinUse, nearrtric.toString()));
+				response.setResponse_code(200);
+				response.setError_info("Neighbour Cell Relation changed Successfully");
+				return response;
+			}else {
+				log.info("HC device not found for the respective config change");
+				response.setResponse_code(400);
+				response.setError_info("HC device not found");
+				return response;
+			}
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.getLocalizedMessage();
+			e.printStackTrace();
+			response.setResponse_code(500);
+			if(e.getMessage() == null) {
+				response.setError_info("Causing JsonParse Exception");
+			}else
+			response.setError_info(e.getMessage());
+			return response;
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.getLocalizedMessage();
+			e.printStackTrace();
+			response.setResponse_code(500);
+			if(e.getMessage() == null) {
+				response.setError_info("Causing JsonMapping Exception");
+			}else
+			response.setError_info(e.getMessage());
+			return response;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.getLocalizedMessage();
+			e.printStackTrace();
+			response.setResponse_code(500);
+			if(e.getMessage() == null) {
+				response.setError_info("Exception Occured while connecting Netconf server");
+			}else
+			response.setError_info(e.getMessage());
+			return response;
+		}
+		
+	}
+
+	private Integer nearrtricfindNearrtricIdfromserverId(String serverId) {
+		// TODO Auto-generated method stub
+		Integer gnbcucpmodel = null,gnbcuupmodel = null,gnbdumodel = null;
+		gnbcucpmodel=ransimRepo.getNeartricfromCUCPmodel(serverId);
+		if(gnbcucpmodel == null) {
+			gnbcuupmodel=ransimRepo.getNeartricfromCUUPmodel(serverId);
+			if(gnbcuupmodel == null) {
+				gnbdumodel=ransimRepo.getNeartricfromDUmodel(serverId);
+				if(gnbdumodel == null) {
+					return null;
+					}else
+						return gnbdumodel;
+				}else
+					return gnbcuupmodel;
+		}else
+			return gnbcucpmodel;
+		
+		
+	}
+
+	private NetconfServers findserverIdfromPayload(PayloadOutput readValue) {
+		// TODO Auto-generated method stub
+		String serverId=readValue.getConfigurations().get(0).getData().getFAPService().getIdNRCellCU();
+		if(serverIdIpPortMapping.keySet().contains(serverId)) {
+			try {
+				log.info("Retrieve Netconf server from database using serverId: "+serverId);
+                NetconfServers server = ransimRepo.getNetconfServer(serverId);
+                if (server != null) {
+                	log.info("Retrieved Netconf server"+ server +"from database using serverId: "+serverId);
+                   return server;
+                }else {
+                	log.info("No Netconf server found for serverId"+ serverId);
+                	return null;
+                }
+            } catch (Exception e1) {
+                log.error("Exception mapServerIdToNodes :", e1);
+            }
+		}
+			log.info("serverIdIpPortMapping does not contain serverId"+ serverId + "in it");
+			
+		return null;
+	}
+
+	
 }
 
 

@@ -37,6 +37,7 @@ import org.onap.ransim.websocket.model.DeviceData;
 import org.onap.ransim.websocket.model.DeviceDataDecoder;
 import org.onap.ransim.websocket.model.DeviceDataEncoder;
 import org.onap.ransim.websocket.model.MessageTypes;
+import org.onap.ransim.websocket.model.ResponsetoRanapp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -142,7 +143,18 @@ public class RansimWebSocketServer {
                     } else if (message.getType().equals(MessageTypes.HC_TO_RC_SLICE_PROFILE_DEL)) {
                         log.info("Delete SliceProfile message received");
                         rscServices.handleSliceProfileDeleteFromSdnr(message.getMessage(), session, ipPort);
-                    }
+                    } else if  (message.getType().equals(MessageTypes.APP_TO_RC_CONNECTION)){
+                    	log.info(message.getMessage());
+                    } else if  (message.getType().equals(MessageTypes.APP_TO_RC_KAFKA_MSG)) {
+                    	log.info(message.getMessage());
+                    	ResponsetoRanapp ws_msgtoranapp=rscServices.sendPayloadtoHC(message.getMessage(),ipPort,session);
+                    	DeviceData devicedata=new DeviceData();
+            			devicedata.setMessage(ws_msgtoranapp.toString());
+            			devicedata.setType(MessageTypes.APP_TO_RC_KAFKA_MSG);
+            			log.info(String.format("Sending Output Payload to "+ipPort+" Server"));
+                    	sendMessage(devicedata,session);
+                    	
+                    } 
                 }
             }
         } catch (Exception e) {
