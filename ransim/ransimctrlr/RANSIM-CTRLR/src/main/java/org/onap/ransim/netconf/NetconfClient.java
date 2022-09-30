@@ -520,7 +520,7 @@ public class NetconfClient {
 
 
 
-	private Element updateNeighbourListCUCP(PayloadOutput neighbourListinUse, String serverId) {
+	public Element updateNeighbourListCUCP(PayloadOutput neighbourListinUse, String serverId) {
 		// TODO Auto-generated method stub
 		
 		
@@ -532,7 +532,7 @@ public class NetconfClient {
                 Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/NearRTRIC");
         Element idNearRTRICElement =
                 Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/idNearRTRIC");
-        idNearRTRICElement.setValue(neighbourListinUse.getConfigurations().get(0).getData().getRicId());
+        idNearRTRICElement.setValue(serverId);
         Element gNBCUCPFunctionElement =
                 Element.create("org:onap:ccsdk:features:sdnr:northbound:ran-network", "/GNBCUCPFunction");
         Element idGNBCUCPFunctionElement =

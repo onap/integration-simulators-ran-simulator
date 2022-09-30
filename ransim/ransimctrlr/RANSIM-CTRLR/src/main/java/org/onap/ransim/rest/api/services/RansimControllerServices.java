@@ -1838,8 +1838,9 @@ public class RansimControllerServices {
 				NetconfClient netconfClient = new NetconfClient("ransim", "admin", "admin", server.getServerId(),
                         server.getIp(), Integer.parseInt(server.getNetconfPort()));
 				log.info("Initializing Netconf client session for "+ server.getIp() +":"+server.getNetconfPort());
+				 Integer nearrtric=nearrtricfindNearrtricIdfromserverId(server.getServerId());
 				netconfClient.editConfig(
-                        netconfClient.updateNeighbourListCUCP(neighbourListinUse, server.getServerId()));
+                        netconfClient.updateNeighbourListCUCP(neighbourListinUse, nearrtric.toString()));
 				response.setResponse_code(200);
 				response.setError_info("Neighbour Cell Relation changed Successfully");
 				return response;
@@ -1880,6 +1881,26 @@ public class RansimControllerServices {
 			response.setError_info(e.getMessage());
 			return response;
 		}
+		
+	}
+
+	private Integer nearrtricfindNearrtricIdfromserverId(String serverId) {
+		// TODO Auto-generated method stub
+		Integer gnbcucpmodel = null,gnbcuupmodel = null,gnbdumodel = null;
+		gnbcucpmodel=ransimRepo.getNeartricfromCUCPmodel(serverId);
+		if(gnbcucpmodel == null) {
+			gnbcuupmodel=ransimRepo.getNeartricfromCUUPmodel(serverId);
+			if(gnbcuupmodel == null) {
+				gnbdumodel=ransimRepo.getNeartricfromDUmodel(serverId);
+				if(gnbdumodel == null) {
+					return null;
+					}else
+						return gnbdumodel;
+				}else
+					return gnbcuupmodel;
+		}else
+			return gnbcucpmodel;
+		
 		
 	}
 
