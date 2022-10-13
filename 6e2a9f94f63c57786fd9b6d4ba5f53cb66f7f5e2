@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Lukasz Rajewski <lukasz.rajewski@t-mobile.pl>
+Submitted-by: Lukasz Rajewski <lukasz.rajewski@t-mobile.pl>
+Submitted-at: Thu, 13 Oct 2022 22:11:50 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/integration/simulators/ran-simulator/+/130756
+Project: integration/simulators/ran-simulator
+Branch: refs/heads/master
