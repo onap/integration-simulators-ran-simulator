@@ -30,7 +30,7 @@ public class Topology {
 
     private String cellId;
 
-    private List<Neighbor> neighborList;
+    private List<NRCellRelation> neighborList;
 
     public long getPciId() {
         return pciId;
@@ -48,11 +48,11 @@ public class Topology {
         this.cellId = cellId;
     }
 
-    public List<Neighbor> getNeighborList() {
+    public List<NRCellRelation> getNeighborList() {
         return neighborList;
     }
 
-    public void setNeighborList(List<Neighbor> neighborList) {
+    public void setNeighborList(List<NRCellRelation> neighborList) {
         this.neighborList = neighborList;
     }
 
@@ -70,7 +70,7 @@ public class Topology {
      * @param cellId node id for the cel
      * @param neighborList neighbor list for the cell
      */
-    public Topology(String pnfName, long pciId, String cellId, List<Neighbor> neighborList) {
+    public Topology(String pnfName, long pciId, String cellId, List<NRCellRelation> neighborList) {
         super();
         this.pnfName = pnfName;
         this.pciId = pciId;

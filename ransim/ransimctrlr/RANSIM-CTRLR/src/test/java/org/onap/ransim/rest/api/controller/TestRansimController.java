@@ -207,11 +207,12 @@ public class TestRansimController {
 
         String networkId = "abc";
         String ncServer = "nc1";
-        String cellId = "Chn00";
+        String cellId = "14427";
         String collisions = "";
-        HashMap<Long,String> confusions = new HashMap<Long,String>();
-        collisions += "Chn00"+","+"Chn00";
-        confusions.put(Long.valueOf(0),"Chn00");confusions.put(Long.valueOf(1),"Chn00");
+        HashMap<Integer, Integer> confusions = new HashMap<Integer, Integer>();
+        collisions += "14427"+","+"14427";
+        confusions.put(Integer.valueOf(0),14427);
+	confusions.put(Integer.valueOf(1),14427);
         FmAlarmInfo issue = new FmAlarmInfo("Collision", collisions, confusions);
         /*
          * EventFm eventObj = rscontroller.setEventFm(networkId, ncServer, cellId,

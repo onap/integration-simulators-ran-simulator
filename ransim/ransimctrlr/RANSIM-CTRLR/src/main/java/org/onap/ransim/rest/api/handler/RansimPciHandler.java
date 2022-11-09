@@ -45,6 +45,7 @@ import org.onap.ransim.rest.api.models.GetNeighborList;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NetconfServers;
 import org.onap.ransim.rest.api.models.NRCellCU;
+import org.onap.ransim.rest.api.models.NRCellDU;
 import org.onap.ransim.rest.api.models.NRCellRelation;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.models.PmDataDump;
@@ -88,7 +89,7 @@ public class RansimPciHandler {
     List<PmParameters> pmParameters = new ArrayList<PmParameters>();
     int next = 0;
 
-    public FmAlarmInfo setCollisionConfusionFromFile(String cellNodeId) {
+    public FmAlarmInfo setCollisionConfusionFromFile(Integer cellNodeId) {
 
         FmAlarmInfo result = new FmAlarmInfo();
 
@@ -96,32 +97,33 @@ public class RansimPciHandler {
 
             boolean collisionDetected = false;
             boolean confusionDetected = false;
-            List<Long> nbrPcis = new ArrayList<Long>();
+            List<Integer> nbrPcis = new ArrayList<Integer>();
             String collisions = "";
-            HashMap<Long, String> confusions = new HashMap<Long, String>();
-            CellDetails currentCell = ransimRepo.getCellDetail(cellNodeId);
+            HashMap<Integer, Integer> confusions = new HashMap<Integer, Integer>();
+            NRCellCU currentCell = ransimRepo.getNRCellCUDetail(cellNodeId);
+            Integer currentCellNRPCI = ransimRepo.getNRPCI(cellNodeId);
             log.info("Setting confusion/collision for Cell :" + cellNodeId);
 
-            GetNeighborList cellNbrDetails = generateNeighborList(cellNodeId);
+            GetNeighborList cellNbrDetails = generateNeighborList(cellNodeId.toString());
 
-            for (CellDetails firstLevelNbr : cellNbrDetails.getCellsWithHo()) {
-                 if (nbrPcis.contains((Long) firstLevelNbr.getPhysicalCellId())) {
+            for (NRCellCU firstLevelNbr : cellNbrDetails.getCUCellsWithHo()) {
+                 Integer cellId = firstLevelNbr.getCellLocalId();
+                 Integer nRPCI = ransimRepo.getNRPCI(cellId);
+                 if (nbrPcis.contains(nRPCI)) {
                     confusionDetected = true;
-                    if(confusions.containsKey((Long) firstLevelNbr.getPhysicalCellId())) {
-                        confusions.put((Long) firstLevelNbr.getPhysicalCellId(),
-                                        confusions.get((Long) firstLevelNbr.getPhysicalCellId())+","+firstLevelNbr.getNodeId());
+                    if(confusions.containsKey((nRPCI))) {
+                        confusions.put(nRPCI,confusions.get(nRPCI+","+firstLevelNbr.getCellLocalId()));
                     } else {
-                         confusions.put((Long) firstLevelNbr.getPhysicalCellId(),firstLevelNbr.getNodeId());
-                    }
-
+                         confusions.put(nRPCI,firstLevelNbr.getCellLocalId());
+  		    }
 
                   } else {
-                     nbrPcis.add((Long) firstLevelNbr.getPhysicalCellId());
+                     nbrPcis.add(nRPCI);
                   }
 
-                  if (currentCell.getPhysicalCellId() == firstLevelNbr.getPhysicalCellId()) {
+                  if (currentCellNRPCI == nRPCI) {
                       collisionDetected = true;
-                      collisions += collisions.isEmpty()?firstLevelNbr.getNodeId():","+firstLevelNbr.getNodeId();
+                      collisions += collisions.isEmpty()?firstLevelNbr.getCellLocalId():","+firstLevelNbr.getCellLocalId();
                   }
             }
 
@@ -152,7 +154,7 @@ public class RansimPciHandler {
                 result.setProblem("No Issues");
             }
 
-            ransimRepo.mergeCellDetails(currentCell);
+            ransimRepo.mergeNRCellCU(currentCell);
 
             return result;
 
@@ -210,11 +212,11 @@ public class RansimPciHandler {
 
     public void checkCollisionAfterModify() {
         try {
-            List<CellDetails> checkCollisionConfusion = ransimRepo.getCellsWithCollisionOrConfusion();
+            List<NRCellCU> checkCollisionConfusion = ransimRepo.getCellsWithCollisionOrConfusion();
 
             for (int i = 0; i < checkCollisionConfusion.size(); i++) {
-                log.info(checkCollisionConfusion.get(i).getNodeId());
-                setCollisionConfusionFromFile(checkCollisionConfusion.get(i).getNodeId());
+                log.info(checkCollisionConfusion.get(i).getCellLocalId());
+                setCollisionConfusionFromFile(Integer.valueOf(checkCollisionConfusion.get(i).getCellLocalId()));
             }
         } catch (Exception eu) {
             log.info("checkCollisionAfterModify", eu);
@@ -235,99 +237,98 @@ public class RansimPciHandler {
      *        The source from which cell modification has been triggered
      * @return returns success or failure message
      */
-    public int modifyCellFunction(String nodeId, long physicalCellId, List<NeighborDetails> newNbrs, String source) {
+    public int modifyCellFunction(String nodeId, Integer physicalCellId, List<NRCellRelation> newNbrs, String source) {
 
         int result = 111;
 
         log.info("modifyCellFunction nodeId:" + nodeId + ", physicalCellId:" + physicalCellId);
-        CellDetails modifyCell = ransimRepo.getCellDetail(nodeId);
+        NRCellCU modifyCell = ransimRepo.getNRCellCUDetail(Integer.valueOf(nodeId));
 
         if (modifyCell != null) {
             if (physicalCellId < 0 || physicalCellId > RansimControllerServices.maxPciValueAllowed) {
                 log.info("NewPhysicalCellId is empty or invalid");
                 result = 400;
             } else {
-                long oldPciId = modifyCell.getPhysicalCellId();
+                long oldPciId = ransimRepo.getNRPCI(modifyCell.getCellLocalId());
                 if (physicalCellId != oldPciId) {
                     updatePciOperationsTable(nodeId, source, physicalCellId, oldPciId);
-
-                    modifyCell.setPhysicalCellId(physicalCellId);
-                    ransimRepo.mergeCellDetails(modifyCell);
+                    NRCellDU nrCellDU = ransimRepo.getNRCellDUDetail(modifyCell.getCellLocalId());
+		    nrCellDU.setnRPCI(physicalCellId);
+		    ransimRepo.mergeNRCellDU(nrCellDU);
                 }
 
-                CellNeighbor neighbors = ransimRepo.getCellNeighbor(nodeId);
-                List<NeighborDetails> oldNbrList = new ArrayList<NeighborDetails>(neighbors.getNeighborList());
-                List<NeighborDetails> oldNbrListWithHo = new ArrayList<NeighborDetails>();
+                NRCellCU neighbors = ransimRepo.getNRCellCUDetail(Integer.valueOf(nodeId));
+		List<NRCellRelation> oldNbrList = new ArrayList<NRCellRelation>(neighbors.getNrCellRelationsList());
+		List<NRCellRelation> oldNbrListWithHo = new ArrayList<NRCellRelation>();
 
-                for (NeighborDetails cell : oldNbrList) {
-                    if (!cell.isBlacklisted()) {
-                        oldNbrListWithHo.add(cell);
-                    }
-                }
+		for (NRCellRelation cell : oldNbrList) {
+                   if (cell.getisHOAllowed()) {
+                      oldNbrListWithHo.add(cell);
+		   }
+		}
 
                 boolean flag = false;
 
-                List<NeighborDetails> addedNbrs = new ArrayList<NeighborDetails>();
-                List<NeighborDetails> deletedNbrs = new ArrayList<NeighborDetails>();
+                List<NRCellRelation> addedNbrs = new ArrayList<NRCellRelation>();
+		List<NRCellRelation> deletedNbrs = new ArrayList<NRCellRelation>();
 
-                String nbrsDel = "";
+		String nbrsDel = "";
 
-                List<String> oldNbrsArr = new ArrayList<String>();
-                for (NeighborDetails cell : oldNbrListWithHo) {
-                    oldNbrsArr.add(cell.getNeigbor().getNeighborCell());
-                }
+		List<String> oldNbrsArr = new ArrayList<String>();
+		for (NRCellRelation cell : oldNbrListWithHo) {
+		   oldNbrsArr.add(cell.getIdNRCellRelation().toString());
+		}
 
-                List<String> newNbrsArr = new ArrayList<String>();
-                for (NeighborDetails cell : newNbrs) {
-                    newNbrsArr.add(cell.getNeigbor().getNeighborCell());
-                }
-
-                for (NeighborDetails cell : oldNbrListWithHo) {
-
-                    if (!newNbrsArr.contains(cell.getNeigbor().getNeighborCell())) {
+		List<String> newNbrsArr = new ArrayList<String>();
+		for (NRCellRelation cell : newNbrs) {
+		   newNbrsArr.add(cell.getIdNRCellRelation().toString());											
+	    	}
+		
+	        for (NRCellRelation cell : oldNbrListWithHo) {
+                    if (!newNbrsArr.contains(cell.getIdNRCellRelation())) {
                         if (!flag) {
                             flag = true;
                         }
                         deletedNbrs.add(cell);
                         if (nbrsDel == "") {
-                            nbrsDel = cell.getNeigbor().getNeighborCell();
+                            nbrsDel = String.valueOf(cell.getIdNRCellRelation());
                         } else {
-                            nbrsDel += "," + cell.getNeigbor().getNeighborCell();
+                            nbrsDel += "," + cell.getIdNRCellRelation();
                         }
-                        log.info("deleted cell: " + cell.getNeigbor().getNeighborCell() + cell.isBlacklisted());
+                        log.info("deleted cell: " + cell.getIdNRCellRelation() + cell.getisHOAllowed());
 
                     }
                 }
 
                 String nbrsAdd = "";
 
-                for (NeighborDetails cell : newNbrs) {
-                    if (cell.isBlacklisted()) {
+                for (NRCellRelation cell : newNbrs) {
+                    if (!cell.getisHOAllowed()) {
                         addedNbrs.add(cell);
                     } else {
-                        if (!oldNbrsArr.contains(cell.getNeigbor().getNeighborCell())) {
+                        if (!oldNbrsArr.contains(cell.getIdNRCellRelation())) {
                             addedNbrs.add(cell);
                             if (nbrsAdd == "") {
-                                nbrsAdd = cell.getNeigbor().getNeighborCell();
+                                nbrsAdd = String.valueOf(cell.getIdNRCellRelation());
                             } else {
-                                nbrsAdd += "," + cell.getNeigbor().getNeighborCell();
+                                nbrsAdd += "," + cell.getIdNRCellRelation();
                             }
-                            log.info("added cell: " + cell.getNeigbor().getNeighborCell() + cell.isBlacklisted());
+                            log.info("added cell: " + cell.getIdNRCellRelation() + cell.getisHOAllowed());
                         }
                     }
+                }
+                
+		List<NRCellRelation> newNeighborList = new ArrayList<NRCellRelation>(oldNbrList);
+		for (NRCellRelation cell : deletedNbrs) {
+                    NRCellRelation removeHo = new NRCellRelation(cell.getIdNRCellRelation(), cell.getnRTCI(), false, cell.getCellLocalId());
+		    ransimRepo.mergeNRCellRel(removeHo);
+		    newNeighborList.add(removeHo);
+		}
 
-                }
-                List<NeighborDetails> newNeighborList = new ArrayList<NeighborDetails>(oldNbrList);
-                for (NeighborDetails cell : deletedNbrs) {
-                    NeighborDetails removeHo = new NeighborDetails(cell.getNeigbor(), true);
-                    ransimRepo.mergeNeighborDetails(removeHo);
-                    newNeighborList.add(removeHo);
-                }
-
-                for (NeighborDetails cell : addedNbrs) {
-                    ransimRepo.mergeNeighborDetails(cell);
-                    newNeighborList.add(cell);
-                }
+		for (NRCellRelation cell : addedNbrs) {
+                    ransimRepo.mergeNRCellRel(cell);
+		    newNeighborList.add(cell);
+		}
 
                 if (!flag) {
                     if (newNbrs.size() != oldNbrList.size()) {
@@ -340,10 +341,10 @@ public class RansimPciHandler {
                 }
 
                 if (newNbrs != null) {
-                    neighbors.getNeighborList().clear();
-                    Set<NeighborDetails> updatedNbrList = new HashSet<NeighborDetails>(newNeighborList);
-                    neighbors.setNeighborList(updatedNbrList);
-                    ransimRepo.mergeCellNeighbor(neighbors);
+                    neighbors.getNrCellRelationsList().clear();
+		    List<NRCellRelation> updatedNbrList = newNeighborList;
+                    neighbors.setNrCellRelationsList(updatedNbrList);
+		    ransimRepo.mergeNRCellCU(neighbors);
                 }
 
                 generateFmData(source, modifyCell, newNeighborList);
@@ -413,11 +414,11 @@ public class RansimPciHandler {
         OperationLog operationLog = new OperationLog();
 
         operationLog.setNodeId(nodeId);
-        operationLog.setFieldName("PCID");
+        operationLog.setFieldName("nRPCI");
         operationLog.setOperation("Modify");
         operationLog.setSource(source);
         operationLog.setTime(System.currentTimeMillis());
-        operationLog.setMessage("PCID value changed from " + oldPciId + " to " + physicalCellId);
+        operationLog.setMessage("nRPCI value changed from " + oldPciId + " to " + physicalCellId);
         ransimRepo.mergeOperationLog(operationLog);
     }
 
@@ -755,7 +756,7 @@ public class RansimPciHandler {
             faultFields.setEventSeverity("CRITICAL");
             faultFields.setEventSourceType("other");
             Map<String, String> alarmAdditionalInformation = new HashMap<String, String>();
-            alarmAdditionalInformation.put("networkId", networkId);
+            alarmAdditionalInformation.put("networkId", "10000000");
             faultFields.setAlarmAdditionalInformation(alarmAdditionalInformation);
 
             if (!issue.getCollisions().isEmpty()) {
@@ -770,11 +771,11 @@ public class RansimPciHandler {
                 eventList.add(event);
             }
 
-            for (Map.Entry<Long, String> set : issue.getConfusions().entrySet()) {
+            for (Map.Entry<Integer, Integer> set : issue.getConfusions().entrySet()) {
                 commonEventHeader.setStartEpochMicrosec(System.currentTimeMillis() * 1000);
                 commonEventHeader.setSourceName(cellId);
                 commonEventHeader.setReportingEntityName(ncServer);
-                faultFields.setSpecificProblem(set.getValue());
+                faultFields.setSpecificProblem(String.valueOf(set.getValue()));
                 faultFields.setEventCategory("PCIConfusion");
                 commonEventHeader.setLastEpochMicrosec(System.currentTimeMillis() * 1000);
                 event.setCommonEventHeader(commonEventHeader);
@@ -803,36 +804,39 @@ public class RansimPciHandler {
      * @param newNeighborList
      *        Neighbor list of the given cell.
      */
-    public void generateFmData(String source, CellDetails cell, List<NeighborDetails> newNeighborList) {
+    public void generateFmData(String source, NRCellCU cell, List<NRCellRelation> nRcellRelList) {
 
         List<EventFm> listCellIssue = new ArrayList<EventFm>();
         Set<String> ncs = new HashSet<>();
         log.info("Generating Fm data");
-        FmAlarmInfo op1 = setCollisionConfusionFromFile(cell.getNodeId());
+        FmAlarmInfo op1 = setCollisionConfusionFromFile(cell.getCellLocalId());
+	String networkId = "ran-1";
+	log.info("networkId is : " + networkId);
 
         if (source.equals("GUI")) {
             if (op1.getProblem().equals("CollisionAndConfusion") || op1.getProblem().equals("Collision")
                     || op1.getProblem().equals("Confusion")) {
                 log.info("op1: " + op1);
-                List<EventFm> lci = setEventFm(cell.getNetworkId(), cell.getServerId(), cell.getNodeId(), op1);
+                List<EventFm> lci = setEventFm(networkId, cell.getgNBCUCPFunction().getgNBCUName(), cell.getCellLocalId().toString(), op1);
                 listCellIssue.addAll(lci);
-                ncs.add(cell.getServerId());
-                log.info("Generating Fm data for: " + cell.getNodeId());
+                ncs.add(cell.getgNBCUCPFunction().getgNBCUName());
+		log.info("Generating Fm data for: " + cell.getCellLocalId());
             }
         }
 
-        for (NeighborDetails cd : newNeighborList) {
-            FmAlarmInfo op2 = setCollisionConfusionFromFile(cd.getNeigbor().getNeighborCell());
-            CellDetails nbrCell = ransimRepo.getCellDetail(cd.getNeigbor().getNeighborCell());
+        for (NRCellRelation cd : nRcellRelList) {
+            FmAlarmInfo op2 = setCollisionConfusionFromFile(cd.getIdNRCellRelation());
+            NRCellCU nbrCell = ransimRepo.getNRCellCUDetail(cd.getIdNRCellRelation());
 
             if (source.equals("GUI")) {
                 if (op2.getProblem().equals("CollisionAndConfusion") || op2.getProblem().equals("Collision")
                         || op2.getProblem().equals("Confusion")) {
-                    List<EventFm> lci = setEventFm(nbrCell.getNetworkId(), nbrCell.getServerId(), nbrCell.getNodeId(), op2);
-                    log.info("FmData added:" + nbrCell.getNodeId());
-                    listCellIssue.addAll(lci);
-                    ncs.add(nbrCell.getServerId());
-                    log.info("Generating Fm data for: " + nbrCell.getNodeId());
+                    List<EventFm> lci = setEventFm(networkId, nbrCell.getgNBCUCPFunction().getgNBCUName(), 
+				    String.valueOf(nbrCell.getCellLocalId()), op2);
+		    log.info("FmData added:" + nbrCell.getCellLocalId());
+		    listCellIssue.addAll(lci);
+		    ncs.add(nbrCell.getgNBCUCPFunction().getgNBCUName());
+		    log.info("Generating Fm data for: " + nbrCell.getCellLocalId());
                 }
             }
 
