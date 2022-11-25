@@ -160,6 +160,49 @@ public class RansimRepositoryService {
         return rel;
     }
 
+    public Integer getNRPCI(Integer cellLocalId) {
+      Optional<NRCellDU> du = nRCellDURepo.findById(cellLocalId);
+      Integer pci = 0;
+      if (du.isPresent()) {
+         pci = du.get().getnRPCI();
+      }
+      return pci;
+    }
+
+    public String getNetworkId(Integer cellLocalId) {
+      Optional<NRCellDU> du = nRCellDURepo.findById(cellLocalId);
+      String networkId = null;
+      if (du.isPresent()) {
+        networkId = du.get().getNetworkId();
+      }
+      return networkId;
+    }
+
+    public String getDUName(Integer cellLocalId) {
+      Optional<NRCellDU> du = nRCellDURepo.findById(cellLocalId);
+      String duName = null;
+      if (du.isPresent()) {
+         duName = du.get().getgNBDUFunction().getgNBDUId().toString();
+      }
+      return duName;
+
+    }
+
+    /**
+     * Method to retrieve all cell details
+     *
+     * @return
+     */
+
+    public List<NRCellCU> getCUCellDetailsList() {
+      Iterable<NRCellCU> cellsList = nRCellCURepo.findAll();
+      if (cellsList != null) {
+           return (List<NRCellCU>) cellsList;
+      } else {
+           return new ArrayList<>();
+      }
+    }
+
 	     /**
 	      * Method to retrieve cellCU neighbors
 	      *
@@ -238,8 +281,8 @@ public class RansimRepositoryService {
 	     * 
 	     * @return
 	     */
-	    public List<CellDetails> getCellsWithCollisionOrConfusion() {
-		List<CellDetails> cellsList = cellDetailsRepo.getCellsWithCollisionOrConfusion();
+	    public List<NRCellCU> getCellsWithCollisionOrConfusion() {
+		List<NRCellCU> cellsList = nRCellCURepo.getCellsWithCollisionOrConfusion();
 		if (cellsList != null) {
 		    return cellsList;
 		} else {
@@ -361,6 +404,15 @@ public class RansimRepositoryService {
      */
     public void mergeNRCellDU(NRCellDU nRCellDU) {
         nRCellDURepo.save(nRCellDU);
+    }
+
+    /**
+     * Method to save cells
+     *
+     * @param nRCellCU
+     */
+    public void mergeNRCellCU(NRCellCU nRCellCU) {
+       nRCellCURepo.save(nRCellCU);
     }
 
     /**

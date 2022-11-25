@@ -47,6 +47,10 @@ public class NRCellCU implements Serializable, Comparable<NRCellCU> {
     private Integer cellLocalId;
     @Column(name = "RESOURCETYPE")
     private String resourceType;
+    @Column(name = "SCREENX")
+    private float screenX;
+    @Column(name = "SCREENY")
+    private float screenY;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PLMNINFO", joinColumns = @JoinColumn(name = "nrcellcu_celllocalid"))
     private List<PLMNInfo> pLMNInfoList;
@@ -56,6 +60,34 @@ public class NRCellCU implements Serializable, Comparable<NRCellCU> {
     @ManyToOne
     @JoinColumn(name = "gnbcuname")
     private GNBCUCPFunction gNBCUCPFunction;
+
+    private boolean pciCollisionDetected;
+    private boolean pciConfusionDetected;
+    private String color;
+
+    public boolean isPciCollisionDetected() {
+      return pciCollisionDetected;
+    }
+
+    public void setPciCollisionDetected(boolean pciCollisionDetected) {
+      this.pciCollisionDetected = pciCollisionDetected;
+    }
+
+    public boolean isPciConfusionDetected() {
+      return pciConfusionDetected;
+    }
+
+    public void setPciConfusionDetected(boolean pciConfusionDetected) {
+      this.pciConfusionDetected = pciConfusionDetected;
+    }
+
+    public String getColor() {
+      return color;
+    }
+
+    public void setColor(String color) {
+      this.color = color;
+    }
 
     public Integer getCellLocalId() {
         return cellLocalId;
@@ -93,6 +125,12 @@ public class NRCellCU implements Serializable, Comparable<NRCellCU> {
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
     }
+
+    public void setScreenX(float screenX){ this.screenX = screenX; }
+    public float getScreenX(){ return screenX; }
+
+    public void setScreenY(float screenY){ this.screenY = screenY; }
+    public float getScreenY(){ return screenY; }
 
     static Logger log = Logger.getLogger(RansimController.class.getName());
 
