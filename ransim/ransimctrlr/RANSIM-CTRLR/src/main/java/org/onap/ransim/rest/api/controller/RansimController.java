@@ -353,7 +353,7 @@ public class RansimController {
             if (message != null) {
 
                 log.info("message.getNodeId(): " + message.getNodeId());
-
+                
                 Gson gson = new Gson();
                 jsonStr = gson.toJson(message);
             }
@@ -375,14 +375,21 @@ public class RansimController {
 
 	    log.debug("Inside getNeighborList...");
 	    try {
-		    String jsonStr = "";
-		    GetNeighborList message = rsPciHdlr.generateNeighborList(req.getNodeId());
-		    if (message != null) {
-			    log.info("message.getNodeId(): " + message.getNodeId());
-			    Gson gson = new Gson();
-			    jsonStr = gson.toJson(message);
-		    }
-		    return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+		   String jsonStr = "";
+		   NRCellCU neighborList = ransimRepo.getCellRelation(Integer.valueOf(req.getNodeId()));
+		   List<Integer> result = new ArrayList<Integer>();
+		   for (NRCellRelation nd : neighborList.getNrCellRelationsList()) {
+
+			   result.add(nd.getIdNRCellRelation());
+		   }
+
+		   if (result != null) {
+			   Gson gson = new Gson();
+			   jsonStr = gson.toJson(result);
+		   }
+
+		   return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+
 	    } catch (Exception eu) {
 		    log.info("/getCUNeighborList", eu);
 		    return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -425,13 +432,13 @@ public class RansimController {
         try {
             String jsonStr = "";
 
-            CellNeighbor neighborList = ransimRepo.getCellNeighbor(req.getNodeId());
+            NRCellCU neighborList = ransimRepo.getCellRelation(Integer.valueOf(req.getNodeId()));
 
-            Map<String, String> result = new ConcurrentHashMap<String, String>();
+            Map<Integer, String> result = new ConcurrentHashMap<Integer, String>();
 
-            for (NeighborDetails nd : neighborList.getNeighborList()) {
+            for (NRCellRelation nd : neighborList.getNrCellRelationsList()) {
 
-                result.put(nd.getNeigbor().getNeighborCell(), "" + nd.isBlacklisted());
+                result.put(nd.getIdNRCellRelation(), "" + nd.getisHOAllowed());
             }
 
             if (result != null) {
@@ -520,10 +527,22 @@ public class RansimController {
         try {
             String jsonStr = null;
 
-            CellDetails cd = ransimRepo.getCellDetail(req.getNodeId());
-            if (cd != null) {
+            NRCellCU celldata = ransimRepo.getNRCellCUDetail(Integer.valueOf(req.getNodeId()));
+	    NRCellDU ducell = ransimRepo.getNRCellDUDetail(celldata.getCellLocalId());
+	    CellDetails cell = new CellDetails();
+	    cell.setScreenX(celldata.getScreenX());
+	    cell.setScreenY(celldata.getScreenY());
+	    cell.setPciConfusionDetected(celldata.isPciConfusionDetected());
+	    cell.setPciCollisionDetected(celldata.isPciCollisionDetected());
+	    cell.setColor(celldata.getColor());
+	    cell.setNodeName(celldata.getCellLocalId().toString());
+	    cell.setServerId(celldata.getgNBCUCPFunction().getgNBCUName());
+	    cell.setPhysicalCellId(ducell.getnRPCI());
+	    cell.setNetworkId(ducell.getNetworkId());
+
+	    if (cell != null){
                 Gson gson = new Gson();
-                jsonStr = gson.toJson(cd);
+                jsonStr = gson.toJson(cell);
             }
             return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 
