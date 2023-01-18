@@ -26,7 +26,7 @@ public class FmAlarmInfo {
     
     private String problem;
     private String collisions;
-    private HashMap<Long, String> confusions;
+    private HashMap<Integer, Integer> confusions;
 
 
     public FmAlarmInfo() {
@@ -43,7 +43,7 @@ public class FmAlarmInfo {
      * @param confusions
      *            Cell ids that causes confusion.
      */
-    public FmAlarmInfo(String problem, String collisions, HashMap<Long, String> confusions) {
+    public FmAlarmInfo(String problem, String collisions, HashMap<Integer, Integer> confusions) {
         super();
         this.problem = problem;
         this.collisions = collisions;
@@ -66,11 +66,11 @@ public class FmAlarmInfo {
         this.collisions = collisions;
     }
 
-    public HashMap<Long, String> getConfusions(){
+    public HashMap<Integer, Integer> getConfusions(){
         return confusions;
     }
 
-    public void setConfusions(HashMap<Long, String> confusions) {
+    public void setConfusions(HashMap<Integer, Integer> confusions) {
         this.confusions = confusions;
     }
 

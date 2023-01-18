@@ -56,6 +56,16 @@ public class NRCellRelation implements Serializable {
      @JoinColumn(name = "celllocalid", referencedColumnName="celllocalid")
      private NRCellCU cellLocalId;
 
+     public  NRCellRelation() {}
+
+     public NRCellRelation(Integer idNRCellRelation, Integer nRTCI, boolean isHOAllowed, NRCellCU cellLocalId) {
+       super();
+       this.idNRCellRelation = idNRCellRelation;
+       this.nRTCI = nRTCI;
+       this.isHOAllowed = isHOAllowed;
+       this.cellLocalId = cellLocalId;
+     }
+
      public NRCellCU getCellLocalId() { return cellLocalId; }
 
      public void setCellLocalId(NRCellCU cellLocalId) { this.cellLocalId = cellLocalId; }

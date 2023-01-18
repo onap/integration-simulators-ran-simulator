@@ -54,6 +54,9 @@ import org.onap.ransim.rest.api.models.ModifyACellReq;
 import org.onap.ransim.rest.api.models.NeighborDetails;
 import org.onap.ransim.rest.api.models.NeihborId;
 import org.onap.ransim.rest.api.models.NetconfServers;
+import org.onap.ransim.rest.api.models.NRCellCU;
+import org.onap.ransim.rest.api.models.NRCellDU;
+import org.onap.ransim.rest.api.models.NRCellRelation;
 import org.onap.ransim.rest.api.models.OperationLog;
 import org.onap.ransim.rest.api.models.TACells;
 import org.onap.ransim.rest.api.models.Topology;
@@ -149,6 +152,7 @@ public class RansimController {
             rscServices.loadGNBFunctionProperties();
             long startTimeStartSimulation = System.currentTimeMillis();
             rscServices.sendRanInitialConfigAll();
+	    rscServices.generateCluster();
             long endTimeStartSimulation = System.currentTimeMillis();
             log.info("Time taken for start ran slice simulation : "
                     + (endTimeStartSimulation - startTimeStartSimulation));
@@ -268,7 +272,22 @@ public class RansimController {
         log.debug("Inside getTopology...");
         try {
             rsPciHdlr.checkCollisionAfterModify();
-            List<CellDetails> cds = ransimRepo.getCellDetailsList();
+            List<NRCellCU> celldata = ransimRepo.getCUCellDetailsList();
+	    List<CellDetails> cds = new ArrayList<CellDetails>();
+	    for(int i = 0; i < celldata.size(); i++){
+		  NRCellDU ducell = ransimRepo.getNRCellDUDetail(celldata.get(i).getCellLocalId());
+		  CellDetails cell = new CellDetails();
+		  cell.setScreenX(celldata.get(i).getScreenX());
+		  cell.setScreenY(celldata.get(i).getScreenY());
+		  cell.setPciConfusionDetected(celldata.get(i).isPciConfusionDetected());
+		  cell.setPciCollisionDetected(celldata.get(i).isPciCollisionDetected());
+		  cell.setColor(celldata.get(i).getColor());
+		  cell.setNodeName(celldata.get(i).getCellLocalId().toString());
+		  cell.setServerId(celldata.get(i).getgNBCUCPFunction().getgNBCUName());
+		  cell.setPhysicalCellId(ducell.getnRPCI());
+		  cell.setNetworkId(ducell.getNetworkId());
+                  cds.add(cell);
+            }
 
             Topology top = new Topology();
 
@@ -299,6 +318,7 @@ public class RansimController {
 
             Gson gson = new Gson();
             String jsonStr = gson.toJson(top);
+	    log.info("jsonStr is" + jsonStr);
 
             return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 
@@ -333,10 +353,14 @@ public class RansimController {
             if (message != null) {
 
                 log.info("message.getNodeId(): " + message.getNodeId());
-
+		
+	
                 Gson gson = new Gson();
                 jsonStr = gson.toJson(message);
+	     
+	       
             }
+	     
             return new ResponseEntity<>(jsonStr, HttpStatus.OK);
 
         } catch (Exception eu) {
@@ -356,13 +380,20 @@ public class RansimController {
 	    log.debug("Inside getNeighborList...");
 	    try {
 		    String jsonStr = "";
-		    GetNeighborList message = rsPciHdlr.generateNeighborList(req.getNodeId());
-		    if (message != null) {
-			    log.info("message.getNodeId(): " + message.getNodeId());
-			    Gson gson = new Gson();
-			    jsonStr = gson.toJson(message);
-		    }
-		    return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+		    NRCellCU neighborList = ransimRepo.getCellRelation(Integer.valueOf(req.getNodeId()));
+		    List<Integer> result = new ArrayList<Integer>();
+	            
+		   for (NRCellRelation nd : neighborList.getNrCellRelationsList()) {
+		        
+			    result.add(nd.getIdNRCellRelation());
+	           }
+
+	           if (result != null) {
+	                Gson gson = new Gson();
+		  	jsonStr = gson.toJson(result);   															           }
+
+    		   return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+
 	    } catch (Exception eu) {
 		    log.info("/getCUNeighborList", eu);
 		    return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -451,11 +482,13 @@ public class RansimController {
                 nbrsStr = "";
             }
             String source = "GUI";
-            List<NeighborDetails> nbrsList = new ArrayList<NeighborDetails>();
+	    NRCellCU nrCellCU = ransimRepo.getNRCellCUDetail(Integer.valueOf(req.getNodeId()));
+	    List<NRCellRelation> nbrsList = new ArrayList<NRCellRelation>();
             String[] newNbrsArr = nbrsStr.split(",");
 
             for (int i = 0; i < newNbrsArr.length; i++) {
-                NeighborDetails cell = new NeighborDetails(new NeihborId(req.getNodeId(), newNbrsArr[i].trim()), false);
+                NRCellRelation cell = new NRCellRelation(Integer.valueOf(newNbrsArr[i].trim()),
+				Integer.valueOf(newNbrsArr[i].trim()),true,nrCellCU);
                 nbrsList.add(cell);
             }
 
@@ -810,11 +843,10 @@ public class RansimController {
                 log.info("2. closedLoopexecService.isTerminated(): " + closedLoopExecService.isTerminated());
 
             }
-            return new ResponseEntity<>("Closed loop PM data generated.", HttpStatus.OK);
-
-        } catch (Exception eu) {
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-}
+	    return new ResponseEntity<>("Closed loop PM data generated.", HttpStatus.OK);
+	     } catch (Exception eu) {
+	         return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		  
+	    }
+       }
+   }

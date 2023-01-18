@@ -23,7 +23,7 @@ package org.onap.ransim.rest.api.models;
 public class ModifyACellReq {
 
     private String nodeId;
-    private Long newPhysicalCellId;
+    private Integer newPhysicalCellId;
     private String newNbrs;
 
     /**
@@ -33,7 +33,7 @@ public class ModifyACellReq {
      * @param newPhysicalCellId new PCI number for the cell
      * @param newNbrs new neighbor list for the cell
      */
-    public ModifyACellReq(String nodeId, Long newPhysicalCellId, String newNbrs) {
+    public ModifyACellReq(String nodeId, Integer newPhysicalCellId, String newNbrs) {
         super();
         this.nodeId = nodeId;
         this.newPhysicalCellId = newPhysicalCellId;
@@ -54,11 +54,11 @@ public class ModifyACellReq {
         this.nodeId = nodeId;
     }
 
-    public Long getNewPhysicalCellId() {
+    public Integer getNewPhysicalCellId() {
         return newPhysicalCellId;
     }
 
-    public void setNewPhysicalCellId(Long newPhysicalCellId) {
+    public void setNewPhysicalCellId(Integer newPhysicalCellId) {
         this.newPhysicalCellId = newPhysicalCellId;
     }
 

@@ -21,7 +21,7 @@ services:
     image: 'onap/ransim:1.0.0-SNAPSHOT'
     container_name: ransim
     environment:
-      - SDNR_IP=10.31.4.51
+      - SDNR_IP=10.31.4.14
       - SDNR_PORT=30267
       - SDNR_USER=admin
       - SDNR_PASSWORD=Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U

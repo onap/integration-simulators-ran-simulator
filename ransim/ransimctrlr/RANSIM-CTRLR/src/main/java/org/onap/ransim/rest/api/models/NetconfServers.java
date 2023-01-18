@@ -47,7 +47,9 @@ public class NetconfServers {
 
     @OneToMany(targetEntity = NRCellCU.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<NRCellCU> cellCUList;
-   
+
+    @OneToMany(targetEntity = NRCellDU.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<NRCellDU> cellDUList;   
 
     public NetconfServers() {
 
@@ -107,5 +109,13 @@ public class NetconfServers {
 
     public void setCellList(Set<NRCellCU> cellCUList) {
         this.cellCUList = cellCUList;
+    }
+
+    public Set<NRCellDU> getDUList() {
+        return cellDUList;
+    }
+
+    public void setDUList(Set<NRCellDU> cellDUList) {
+        this.cellDUList = cellDUList;
     }
 }
