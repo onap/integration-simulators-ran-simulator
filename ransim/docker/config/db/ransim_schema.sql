@@ -118,6 +118,8 @@ create table nrcellcu (
   celllocalid integer not null,
   gnbcuname varchar(255),
   resourcetype varchar(255),
+  screenX float,
+  screenY float,
   primary key (celllocalid)
 ) engine = InnoDB;
 -- -----------------------------------------------------
@@ -279,65 +281,65 @@ INSERT INTO gnbdufunction(gnbduid,gnbduname, gnbid, gnbidlength, nftype, plmnid,
 INSERT INTO gnbdufunction(gnbduid,gnbduname, gnbid, gnbidlength, nftype, plmnid, nearrtricid) VALUES(660,'gnduserver6', 25, 25, 'DU', '310-410', 22);
 
 --nrcellcu
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15289,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15289,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15290,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15290,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15296,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15296,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15687,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15687,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15689,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15689,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15155,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15155,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15174,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15174,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15175,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15175,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15176,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15176,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15825,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15825,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15826,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15826,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15425,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15425,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15426,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15426,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(13999,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(13999,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(14000,'RRC Connected Users','cucpserver1');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(14000,'RRC Connected Users','cucpserver1',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(11561,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(11561,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(11562,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(11562,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(11568,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(11568,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(11569,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(11569,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(10896,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(10896,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(10897,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(10897,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(14655,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(14655,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(14656,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(14656,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(13905,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(13905,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(13910,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(13910,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15360,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15360,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15361,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15361,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15548,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15548,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(15549,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(15549,'RRC Connected Users','cucpserver2',0.0,0.0);
 
-INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname) VALUES(14427,'RRC Connected Users','cucpserver2');
+INSERT INTO nrcellcu(celllocalid,resourcetype,gnbcuname,screenX,screenY) VALUES(14427,'RRC Connected Users','cucpserver2',0.0,0.0);
 
 --nrcellrelation
 
@@ -446,64 +448,64 @@ insert into nrcellrelation(sno,idnrcellrelation,nrtci,ishoallowed,celllocalid) v
 	
 --nrcelldu
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15289,'PRB','UNLOCKED','ACTIVE',0,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',110);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15289,'PRB','UNLOCKED','ACTIVE',0,310,20.171145097916106,-50.10471740400266,'RAN001','ENABLED',110);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15290,'PRB','UNLOCKED','ACTIVE',1,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',110);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15290,'PRB','UNLOCKED','ACTIVE',1,310,20.054355662501198,-50.19955964341554,'RAN001','ENABLED',110);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15296,'PRB','UNLOCKED','ACTIVE',2,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',110);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15296,'PRB','UNLOCKED','ACTIVE',2,310,20.344108471812696,-50.14131179861543,'RAN001','ENABLED',110);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15687,'PRB','UNLOCKED','ACTIVE',3,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',110);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15687,'PRB','UNLOCKED','ACTIVE',3,310,20.093454779893126,-50.9797749599232,'RAN001','ENABLED',110);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15689,'PRB','UNLOCKED','ACTIVE',11,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',110);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15689,'PRB','UNLOCKED','ACTIVE',11,310,20.45554775611858,-50.979485093199536,'RAN001','ENABLED',110);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15155,'PRB','UNLOCKED','ACTIVE',10,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',220);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15155,'PRB','UNLOCKED','ACTIVE',10,310,20.467064174435897,-50.544952071014976,'RAN001','ENABLED',220);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15174,'PRB','UNLOCKED','ACTIVE',8,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',220);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15174,'PRB','UNLOCKED','ACTIVE',8,310,20.470011373279082,-50.39457663746372,'RAN001','ENABLED',220);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15175,'PRB','UNLOCKED','ACTIVE',9,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',220);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15175,'PRB','UNLOCKED','ACTIVE',9,310,20.618942388739445,-50.35576539396432,'RAN001','ENABLED',220);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15176,'PRB','UNLOCKED','ACTIVE',7,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',220);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15176,'PRB','UNLOCKED','ACTIVE',7,310,20.541005063488934,-50.82784894571226,'RAN001','ENABLED',220);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15825,'PRB','UNLOCKED','ACTIVE',4,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',220);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15825,'PRB','UNLOCKED','ACTIVE',4,310,20.791728461108168,-50.52413904499894,'RAN001','ENABLED',220);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15826,'PRB','UNLOCKED','ACTIVE',5,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',330);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15826,'PRB','UNLOCKED','ACTIVE',5,310,21.00290859235497,-50.67500409737939,'RAN001','ENABLED',330);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15425,'PRB','UNLOCKED','ACTIVE',14,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',330);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15425,'PRB','UNLOCKED','ACTIVE',14,310,20.765928461158662,-50.67126426158861,'RAN001','ENABLED',330);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15426,'PRB','UNLOCKED','ACTIVE',12,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',330);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15426,'PRB','UNLOCKED','ACTIVE',12,310,20.905443462816146,-50.35261324080344,'RAN001','ENABLED',330);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13999,'PRB','UNLOCKED','ACTIVE',6,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',330);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13999,'PRB','UNLOCKED','ACTIVE',6,310,21.260234366276542,-50.60994593645002,'RAN001','ENABLED',330);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14000,'PRB','UNLOCKED','ACTIVE',13,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',330);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14000,'PRB','UNLOCKED','ACTIVE',13,310,21.245134442935765,-50.78843990735506,'RAN001','ENABLED',330);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11561,'PRB','UNLOCKED','ACTIVE',15,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',440);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11561,'PRB','UNLOCKED','ACTIVE',15,310,21.234874444612552,-51.00975286482709,'RAN001','ENABLED',440);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11562,'PRB','UNLOCKED','ACTIVE',16,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',440);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11562,'PRB','UNLOCKED','ACTIVE',16,310,22.304561392788322,-51.087181724511254,'RAN001','ENABLED',440);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11568,'PRB','UNLOCKED','ACTIVE',17,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',440);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11568,'PRB','UNLOCKED','ACTIVE',17,310,21.612156253536764,-51.00750227877614,'RAN001','ENABLED',440);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11569,'PRB','UNLOCKED','ACTIVE',18,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',440);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(11569,'PRB','UNLOCKED','ACTIVE',18,310,21.851976998606446,-50.87760303333795,'RAN001','ENABLED',440);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(10896,'PRB','UNLOCKED','ACTIVE',22,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',440);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(10896,'PRB','UNLOCKED','ACTIVE',22,310,21.940764342108555,-50.89159371045879,'RAN001','ENABLED',440);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(10897,'PRB','UNLOCKED','ACTIVE',21,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',550);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(10897,'PRB','UNLOCKED','ACTIVE',21,310,22.11092368340177,-51.14867522095378,'RAN001','ENABLED',550);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14655,'PRB','UNLOCKED','ACTIVE',19,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',550);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14655,'PRB','UNLOCKED','ACTIVE',19,310,22.28286955645821,-51.05349284587335,'RAN001','ENABLED',550);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14656,'PRB','UNLOCKED','ACTIVE',20,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',550);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14656,'PRB','UNLOCKED','ACTIVE',20,310,22.28637374846344,-50.91744546021376,'RAN001','ENABLED',550);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13905,'PRB','UNLOCKED','ACTIVE',26,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',550);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13905,'PRB','UNLOCKED','ACTIVE',26,310,22.44559011003066,-51.03346240346578,'RAN001','ENABLED',550);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13910,'PRB','UNLOCKED','ACTIVE',23,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',550);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(13910,'PRB','UNLOCKED','ACTIVE',23,310,22.50414702994992,-50.92241237850577,'RAN001','ENABLED',550);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15360,'PRB','UNLOCKED','ACTIVE',24,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',660);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15360,'PRB','UNLOCKED','ACTIVE',24,310,22.479315608114085,-51.32620951233829,'RAN001','ENABLED',660);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15361,'PRB','UNLOCKED','ACTIVE',25,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',660);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15361,'PRB','UNLOCKED','ACTIVE',25,310,22.530823168301502,-51.524450149774445,'RAN001','ENABLED',660);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15548,'PRB','UNLOCKED','ACTIVE',29,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',660);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15548,'PRB','UNLOCKED','ACTIVE',29,310,22.768181832963027,-51.860886350283174,'RAN001','ENABLED',660);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15549,'PRB','UNLOCKED','ACTIVE',27,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',660);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(15549,'PRB','UNLOCKED','ACTIVE',27,310,23.05931777916562,-51.80931313017544,'RAN001','ENABLED',660);
 
-INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14427,'PRB','UNLOCKED','ACTIVE',28,310,21.478915984298443,-51.40392800806856,'RAN001','ENABLED',660);
+INSERT INTO nrcelldu(celllocalId,resourcetype,administrativestate,cellstate, nrpci, nrtac, latitude, longitude, network_id, operationalstate,gnbduid) VALUES(14427,'PRB','UNLOCKED','ACTIVE',28,310,23.142550519966985,-51.911308879022286,'RAN001','ENABLED',660);
 
 UPDATE nrcelldu SET prb=500;

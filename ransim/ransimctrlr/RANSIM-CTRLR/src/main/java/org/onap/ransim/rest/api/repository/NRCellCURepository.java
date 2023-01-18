@@ -20,11 +20,17 @@
 
 package org.onap.ransim.rest.api.repository;
 
+import java.util.List;
+
 import org.onap.ransim.rest.api.models.NRCellCU;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NRCellCURepository extends CrudRepository<NRCellCU, Integer> {
+    
+    @Query("SELECT cd from NRCellCU cd where cd.pciCollisionDetected=true or cd.pciConfusionDetected=true")
+    List<NRCellCU> getCellsWithCollisionOrConfusion();
 
 }

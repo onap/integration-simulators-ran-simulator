@@ -90,6 +90,7 @@ import org.onap.ransim.websocket.model.GNBCUCPFunction;
 import org.onap.ransim.websocket.model.ModifyNeighbor;
 import org.onap.ransim.websocket.model.Neighbor;
 import org.onap.ransim.websocket.model.SNSSAI;
+import org.onap.ransim.websocket.model.NRCellDU;
 import org.onap.ransim.websocket.model.SetConfigTopology;
 import org.onap.ransim.websocket.model.Topology;
 import org.onap.ransim.websocket.model.UpdateCell;
@@ -615,24 +616,33 @@ public class RansimControllerServices {
     public void setRanCUCPNetconfServers(Integer cellLocalId) {
 	
 	    NRCellCU currentCell = ransimRepo.getNRCellCUDetail(cellLocalId);
+	    org.onap.ransim.rest.api.models.NRCellDU nrCellDU = ransimRepo.getNRCellDUDetail(cellLocalId);
 	    Set<NRCellCU> newList = new HashSet<NRCellCU>();
+	    Set<org.onap.ransim.rest.api.models.NRCellDU> duList = new HashSet<>();
 
 	    try {
-		    if (currentCell != null) {
+		    if (currentCell != null && nrCellDU != null) {
 			    NetconfServers server = ransimRepo.getNetconfServer(currentCell.getgNBCUCPFunction().getgNBCUName());
-			    if (server == null) {
+			    NetconfServers duServer = ransimRepo.getNetconfServer(nrCellDU.getgNBDUFunction().getgNBDUId().toString());
+			    if (server == null || duServer == null) {
 				    server = new NetconfServers();
+				    duServer = new NetconfServers();duServer = new NetconfServers();
 				    server.setServerId(currentCell.getgNBCUCPFunction().getgNBCUName());
+				    duServer.setServerId(nrCellDU.getgNBDUFunction().getgNBDUId().toString());
 			    } else {
 				    newList.addAll(server.getCellList());
-
+				    duList.addAll(duServer.getDUList());
 			    }
 			    newList.add(currentCell);
+			    duList.add(nrCellDU);
 			    server.setCellList(newList);
+			    duServer.setDUList(duList);
 			    log.info("setNetconfServer CUCP: cellLocalId: " + cellLocalId + ",  ip: " + server.getIp() + ", portNum: " + server.getNetconfPort()
 					    + ", serverId:" + currentCell.getgNBCUCPFunction().getgNBCUName());
-
+                            log.info("setNetconfServer DU : cellLocalId: " + cellLocalId + ",  ip: " + server.getIp() + ", portNum: " + server.getNetconfPort()
+					    + ", serverId:" + nrCellDU.getgNBDUFunction().getgNBDUId().toString());
 			    ransimRepo.mergeNetconfServers(server);
+			    ransimRepo.mergeNetconfServers(duServer);
 		    }
 	    } catch (Exception eu) {
 		    log.error("setRanCUCPNetconfServers Function Error", eu);
@@ -678,6 +688,43 @@ public class RansimControllerServices {
 
         }
     }
+
+    public void generateCluster() {
+
+       List<org.onap.ransim.rest.api.models.NRCellDU> DUList = (List<org.onap.ransim.rest.api.models.NRCellDU>) nRCellDURepository.findAll();
+
+       for( org.onap.ransim.rest.api.models.NRCellDU nrCellDU : DUList ) {
+
+          double lon = nrCellDU.getLongitude();
+          double lat = nrCellDU.getLatitude();
+
+          double xx = (lon - 0) * RansimUtilities.metersDeglon(0);
+          double yy = (lat - 0) * RansimUtilities.metersDeglat(0);
+
+          double rad = Math.sqrt(xx * xx + yy * yy);
+
+          if (rad > 0) {
+            double ct = xx / rad;
+
+            double st = yy / rad;
+
+            xx = rad * ((ct * Math.cos(0)) + (st * Math.sin(0)));
+
+            yy = rad * ((st * Math.cos(0)) - (ct * Math.sin(0)));
+
+          }
+	
+	  NRCellCU nrCellCU = ransimRepo.getNRCellCUDetail(nrCellDU.getCellLocalId());
+	
+	  nrCellCU.setScreenX((float) (xx));
+	
+	  nrCellCU.setScreenY((float) (yy));
+	
+	  ransimRepo.mergeNRCellCU(nrCellCU);
+        }
+
+    }
+   
 
     /**
      * generateClusterFromFile()
@@ -796,7 +843,7 @@ public class RansimControllerServices {
 
                         neighborList.setNeighborList(newCell);
                         ransimRepo.mergeCellNeighbor(neighborList);
-                        rsPciHdlr.setCollisionConfusionFromFile(cellNodeId);
+                        rsPciHdlr.setCollisionConfusionFromFile(Integer.valueOf(cellNodeId));
 
                     }
 
@@ -1234,7 +1281,6 @@ public class RansimControllerServices {
 		    nbr.setIsHOAllowed(cellDetails.isBlacklisted());
                     nbrList.add(nbr);
                 }
-                cell.setNeighborList(nbrList);
                 config.add(i, cell);
             }
 
@@ -1691,7 +1737,7 @@ public class RansimControllerServices {
 	}
 
         for (String cl : cellList) {
-            rsPciHdlr.setCollisionConfusionFromFile(cl);
+            rsPciHdlr.setCollisionConfusionFromFile(Integer.valueOf(cl));
         }
 
 	rsPciHdlr.updateNbrsOperationsTable(modifyNeighbor.getIdNRCellCU(), source, nbrsAdd, nbrsDel);
@@ -1707,32 +1753,31 @@ public class RansimControllerServices {
         log.info("handleModifyPciFromGUI: cellId:" + cellId + " pciId:" + pciId);
 
         try {
-            CellDetails currentCell = ransimRepo.getCellDetail(cellId);
-            CellNeighbor neighborList = ransimRepo.getCellNeighbor(cellId);
-            List<Neighbor> nbrList = new ArrayList<Neighbor>();
-            Iterator<NeighborDetails> iter = neighborList.getNeighborList().iterator();
-            while (iter.hasNext()) {
-                NeighborDetails nbCell = iter.next();
-                Neighbor nbr = new Neighbor();
-                CellDetails nbrCell = ransimRepo.getCellDetail(nbCell.getNeigbor().getNeighborCell());
+            NRCellCU currentCell = ransimRepo.getNRCellCUDetail(Integer.valueOf(cellId));
+            List<NRCellRelation> neighborList = currentCell.getNrCellRelationsList();
 
-		nbr.setIdNRCellRelation(nbrCell.getNodeId());
-                nbr.setNRTCI(nbrCell.getPhysicalCellId());
-                nbr.setIdGNBCUCPFunction(nbrCell.getNodeName());
-                nbr.setServerId(nbrCell.getServerId());
-                nbr.setPlmnId(nbrCell.getNetworkId());
-                nbrList.add(nbr);
+            List<org.onap.ransim.websocket.model.NRCellRelation> nrCellList = new ArrayList<>();
+
+            for(NRCellRelation nrCellRelation : neighborList )
+            {
+               org.onap.ransim.websocket.model.NRCellRelation cellRelation = new org.onap.ransim.websocket.model.NRCellRelation();
+               cellRelation.setIdNRCellRelation(nrCellRelation.getIdNRCellRelation());
+               AttributesNRRelation attributesNRRelation = new AttributesNRRelation();
+               attributesNRRelation.setNRTCI(nrCellRelation.getnRTCI());
+               attributesNRRelation.setIsHoAllowed(nrCellRelation.getisHOAllowed());
+               cellRelation.setAttributes(attributesNRRelation);
+               nrCellList.add(cellRelation);
             }
 
-            String pnfName = currentCell.getServerId();
+            String pnfName = ransimRepo.getDUName(currentCell.getCellLocalId());
             String ipPort = serverIdIpPortMapping.get(pnfName);
             log.info("handleModifyPciFromGui:ipPort >>>>>>> " + ipPort);
 
             if (ipPort != null && !ipPort.trim().equals("")) {
 
                 String[] ipPortArr = ipPort.split(":");
-                Topology oneCell = new Topology(pnfName, pciId, cellId, nbrList);
-                UpdateCell updatedPci = new UpdateCell(currentCell.getServerId(), ipPortArr[0], ipPortArr[1], oneCell);
+                Topology oneCell = new Topology(pnfName, pciId, cellId, nrCellList);
+		UpdateCell updatedPci = new UpdateCell(pnfName, ipPortArr[0], ipPortArr[1], oneCell);
                 Gson gson = new Gson();
                 String jsonStr = gson.toJson(updatedPci);
                 if (ipPort != null && !ipPort.trim().equals("")) {
@@ -1744,7 +1789,7 @@ public class RansimControllerServices {
                         log.info("No client session for " + ipPort);
                     }
                 } else {
-                    log.info("No client for " + currentCell.getServerId());
+                    log.info("No client for " + pnfName);
                 }
             }
 
