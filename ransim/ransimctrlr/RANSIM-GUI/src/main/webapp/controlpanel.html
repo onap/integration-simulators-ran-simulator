@@ -34,7 +34,23 @@
 		$scope.startSimulatorFile = function() {
                         document.getElementById("stopSimulator").disabled = false;
 			document.getElementById("startSimulator").disabled = true;
-			$window.open('SimulationTriggerFile.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=250px');
+			//$window.open('SimulationTriggerFile.html', '','menubar=no, locationbar=no, toolbar=no, width=600px, height=250px');
+
+               var xmlhttp = new XMLHttpRequest();
+			           xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+					    alert( "Simulation successfully triggered");
+			                  } else if(this.status == 500) {
+					      alert( "Simulation Failed.");
+				      }
+					                };
+			            xmlhttp.open("POST", "/ransim/api/StartRanSliceSimulation",
+					                    true);
+			            xmlhttp.setRequestHeader('Content-Type', 'application/json')
+			            xmlhttp.send('');
+
+
+
 		};
 		$scope.stopSimulator = function() {
                         document.getElementById("stopSimulator").disabled = true;
@@ -73,11 +89,10 @@
 		<!-- button ng-click="startSimulator()">StartHoneycomb</button-->
 		<button id="startSimulator" ng-click="startSimulatorFile()">Start</button>
 		<button id="stopSimulator" ng-click="stopSimulator()" disabled>Stop</button>
-		<br> <br>
-		<button id="uploadFile" ng-click="uploadFile()">Upload Dump File</button>
 		<br><br>
 		<div id="operupdate" name="operuodate">Click view to check
 			details of the updated cells</div>
+		<br><br>
 		<button ng-click="showOperationTable()">View</button>
 		<br> <br>
 		<button ng-click="showNetconfServerDetails()">Netconf Details</button>

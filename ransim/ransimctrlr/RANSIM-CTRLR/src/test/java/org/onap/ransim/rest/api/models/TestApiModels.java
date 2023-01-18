@@ -32,14 +32,14 @@ public class TestApiModels {
     @Test
     public void testsetNewPhysicalCellId() {
         ModifyACellReq mcell = new ModifyACellReq();
-        mcell.setNewPhysicalCellId(001L);
+        mcell.setNewPhysicalCellId(001);
         assertTrue(mcell.getNewPhysicalCellId() == 001);
     }
 
     @Test
     public void testsetNewPhysicalCellId1() {
         ModifyACellReq mcell = new ModifyACellReq();
-        mcell.setNewPhysicalCellId(000L);
+        mcell.setNewPhysicalCellId(000);
         assertFalse(mcell.getNewPhysicalCellId() == 001);
     }
 
